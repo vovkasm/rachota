@@ -63,4 +63,19 @@ public class Tools {
         }
         return time;
     }
+    
+    /** Returns text string that has all occurences of oldText strings replaced by newText string.
+     * @param text String where all occurences of oldText should be replaced.
+     * @param oldText Substring to be searched for in text string.
+     * @param newText New replacement string for all occurences of oldText string.
+     * @return Text string with all occurences of oldText replaced by newText strings.
+     */
+    public static String replaceAll(String text, String oldText, String newText) {
+        int index = text.indexOf(oldText);
+        while (index != -1) {
+            text = text.substring(0, index) + newText + text.substring(index + oldText.length());
+            index = text.indexOf(oldText);
+        }
+        return text;
+    }
 }
