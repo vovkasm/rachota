@@ -188,6 +188,12 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
 
         txtDate.setEditable(false);
         txtDate.setDoubleBuffered(true);
+        txtDate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtDateMouseClicked(evt);
+            }
+        });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -456,6 +462,22 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
 
     }
     // </editor-fold>//GEN-END:initComponents
+
+    /** Method called when date textfield is clicked.
+     * @param evt Event that invoked the action.
+     */
+    private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
+        if (day.isModified()) Plan.getDefault().addDay(day);
+        ChangeHandler.getDefault().removeChangeEventListener(this, day);
+        day = Plan.getDefault().getDay(new Date());
+        Plan.getDefault().addRegularTasks(day);
+        ChangeHandler.getDefault().addChangeEventListener(this, day);
+        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+        dayTableModel.setDay(day);
+        updateInformation(ChangeListener.GENERIC_CHANGE);
+        // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
+        checkButtons();
+    }//GEN-LAST:event_txtDateMouseClicked
     
     /** Method called when remove button is pressed.
      * @param evt Event that invoked the action.
