@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.jar.JarFile;
+import org.cesilko.rachota.gui.Tools;
 
 /** Translator class providing localization.
  *
@@ -63,7 +64,7 @@ public class Translator {
         if (dictionary == null) findDictionary();
         try {
             String translation = dictionary.getString(word);
-            if (removeAnds) translation = translation.replace("&", "");
+            if (removeAnds) translation = Tools.replaceAll(translation, "&", "");
             return translation;
         } catch (Exception e) {
             System.out.println("Error: Reading translation of " + word + " word failed.");
@@ -89,7 +90,7 @@ public class Translator {
         String translation = getTranslation(word, true);
         int count = substitutions.length;
         for (int i=0; i<count; i++)
-            translation = translation.replace("${" + i + "}", substitutions[i]);
+            translation = Tools.replaceAll(translation, "${" + i + "}", substitutions[i]);
         return translation;
     }
     
@@ -105,5 +106,4 @@ public class Translator {
        int index = translation.indexOf("&");
        return (index == -1) ? 32 : translation.charAt(index + 1);
     }
-    
 }

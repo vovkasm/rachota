@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import org.cesilko.rachota.gui.Tools;
 
 /** Persistent settings of the system.
  *
@@ -45,14 +46,13 @@ public class Settings {
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
+        int index = System.getProperty("os.name").indexOf("Windows") != -1 ? 1 : 0;
+        if (index == 1) userDir = Tools.replaceAll(userDir, "/", "\\");
         if (userDir.indexOf(".jar!") == -1) {
-            int index = System.getProperty("os.name").indexOf("Windows") != -1 ? 1 : 0;
             userDir = userDir.substring(index, userDir.indexOf("Settings.class"));
         } else { //  file:/home/jk110465/Projects/Rachota/dist/Rachota.jar!/org/cesilko/rachota/core/
-            int index = System.getProperty("os.name").indexOf("Windows") != -1 ? 1 : 0;
             userDir = userDir.substring(userDir.indexOf(":") + 1, userDir.indexOf(".jar!"));
-            userDir = userDir.substring(index, userDir.lastIndexOf("/"));
-            if (index == 1) userDir = userDir.replace("/", "\\");
+            userDir = userDir.substring(index, userDir.lastIndexOf("\\"));
         }
         settingsMap.put("userDir", userDir);
     }
