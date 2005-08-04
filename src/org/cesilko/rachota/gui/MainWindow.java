@@ -272,7 +272,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
     /** Name and version of application. */
     private static String title = "Rachota 2.0";
     /** Build number. */
-    private static String build = "#050729";
+    private static String build = "#050804";
     
     /** Given object fired a change event.
      * @param object Object that was changed.
