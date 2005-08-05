@@ -49,7 +49,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
             System.out.println("      <diary_folder> is directory with settings and diary files e.g. C:\\Rachota");
             System.out.println("      <language_id> is Java language code e.g. cs or en");
             System.out.println("      <country_id> is Java country code e.g. CZ, GB or US");
-            System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/.rachota");
+            System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
         Settings.loadSettings();
         new MainWindow().setVisible(true);
@@ -270,9 +270,9 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
     // End of variables declaration//GEN-END:variables
     
     /** Name and version of application. */
-    private static String title = "Rachota 2.0";
+    private static String title = "Rachota 2.0 Beta";
     /** Build number. */
-    private static String build = "#050804";
+    private static String build = "#050805";
     
     /** Given object fired a change event.
      * @param object Object that was changed.

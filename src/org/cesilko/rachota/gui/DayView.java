@@ -187,6 +187,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         add(lblDate, gridBagConstraints);
 
         txtDate.setEditable(false);
+        txtDate.setToolTipText(Translator.getTranslation("DAYVIEW.TXT_DATE_TOOLTIP"));
         txtDate.setDoubleBuffered(true);
         txtDate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -462,7 +463,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
 
     }
     // </editor-fold>//GEN-END:initComponents
-
+    
     /** Method called when date textfield is clicked.
      * @param evt Event that invoked the action.
      */
