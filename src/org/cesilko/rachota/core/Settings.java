@@ -52,7 +52,7 @@ public class Settings {
             userDir = userDir.substring(index, userDir.indexOf("Settings.class"));
         } else { //  file:/home/jk110465/Projects/Rachota/dist/Rachota.jar!/org/cesilko/rachota/core/
             userDir = userDir.substring(userDir.indexOf(":") + 1, userDir.indexOf(".jar!"));
-            userDir = userDir.substring(index, userDir.lastIndexOf("\\"));
+            userDir = userDir.substring(index, userDir.lastIndexOf((index == 1) ? "\\" : "/"));
         }
         settingsMap.put("userDir", userDir);
     }
