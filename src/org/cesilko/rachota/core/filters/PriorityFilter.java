@@ -17,14 +17,54 @@ import org.cesilko.rachota.core.Translator;
  */
 public class PriorityFilter extends AbstractTaskFilter {
     
-    /** Creates new priority filter. Filter accepts only RULE_EQUALS, RULE_LESS_THAN
-     * and RULE_MORE_THAN content rules. Other rules will cause that tasks will not
-     * be filtered at all.
+    /** Rule requiring given content to be equal to task property. */
+    public static final int RULE_EQUALS = 0;
+    /** Rule requiring given content NOT to be greater than task property. */
+    public static final int RULE_EQUALS_NOT = 1;
+    
+    /** Creates new priority filter. Filter accepts only RULE_EQUALS and RULE_EQUALS_NOT
+     * content rules. Other rules will cause that tasks will not be filtered at all.
      * @param contentRule One of three content rules determining allowed value of task priority.
      * @param priority Priority level that must be equal/greater/smaller than task priority.
      */
     public PriorityFilter(int contentRule, Integer priority) {
-        super(Translator.getTranslation("TASK_PRIORITY"), contentRule, priority);
+        super(contentRule, priority.toString());
+    }
+    
+    /** Creates new default priority filter which is preset to RULE_EQUALS
+     * content rule and Task.PRIORITY_LOW.
+     */
+    public PriorityFilter() {
+        this(RULE_EQUALS, new Integer(Task.PRIORITY_LOW));
+    }
+    
+    /** Returns all three available content rules of priority filter.
+     * @return RULE_EQUALS and RULE_EQUALS_NOT content rules.
+     */
+    public Vector getContentRules() {
+        Vector contentRules = new Vector();
+        contentRules.add(Translator.getTranslation("FILTER.RULE_EQUALS"));
+        contentRules.add(Translator.getTranslation("FILTER.RULE_EQUALS_NOT"));
+        return contentRules;
+    }
+    
+    /** Returns all available content values of priority filter.
+     * @return All content values of priority filter.
+     */
+    public Vector getContentValues() {
+        Vector contentValues = new Vector();
+        contentValues.add(Translator.getTranslation("TASK_PRIORITY_0"));
+        contentValues.add(Translator.getTranslation("TASK_PRIORITY_1"));
+        contentValues.add(Translator.getTranslation("TASK_PRIORITY_2"));
+        return contentValues;
+    }
+    
+    /** Returns required priority value of task.
+     * @return Required priority value of task.
+     */
+    public String getContent() {
+        int index = Integer.parseInt(super.getContent());
+        return (String) getContentValues().get(index);
     }
     
     /** Applies priority filter on given tasks and returns those tasks
@@ -34,9 +74,8 @@ public class PriorityFilter extends AbstractTaskFilter {
      */
     public Vector filterTasks(Vector tasks) {
         Vector filteredTasks = (Vector) tasks.clone();
-        Iterator iterator = filteredTasks.iterator();
-        Integer priority = (Integer) getContent();
-        int requiredPriority = priority.intValue();
+        Iterator iterator = tasks.iterator();
+        int requiredPriority = getContentValues().indexOf(getContent());
         int contentRule = getContentRule();
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
@@ -44,16 +83,20 @@ public class PriorityFilter extends AbstractTaskFilter {
                 case RULE_EQUALS:
                     if (task.getPriority() != requiredPriority) filteredTasks.remove(task);
                     break;
-                case RULE_LESS_THAN:
-                    if (task.getPriority() > requiredPriority) filteredTasks.remove(task);
-                    break;
-                case RULE_MORE_THAN:
-                    if (task.getPriority() < requiredPriority) filteredTasks.remove(task);
+                case RULE_EQUALS_NOT:
+                    if (task.getPriority() == requiredPriority) filteredTasks.remove(task);
                     break;
                 default:
-                    System.out.println("Error: Task priority can't be filtered by content rule: " + getContentRule(contentRule));
+                    System.out.println("Error: Task priority can't be filtered by content rule: " + getContentRules().get(contentRule));
             }
         }
         return filteredTasks;
+    }
+    
+    /** Returns name of filter as text.
+     * @return Name of filter as text.
+     */
+    public String toString() {
+        return Translator.getTranslation("TASK_PRIORITY");
     }
 }
