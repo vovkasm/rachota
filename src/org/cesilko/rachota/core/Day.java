@@ -8,6 +8,7 @@ package org.cesilko.rachota.core;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -260,5 +261,14 @@ public class Day implements ChangeListener {
         }
         writer.write("    </day>");
         writer.newLine();
+    }
+    
+    /** Returns textual representation of day's date e.g. 11/25 or 25.11.
+     * @return Tex representation of days' date.
+     */
+    public String toString() {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        String text = df.format(date);
+        return text.substring(0, text.length() - 3);
     }
 }
