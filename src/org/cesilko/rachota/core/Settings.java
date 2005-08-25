@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.Tools;
 
@@ -43,6 +44,7 @@ public class Settings {
         settingsMap.put("checkPriority", new Boolean(true));
         settingsMap.put("displayFinishedTasks", new Boolean(false));
         settingsMap.put("runningTask", null);
+        settingsMap.put("dictionary", "Dictionary_" + Locale.getDefault().getLanguage() + "_" + Locale.getDefault().getCountry() + ".properties");
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
