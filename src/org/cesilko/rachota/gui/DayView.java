@@ -32,14 +32,12 @@ import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
-/**
- * Panel showing tasks planned for one day and manipulation with them.
+/** Panel showing tasks planned for one day and manipulation with them.
  * @author Jiri Kovalsky
  */
 public class DayView extends javax.swing.JPanel implements ChangeListener, ClockListener {
     
-    /**
-     * Creates new DayView panel containing tasks planned for given day.
+    /** Creates new DayView panel containing tasks planned for given day.
      */
     public DayView() {
         day = Plan.getDefault().getDay(new Date());
@@ -122,6 +120,9 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
             if (name.equals(Translator.getTranslation("TASK_STATE")))
                 tableColumn.setPreferredWidth(100);
         }
+        tbPlan.getTableHeader().setForeground(java.awt.Color.BLUE);
+        tbPlan.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
+        tbPlan.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
     }
     
     /** This method is called from within the constructor to
@@ -187,6 +188,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         add(lblDate, gridBagConstraints);
 
         txtDate.setEditable(false);
+        txtDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDate.setToolTipText(Translator.getTranslation("DAYVIEW.TXT_DATE_TOOLTIP"));
         txtDate.setDoubleBuffered(true);
         txtDate.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -570,16 +572,14 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         checkButtons();
     }//GEN-LAST:event_btPreviousActionPerformed
     
-    /**
-     * Method called when any key is released while table of planned tasks has focus.
+    /** Method called when any key is released while table of planned tasks has focus.
      * @param evt Event that invoked this method call.
      */
     private void tbPlanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbPlanKeyReleased
         checkButtons();
     }//GEN-LAST:event_tbPlanKeyReleased
     
-    /**
-     * Method called when Done button is pressed.
+    /** Method called when Done button is pressed.
      * @param evt Event that invoked this action.
      */
     private void btDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDoneActionPerformed
@@ -600,8 +600,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         checkButtons();
     }//GEN-LAST:event_btDoneActionPerformed
     
-    /**
-     * Method called when Relax button is pressed.
+    /** Method called when Relax button is pressed.
      * @param evt Event that invoked this action.
      */
     private void btRelaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRelaxActionPerformed
@@ -613,8 +612,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         checkButtons();
     }//GEN-LAST:event_btRelaxActionPerformed
     
-    /**
-     * Method called when Work button is pressed.
+    /** Method called when Work button is pressed.
      * @param evt Event that invoked this action.
      */
     private void btWorkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkActionPerformed
@@ -624,8 +622,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         checkButtons();
     }//GEN-LAST:event_btWorkActionPerformed
     
-    /**
-     * Method called when user clicks to table with tasks plan.
+    /** Method called when user clicks to table with tasks plan.
      * @param evt Event that invoked this action.
      */
     private void tbPlanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPlanMouseClicked
@@ -744,8 +741,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
     }
     
-    /**
-     * Check availability of buttons according to current state of view.
+    /** Check availability of buttons according to current state of view.
      */
     private void checkButtons() {
         boolean today = Plan.getDefault().isToday(day);
