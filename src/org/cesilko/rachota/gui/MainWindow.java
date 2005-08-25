@@ -6,6 +6,7 @@
 
 package org.cesilko.rachota.gui;
 import java.io.File;
+import java.text.DateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.ChangeHandler;
@@ -16,8 +17,7 @@ import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
-/**
- * Main window of the Rachota application.
+/** Main window of the Rachota application.
  * @author Jiri Kovalsky
  */
 public class MainWindow extends javax.swing.JFrame implements ChangeListener {
@@ -42,7 +42,8 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
         }
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println(">> " + title + " << (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
-        System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + new Date());
+        System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
+        System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
         System.out.println("   " + Translator.getTranslation("INFORMATION.USERDIR") + ": " + Settings.getDefault().getSetting("userDir"));
         if (printHelp) {
             System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar Rachota.jar [-userdir=<diary_folder>] where:");
@@ -65,8 +66,10 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
         if (moveUnfinishedTasks.booleanValue()) Plan.getDefault().copyUnfinishedTasks();
         initComponents();
         DayView dayView = new DayView();
-        tpViews.add(dayView);
+        tpViews.add(dayView, TAB_DAY_VIEW);
         ChangeHandler.getDefault().addChangeEventListener(this, dayView);
+        HistoryView historyView = new HistoryView();
+        tpViews.add(historyView, TAB_HISTORY_VIEW);
         pack();
         setTitle(title + " " + dayView.getTitleSuffix());
         setLocationRelativeTo(null);
@@ -191,7 +194,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
      * @param evt Event that invoked the action.
      */
     private void mnMoveTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnMoveTimeActionPerformed
-        DayView dayView = (DayView) tpViews.getComponentAt(0);
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         dayView.moveTime();
     }//GEN-LAST:event_mnMoveTimeActionPerformed
     
@@ -199,7 +202,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
      * @param evt Event that invoked the action.
      */
     private void mnCopyTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCopyTaskActionPerformed
-        DayView dayView = (DayView) tpViews.getComponentAt(0);
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         dayView.copyTask();
     }//GEN-LAST:event_mnCopyTaskActionPerformed
     
@@ -207,7 +210,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
      * @param evt Event that invoked the action.
      */
     private void mnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSettingsActionPerformed
-        DayView dayView = (DayView) tpViews.getComponentAt(0);
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         ChangeHandler.getDefault().addChangeEventListener(dayView, Settings.getDefault());
         new SettingsDialog(this).setVisible(true);
     }//GEN-LAST:event_mnSettingsActionPerformed
@@ -270,16 +273,20 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
     // End of variables declaration//GEN-END:variables
     
     /** Name and version of application. */
-    private static String title = "Rachota 2.0 Beta";
+    private static final String title = "Rachota 2.0 RC";
     /** Build number. */
-    private static String build = "#050805";
+    private static final String build = "#050825";
+    /** Index of day view tab. */
+    private static final int TAB_DAY_VIEW = 0;
+    /** Index of history view tab. */
+    private static final int TAB_HISTORY_VIEW = 1;
     
     /** Given object fired a change event.
      * @param object Object that was changed.
      * @param changeType Type of change.
      */
     public void eventFired(Object object, int changeType) {
-        DayView dayView = (DayView) tpViews.getComponentAt(0);
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         setTitle(title + " " + dayView.getTitleSuffix());
     }
 }
