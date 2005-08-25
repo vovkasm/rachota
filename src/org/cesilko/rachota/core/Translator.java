@@ -9,7 +9,6 @@ package org.cesilko.rachota.core;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.jar.JarFile;
 import org.cesilko.rachota.gui.Tools;
@@ -20,21 +19,15 @@ import org.cesilko.rachota.gui.Tools;
  */
 public class Translator {
     
-    /**
-     * Resource bundle representing appropriate dictionary of translations.
-     */
+    /** Resource bundle representing appropriate dictionary of translations. */
     private static PropertyResourceBundle dictionary;
     
-    /**
-     * Finds appropriate dictionary based on set country and language locales.
+    /** Finds appropriate dictionary based on set country and language locales.
      */
     private static void findDictionary() {
         java.net.URL url = Translator.class.getResource("Translator.class");
         String location = url.getFile();
-        String dictionaryName = "Dictionary_" + Locale.getDefault().getLanguage();
-        dictionaryName = dictionaryName + "_";
-        dictionaryName = dictionaryName + Locale.getDefault().getCountry();
-        dictionaryName = dictionaryName + ".properties";
+        String dictionaryName = (String) Settings.getDefault().getSetting("dictionary");
         
         InputStream inputStream;
         try {
@@ -102,8 +95,8 @@ public class Translator {
      * the translated word.
      */
     public static char getMnemonic(String word) {
-       String translation = getTranslation(word, false);
-       int index = translation.indexOf("&");
-       return (index == -1) ? 32 : translation.charAt(index + 1);
+        String translation = getTranslation(word, false);
+        int index = translation.indexOf("&");
+        return (index == -1) ? 32 : translation.charAt(index + 1);
     }
 }
