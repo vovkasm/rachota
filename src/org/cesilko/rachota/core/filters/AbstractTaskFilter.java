@@ -7,7 +7,7 @@
 package org.cesilko.rachota.core.filters;
 
 import java.util.Vector;
-import org.cesilko.rachota.core.Translator;
+
 
 /** Abstract task filter forwarding all provided tasks.
  * Can't be instantiated because of its empty implementation.
@@ -15,30 +15,17 @@ import org.cesilko.rachota.core.Translator;
  */
 public abstract class AbstractTaskFilter {
     
-    /** Localized name of filter. */
-    private String filterName;
     /** One of content rules determining allowed content. */
     private int contentRule;
     /** Content that must comply with content rule. */
-    private Object content;
-    /** Rule requiring given content to be part of task property. */
-    public static final int RULE_CONTAINS = 0;
-    /** Rule requiring given content not to be part of task property. */
-    public static final int RULE_CONTAINS_NOT = 1;
-    /** Rule requiring given content NOT to be greater than task property. */
-    public static final int RULE_MORE_THAN = 2;
-    /** Rule requiring given content NOT to be smaller than task property. */
-    public static final int RULE_LESS_THAN = 3;
-    /** Rule requiring given content be same as task property. */
-    public static final int RULE_EQUALS = 4;
+    private String content;
     
-    /** Default filter constructor.
-     * @param filterName Localized name of filter.
+    /**
+     * Default filter constructor.
      * @param contentRule One of content rules determining allowed content.
      * @param content Required content that must comply with content rule.
      */
-    public AbstractTaskFilter(String filterName, int contentRule, Object content) {
-        this.filterName = filterName;
+    public AbstractTaskFilter(int contentRule, String content) {
         setContentRule(contentRule);
         setContent(content);
     }
@@ -50,27 +37,11 @@ public abstract class AbstractTaskFilter {
         this.contentRule = contentRule;
     }
     
-    /**
-     * Sets required content of appropriate task property.
+    /** Sets required content of appropriate task property.
      * @param content New required content of appropriate task property.
      */
-    public void setContent(Object content) {
+    public void setContent(String content) {
         this.content = content;
-    }
-    
-    /** Returns localized name of filter.
-     * @return Localized name of filter.
-     */
-    public String getFilterName() {
-        return filterName;
-    }
-    
-    /** Returns content rule of filter as localized string.
-     * @param contentRule Content rule of filter.
-     * @return Content rule of filter as localized string.
-     */
-    public static String getContentRule(int contentRule) {
-        return Translator.getTranslation("FILTER.CONTENT_RULE_" + contentRule);
     }
     
     /** Returns content rule of filter.
@@ -80,11 +51,25 @@ public abstract class AbstractTaskFilter {
         return contentRule;
     }
     
+    /** Returns all available content rules of filter.
+     * @return All content rules of filter.
+     */
+    public Vector getContentRules() {
+        return null;
+    }
+    
     /** Returns required content of appropriate task property.
      * @return Required content of appropriate task property.
      */
-    public Object getContent() {
+    public String getContent() {
         return content;
+    }
+    
+    /** Returns all available content values of filter.
+     * @return All content values of filter.
+     */
+    public Vector getContentValues() {
+        return null;
     }
     
     /** Applies filter on given tasks and returns those tasks
@@ -94,5 +79,12 @@ public abstract class AbstractTaskFilter {
      */
     public Vector filterTasks(Vector tasks) {
         return tasks;
+    }
+    
+    /** Returns name of filter as text.
+     * @return Name of filter as text.
+     */
+    public String toString() {
+        return null;
     }
 }

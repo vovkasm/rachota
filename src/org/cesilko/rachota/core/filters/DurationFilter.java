@@ -10,12 +10,18 @@ import java.util.Iterator;
 import java.util.Vector;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
+import org.cesilko.rachota.gui.Tools;
 
 /** Task filter allowing to filter tasks by duration.
  *
  * @author Jiri Kovalsky
  */
 public class DurationFilter extends AbstractTaskFilter {
+    
+    /** Rule requiring given content NOT to be greater than task property. */
+    public static final int RULE_MORE_THAN = 0;
+    /** Rule requiring given content NOT to be smaller than task property. */
+    public static final int RULE_LESS_THAN = 1;
     
     /** Creates new duration filter. Filter accepts only RULE_LESS_THAN and
      * RULE_MORE_THAN content rules. Other rules will cause that tasks will not
@@ -24,7 +30,24 @@ public class DurationFilter extends AbstractTaskFilter {
      * @param duration Time duration in millisecondss that must be greater/smaller than task duration.
      */
     public DurationFilter(int contentRule, Long duration) {
-        super(Translator.getTranslation("TASK_DURATION"), contentRule, duration);
+        super(contentRule, Tools.getTime(duration.longValue()));
+    }
+    
+    /** Creates new default duration filter which is preset to RULE_MORE_THAN
+     * content rule and zero duration.
+     */
+    public DurationFilter() {
+        this(RULE_MORE_THAN, new Long(0));
+    }
+    
+    /** Returns both available content rules of duration filter.
+     * @return RULE_LESS_THAN and RULE_MORE_THAN content rules.
+     */
+    public Vector getContentRules() {
+        Vector contentRules = new Vector();
+        contentRules.add(Translator.getTranslation("FILTER.RULE_LESS_THAN"));
+        contentRules.add(Translator.getTranslation("FILTER.RULE_MORE_THAN"));
+        return contentRules;
     }
     
     /** Applies duration filter on given tasks and returns those tasks
@@ -34,24 +57,30 @@ public class DurationFilter extends AbstractTaskFilter {
      */
     public Vector filterTasks(Vector tasks) {
         Vector filteredTasks = (Vector) tasks.clone();
-        Iterator iterator = filteredTasks.iterator();
-        Long duration = (Long) getContent();
-        long requiredDuration = duration.longValue();
+        Iterator iterator = tasks.iterator();
+        long requiredDuration = Tools.getTime(getContent());
         int contentRule = getContentRule();
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
             boolean taskLonger = task.getDuration() > requiredDuration;
             switch (contentRule) {
                 case RULE_LESS_THAN:
-                    if (taskLonger) filteredTasks.remove(task);
-                    break;
-                case RULE_MORE_THAN:
                     if (!taskLonger) filteredTasks.remove(task);
                     break;
+                case RULE_MORE_THAN:
+                    if (taskLonger) filteredTasks.remove(task);
+                    break;
                 default:
-                    System.out.println("Error: Task duration can't be filtered by content rule: " + getContentRule(contentRule));
+                    System.out.println("Error: Task duration can't be filtered by content rule: " + getContentRules().get(contentRule));
             }
         }
         return filteredTasks;
+    }
+    
+    /** Returns name of filter as text.
+     * @return Name of filter as text.
+     */
+    public String toString() {
+        return Translator.getTranslation("TASK_DURATION");
     }
 }

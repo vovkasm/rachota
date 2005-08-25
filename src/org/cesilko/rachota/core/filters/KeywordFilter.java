@@ -17,6 +17,11 @@ import org.cesilko.rachota.core.Translator;
  */
 public class KeywordFilter extends AbstractTaskFilter {
     
+    /** Rule requiring given content to be part of task property. */
+    public static final int RULE_CONTAINS = 0;
+    /** Rule requiring given content not to be part of task property. */
+    public static final int RULE_CONTAINS_NOT = 1;
+    
     /** Creates new keyword filter. Filter accepts only RULE_CONTAINS and
      * RULE_CONTAINS_NOT content rules. Other rules will cause that tasks will not
      * be filtered at all.
@@ -24,7 +29,24 @@ public class KeywordFilter extends AbstractTaskFilter {
      * @param subString Text that must/mustn't be present in task keyword.
      */
     public KeywordFilter(int contentRule, String subString) {
-        super(Translator.getTranslation("TASK_KEYWORD"), contentRule, subString);
+        super(contentRule, subString);
+    }
+    
+    /** Creates new default keyword filter which is preset to RULE_CONTAINS
+     * content rule and no text.
+     */
+    public KeywordFilter() {
+        this(RULE_CONTAINS, "");
+    }
+    
+    /** Returns both available content rules of keyword filter.
+     * @return RULE_CONTAINS and RULE_CONTAINS_NOT content rules.
+     */
+    public Vector getContentRules() {
+        Vector contentRules = new Vector();
+        contentRules.add(Translator.getTranslation("FILTER.RULE_CONTAINS"));
+        contentRules.add(Translator.getTranslation("FILTER.RULE_CONTAINS_NOT"));
+        return contentRules;
     }
     
     /** Applies keyword filter on given tasks and returns those tasks
@@ -34,7 +56,7 @@ public class KeywordFilter extends AbstractTaskFilter {
      */
     public Vector filterTasks(Vector tasks) {
         Vector filteredTasks = (Vector) tasks.clone();
-        Iterator iterator = filteredTasks.iterator();
+        Iterator iterator = tasks.iterator();
         String subString = (String) getContent();
         int contentRule = getContentRule();
         while (iterator.hasNext()) {
@@ -48,9 +70,16 @@ public class KeywordFilter extends AbstractTaskFilter {
                     if (containsSubString) filteredTasks.remove(task);
                     break;
                 default:
-                    System.out.println("Error: Task keyword can't be filtered by content rule: " + getContentRule(contentRule));
+                    System.out.println("Error: Task keyword can't be filtered by content rule: " + getContentRules().get(contentRule));
             }
         }
         return filteredTasks;
+    }
+    
+    /** Returns name of filter as text.
+     * @return Name of filter as text.
+     */
+    public String toString() {
+        return Translator.getTranslation("TASK_KEYWORD");
     }
 }
