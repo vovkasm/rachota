@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.xml.sax.SAXParseException;
 
 
 /**
@@ -29,17 +30,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
  */
 public class Plan {
     
-    /**
-     * All days planned for the future or when any worked happened in the past.
-     */
+    /** All days planned for the future or when any worked happened in the past. */
     private Hashtable days;
-    /**
-     * Set of all regular tasks planned for the future.
-     */
+    /** Set of all regular tasks planned for the future. */
     private Vector regularTasks;
-    /**
-     * The only instance of Plan object in the system.
-     */
+    /** The only instance of Plan object in the system. */
     private static Plan plan;
     
     /** Creates a new instance of plan */
@@ -110,7 +105,7 @@ public class Plan {
      * @param calendar Calendar preset to some day.
      * @return Identification of day e.g. "2005_2_17"
      **/
-    private String getDayID(Calendar calendar) {
+    public String getDayID(Calendar calendar) {
         String ID = "" + calendar.get(Calendar.YEAR);
         ID = ID + "_" + calendar.get(Calendar.MONTH);
         ID = ID + "_" + calendar.get(Calendar.DATE);
@@ -182,7 +177,7 @@ public class Plan {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.WEEK_OF_YEAR, savedWeek);
         Date savedDate = calendar.getTime();
-        int maxWeek = 52;
+        int maxWeek = calendar.getMaximum(Calendar.WEEK_OF_YEAR);
         Iterator iterator = days.values().iterator();
         while (iterator.hasNext()) {
             Day day = (Day) iterator.next();
@@ -194,7 +189,7 @@ public class Plan {
                     maxWeek = week;
             }
         }
-        if (maxWeek == 52) maxWeek = -1;
+        if (maxWeek == calendar.getMaximum(Calendar.WEEK_OF_YEAR)) maxWeek = -1;
         return maxWeek;
     }
     
@@ -253,10 +248,15 @@ public class Plan {
         DiaryScanner.createDTD();
         ProgressMonitor pm = new ProgressMonitor(null, Translator.getTranslation("MESSAGE.PROGRESS"), null, 0,  diaries.length - 1);
         for (int i=0; i<diaries.length; i++) {
-            DiaryScanner scanner = new DiaryScanner(builder.parse(diaries[i]));
-            pm.setNote(diaries[i].getName());
-            scanner.loadDocument();
-            pm.setProgress(i);
+            try {
+                DiaryScanner scanner = scanner = new DiaryScanner(builder.parse(diaries[i]));
+                pm.setNote(diaries[i].getName());
+                scanner.loadDocument();
+                pm.setProgress(i);
+            } catch (SAXParseException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.READ_ERROR", new String[] {diaries[i].getName()}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     
