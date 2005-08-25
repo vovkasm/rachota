@@ -17,71 +17,39 @@ import org.cesilko.rachota.gui.Tools;
  */
 public class Task implements ClockListener {
     
-    /**
-     * Short description of task.
-     */
+    /** Short description of task. */
     private String description;
-    /**
-     * Categories of task.
-     */
+    /** Categories of task. */
     private String keyword;
-    /**
-     * Long description of task.
-     */
+    /** Long description of task. */
     private String notes;
-    /**
-     * Priority of task i.e. either High or Medium or Low.
-     */
+    /** Priority of task i.e. either High or Medium or Low. */
     private int priority;
-    /**
-     * State of task i.e. either New or Started or Done.
-     */
+    /** State of task i.e. either New or Started or Done. */
     private int state;
-    /**
-     * Total time in ms that was already spent on task.
-     */
+    /** Total time in ms that was already spent on task. */
     private long duration;
-    /**
-     * Time when system should warn about task.
-     */
+    /** Time when system should warn about task. */
     private Date notificationTime;
-    /**
-     * Whether system should switch to task automatically.
-     */
+    /** Whether system should switch to task automatically. */
     private boolean automaticStart;
-    /**
-     * Time checkpoint used for exact calculation of time to be added to duration.
-     */
+    /** Time checkpoint used for exact calculation of time to be added to duration. */
     private Date timeStamp;
-    /**
-     * Whether this task is private i.e. its duration should not be counted to whole day duration.
-     */
+    /** Whether this task is private i.e. its duration should not be counted to whole day duration. */
     private boolean privateTask;
     
-    /**
-     * State representing not started task.
-     */
+    /** State representing not started task. */
     public static int STATE_NEW = 0;
-    /**
-     * State representing already started task.
-     */
+    /** State representing already started task. */
     public static int STATE_STARTED = 1;
-    /**
-     * State representing already finished task.
-     */
+    /** State representing already finished task. */
     public static int STATE_DONE = 2;
     
-    /**
-     * High level of task priority.
-     */
+    /** High level of task priority. */
     public static int PRIORITY_HIGH = 0;
-    /**
-     * Medium level of task priority.
-     */
+    /** Medium level of task priority. */
     public static int PRIORITY_MEDIUM = 1;
-    /**
-     * Low level of task priority.
-     */
+    /** Low level of task priority. */
     public static int PRIORITY_LOW = 2;
     
     /**
@@ -273,14 +241,26 @@ public class Task implements ClockListener {
         writer.newLine();
         writer.write("            <priority>" + priority + "</priority>");
         writer.newLine();
-        writer.write("            <description>" + description + "</description>");
+        String data = Tools.replaceAll(description, "&", "&amp;");
+        data = Tools.replaceAll(data, "<", "&lt;");
+        data = Tools.replaceAll(data, ">", "&gt;");
+        data = Tools.replaceAll(data, "\"", "&quot;");
+        writer.write("            <description>" + data + "</description>");
         writer.newLine();
         if ((keyword != null) && (!keyword.equals(""))) {
-            writer.write("            <keyword>" + keyword + "</keyword>");
+            data = Tools.replaceAll(keyword, "&", "&amp;");
+            data = Tools.replaceAll(data, "<", "&lt;");
+            data = Tools.replaceAll(data, ">", "&gt;");
+            data = Tools.replaceAll(data, "\"", "&quot;");
+            writer.write("            <keyword>" + data + "</keyword>");
             writer.newLine();
         }
         if ((notes != null) && (!notes.equals(""))) {
-            writer.write("            <notes>" + notes + "</notes>");
+            data = Tools.replaceAll(notes, "&", "&amp;");
+            data = Tools.replaceAll(data, "<", "&lt;");
+            data = Tools.replaceAll(data, ">", "&gt;");
+            data = Tools.replaceAll(data, "\"", "&quot;");
+            writer.write("            <notes>" + data + "</notes>");
             writer.newLine();
         }
         if (notificationTime != null) {
