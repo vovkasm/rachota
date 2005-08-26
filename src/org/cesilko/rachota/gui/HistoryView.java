@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Translator;
@@ -28,9 +29,9 @@ public class HistoryView extends javax.swing.JPanel {
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_WEEK));
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_MONTH));
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_YEAR));
-        historyChart = new HistoryChart(getDays(), HistoryChart.TYPE_TOTAL);
+        historyChart = new HistoryChart(getDays(), null, HistoryChart.TYPE_TOTAL);
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -46,6 +47,12 @@ public class HistoryView extends javax.swing.JPanel {
         tbTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
         tbTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
         tbTasks.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
+        cmbFilterName.addItem(new DescriptionFilter().toString());
+        cmbFilterName.addItem(new KeywordFilter().toString());
+        cmbFilterName.addItem(new DurationFilter().toString());
+        cmbFilterName.addItem(new PriorityFilter().toString());
+        cmbFilterName.addItem(new StateFilter().toString());
+        setComponents();
     }
     
     /** This method is called from within the constructor to
@@ -70,6 +77,11 @@ public class HistoryView extends javax.swing.JPanel {
         lblChartType = new javax.swing.JLabel();
         rbTotal = new javax.swing.JRadioButton();
         rbFromTo = new javax.swing.JRadioButton();
+        chbHighlightTasks = new javax.swing.JCheckBox();
+        cmbFilterName = new javax.swing.JComboBox();
+        cmbContentRule = new javax.swing.JComboBox();
+        cmbContent = new javax.swing.JComboBox();
+        txtContent = new javax.swing.JTextField();
         pnTasks = new javax.swing.JPanel();
         lblFilters = new javax.swing.JLabel();
         spFilters = new javax.swing.JScrollPane();
@@ -171,23 +183,24 @@ public class HistoryView extends javax.swing.JPanel {
         pnTimes.setLayout(new java.awt.GridBagLayout());
 
         lblChartType.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_CHART_TYPE"));
+        lblChartType.setLabelFor(rbFromTo);
         lblChartType.setText(Translator.getTranslation("HISTORYVIEW.LBL_CHART_TYPE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(lblChartType, gridBagConstraints);
 
         rbTotal.setSelected(true);
         rbTotal.setText(Translator.getTranslation("HISTORYVIEW.TYPE_TOTAL"));
         rbTotal.setToolTipText(Translator.getTranslation("HISTORYVIEW.TYPE_TOTAL_TOOLTIP"));
-        rbTotal.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        rbTotal.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbTotalItemStateChanged(evt);
+        rbTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbTotalActionPerformed(evt);
             }
         });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -195,19 +208,95 @@ public class HistoryView extends javax.swing.JPanel {
 
         rbFromTo.setText(Translator.getTranslation("HISTORYVIEW.TYPE_FROM_TO"));
         rbFromTo.setToolTipText(Translator.getTranslation("HISTORYVIEW.TYPE_FROM_TO_TOOLTIP"));
-        rbFromTo.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        rbFromTo.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbFromToItemStateChanged(evt);
+        rbFromTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbFromToActionPerformed(evt);
             }
         });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
         pnTimes.add(rbFromTo, gridBagConstraints);
+
+        chbHighlightTasks.setMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_HIGHLIGHT_TASKS"));
+        chbHighlightTasks.setText(Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS"));
+        chbHighlightTasks.setToolTipText(Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS_TOOLTIP"));
+        chbHighlightTasks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chbHighlightTasksActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(chbHighlightTasks, gridBagConstraints);
+
+        cmbFilterName.setToolTipText(Translator.getTranslation("FILTERDIALOG.NAME_TOOLTIP"));
+        cmbFilterName.setEnabled(false);
+        cmbFilterName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbFilterNameItemStateChanged(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(cmbFilterName, gridBagConstraints);
+
+        cmbContentRule.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_RULE_TOOLTIP"));
+        cmbContentRule.setEnabled(false);
+        cmbContentRule.setPreferredSize(new java.awt.Dimension(100, 22));
+        cmbContentRule.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbContentRuleItemStateChanged(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(cmbContentRule, gridBagConstraints);
+
+        cmbContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
+        cmbContent.setEnabled(false);
+        cmbContent.setPreferredSize(new java.awt.Dimension(100, 22));
+        cmbContent.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbContentItemStateChanged(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(cmbContent, gridBagConstraints);
+
+        txtContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
+        txtContent.setEnabled(false);
+        txtContent.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtContentKeyTyped(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(txtContent, gridBagConstraints);
 
         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TIMES_TAB_NAME"), pnTimes);
 
@@ -357,8 +446,72 @@ public class HistoryView extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(tpViews, gridBagConstraints);
 
-    }
+       /**
+     * 
+     * @param evt 
+     */
+ }
     // </editor-fold>//GEN-END:initComponents
+    
+    /** Method called when highlight tasks checkbox is checked.
+     * @param evt Event that invoked the action.
+     */
+    private void chbHighlightTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbHighlightTasksActionPerformed
+        setComponents();
+        historyChart.setHighlightingFilter(getFilter());
+    }//GEN-LAST:event_chbHighlightTasksActionPerformed
+    
+    /** Method called when from/to chart type is required.
+     * @param evt Event that invoked the action.
+     */
+    private void rbFromToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbFromToActionPerformed
+        rbTotal.setSelected(false);
+        rbFromTo.setSelected(true);
+        chbHighlightTasks.setEnabled(false);
+        historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
+        setComponents();
+    }//GEN-LAST:event_rbFromToActionPerformed
+    
+    /** Method called when total times chart type is required.
+     * @param evt Event that invoked the action.
+     */
+    private void rbTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTotalActionPerformed
+        rbTotal.setSelected(true);
+        rbFromTo.setSelected(false);
+        chbHighlightTasks.setEnabled(true);
+        historyChart.setChartType(HistoryChart.TYPE_TOTAL);
+        setComponents();
+        historyChart.setHighlightingFilter(getFilter());
+    }//GEN-LAST:event_rbTotalActionPerformed
+    
+    /** Method called when any key is typed in content textfield.
+     * @param evt Event that invoked the action.
+     */
+    private void txtContentKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContentKeyTyped
+        if (evt.getKeyChar() == evt.VK_ENTER) historyChart.setHighlightingFilter(getFilter());
+    }//GEN-LAST:event_txtContentKeyTyped
+    
+    /** Method called when selection of content item has changed.
+     * @param evt Event that invoked the action.
+     */
+    private void cmbContentItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbContentItemStateChanged
+        historyChart.setHighlightingFilter(getFilter());
+    }//GEN-LAST:event_cmbContentItemStateChanged
+    
+    /** Method called when selection of content rule item has changed.
+     * @param evt Event that invoked the action.
+     */
+    private void cmbContentRuleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbContentRuleItemStateChanged
+        historyChart.setHighlightingFilter(getFilter());
+    }//GEN-LAST:event_cmbContentRuleItemStateChanged
+    
+    /** Method called when selection of filter item has changed.
+     * @param evt Event that invoked the action.
+     */
+    private void cmbFilterNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbFilterNameItemStateChanged
+        setComponents();
+        historyChart.setHighlightingFilter(getFilter());
+    }//GEN-LAST:event_cmbFilterNameItemStateChanged
     
     /** Method called when checkbox "Group tasks with same name" is un/checked.
      * @param evt Event that invoked this action.
@@ -408,24 +561,6 @@ public class HistoryView extends javax.swing.JPanel {
         checkButtons();
         filterTasks();
     }//GEN-LAST:event_btAddFilterActionPerformed
-    
-    /** Method called when from/to chart type is required.
-     * @param evt Event that invoked the action.
-     */
-    private void rbFromToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbFromToItemStateChanged
-        boolean selected = rbFromTo.isSelected();
-        rbTotal.setSelected(!selected);
-        historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
-    }//GEN-LAST:event_rbFromToItemStateChanged
-    
-    /** Method called when total times chart type is required.
-     * @param evt Event that invoked the action.
-     */
-    private void rbTotalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbTotalItemStateChanged
-        boolean selected = rbTotal.isSelected();
-        rbFromTo.setSelected(!selected);
-        historyChart.setChartType(HistoryChart.TYPE_TOTAL);
-    }//GEN-LAST:event_rbTotalItemStateChanged
     
     /** Method called when date textfield was clicked to select actual day/week/month/year.
      * @param evt Event that invoked the action.
@@ -512,6 +647,10 @@ public class HistoryView extends javax.swing.JPanel {
     private javax.swing.JButton btForward;
     private javax.swing.JButton btRemoveFilter;
     private javax.swing.JCheckBox chbGroupTasks;
+    private javax.swing.JCheckBox chbHighlightTasks;
+    private javax.swing.JComboBox cmbContent;
+    private javax.swing.JComboBox cmbContentRule;
+    private javax.swing.JComboBox cmbFilterName;
     private javax.swing.JComboBox cmbPeriod;
     private javax.swing.JLabel lblChartType;
     private javax.swing.JLabel lblFilters;
@@ -532,6 +671,7 @@ public class HistoryView extends javax.swing.JPanel {
     private javax.swing.JTable tbFilters;
     private javax.swing.JTable tbTasks;
     private javax.swing.JTabbedPane tpViews;
+    private javax.swing.JTextField txtContent;
     private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtTotalTime;
     // End of variables declaration//GEN-END:variables
@@ -667,5 +807,78 @@ public class HistoryView extends javax.swing.JPanel {
         FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
         filteredTasksTableModel.setTasks(filteredTasks);
         txtTotalTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+    }
+    
+    /** Sets content rules and values according to currently selected task filter.
+     */
+    private void setComponents() {
+        if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
+            cmbFilterName.setEnabled(false);
+            cmbContentRule.setEnabled(false);
+            txtContent.setEnabled(false);
+            cmbContent.setEnabled(false);
+            return;
+        }
+        cmbFilterName.setEnabled(true);
+        cmbContentRule.setEnabled(true);
+        AbstractTaskFilter taskFilter = getFilter();
+        Vector contentRules = taskFilter.getContentRules();
+        int length = contentRules.size();
+        cmbContentRule.removeAllItems();
+        for (int i=0; i<length; i++)
+            cmbContentRule.addItem(contentRules.get(i));
+        cmbContentRule.setSelectedIndex(0);
+        
+        Vector contentValues = taskFilter.getContentValues();
+        cmbContent.removeAllItems();
+        if (contentValues != null) {
+            length = contentValues.size();
+            for (int i=0; i<length; i++)
+                cmbContent.addItem(contentValues.get(i));
+            cmbContent.setSelectedIndex(0);
+        } else txtContent.setText("");
+        if (taskFilter instanceof DurationFilter) txtContent.setText(Tools.getTime(0));
+        cmbContent.setEnabled(contentValues != null);
+        txtContent.setEnabled(contentValues == null);
+    }
+    
+    /** Returns task filter object based on currently selected options.
+     * @return Task filter object based on currently selected options.
+     */
+    private AbstractTaskFilter getFilter() {
+        if (!chbHighlightTasks.isSelected()) return null;
+        String filterName = (String) cmbFilterName.getSelectedItem();
+        AbstractTaskFilter taskFilter = null;
+        if (new DescriptionFilter().toString().equals(filterName)) {
+            taskFilter = new DescriptionFilter();
+            taskFilter.setContent(txtContent.getText());
+        }
+        if (new KeywordFilter().toString().equals(filterName)) {
+            taskFilter = new KeywordFilter();
+            taskFilter.setContent(txtContent.getText());
+        }
+        if (new DurationFilter().toString().equals(filterName)) {
+            taskFilter = new DurationFilter();
+            taskFilter.setContent(Tools.getTime(0));
+            String content = txtContent.getText();
+            if (content.equals("")) content = Tools.getTime(0);
+            try {
+                if (content.length() != 8) throw new NumberFormatException("Error: invalid task duration specified: " + content);
+                taskFilter.setContent(Tools.getTime(Tools.getTime(content)));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.INVALID_DURATION"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        if (new PriorityFilter().toString().equals(filterName)) {
+            taskFilter = new PriorityFilter();
+            taskFilter.setContent("" + cmbContent.getSelectedIndex());
+        }
+        if (new StateFilter().toString().equals(filterName)) {
+            taskFilter = new StateFilter();
+            taskFilter.setContent("" + cmbContent.getSelectedIndex());
+        }
+        taskFilter.setContentRule(cmbContentRule.getSelectedIndex());
+        return taskFilter;
     }
 }
