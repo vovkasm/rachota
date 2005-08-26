@@ -15,7 +15,9 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Settings;
+import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
+import org.cesilko.rachota.core.filters.AbstractTaskFilter;
 
 /** Chart showing either from/to or total times in given
  * period scale.
@@ -25,6 +27,8 @@ public class HistoryChart extends JPanel {
     
     /** Days whose data should be drawn. */
     private Vector days;
+    /** Filter for highlighting tasks. */
+    private AbstractTaskFilter taskFilter;
     /** Type of history chart to be drawn. */
     private int chartType;
     /** Maximum value on Y axis. */
@@ -52,11 +56,13 @@ public class HistoryChart extends JPanel {
     
     /** Creates a new history chart.
      * @param days Days that should be used to draw history chart.
+     * @param taskFilter Filter for highlighting tasks when drawing chart.
      * @param chartType Type of history chart to be drawn.
      */
-    public HistoryChart(Vector days, int chartType) {
+    public HistoryChart(Vector days, AbstractTaskFilter taskFilter, int chartType) {
         super();
         setDays(days);
+        setHighlightingFilter(taskFilter);
         setChartType(chartType);
     }
     
@@ -65,6 +71,15 @@ public class HistoryChart extends JPanel {
      */
     public void setDays(Vector days) {
         this.days = days;
+        repaint();
+    }
+    
+    /** Sets task filter for highlighting tasks when drawing chart.
+     * @param taskFilter Filter that will be used to select tasks that
+     * will be highlighted when drawing total times chart.
+     */
+    public void setHighlightingFilter(AbstractTaskFilter taskFilter) {
+        this.taskFilter = taskFilter;
         repaint();
     }
     
@@ -189,6 +204,21 @@ public class HistoryChart extends JPanel {
                 if (columnHeight != 0) {
                     graphics.setColor(Color.LIGHT_GRAY);
                     graphics.fillRect(x, height - INSET_BOTTOM - columnHeight, (int) (xStep > 4 ? xStep - 3 : xStep), columnHeight);
+                    if (taskFilter != null) {
+                        Vector filteredTasks = taskFilter.filterTasks(day.getTasks());
+                        if (filteredTasks.size() != 0) {
+                            Iterator iterator = filteredTasks.iterator();
+                            long totalTime = 0;
+                            while (iterator.hasNext()) {
+                                Task task = (Task) iterator.next();
+                                if (!task.privateTask()) totalTime = totalTime + task.getDuration();
+                            }
+                            double filtered = totalTime / (double) (1000*60*60);
+                            int filteredTasksHeight = (int) ((height - INSET_BOTTOM - INSET_TOP) * (filtered / maxValueY));
+                            graphics.setColor(Color.CYAN);
+                            graphics.fillRect(x, height - INSET_BOTTOM - filteredTasksHeight, (int) (xStep > 4 ? xStep - 3 : xStep), filteredTasksHeight);
+                        }
+                    }
                     graphics.setColor(Color.DARK_GRAY);
                     graphics.drawRect(x, height - INSET_BOTTOM - columnHeight, (int) (xStep > 4 ? xStep - 3 : xStep), columnHeight);
                     String value = Tools.getTime(day.getTotalTime());
