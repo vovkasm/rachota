@@ -9,8 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Helper class providing support for time conversion between long, Date and String formats.
+/** Helper class providing support for time conversion between
+ * long, Date and String formats.
  * @author Jiri Kovalsky
  */
 public class Tools {
@@ -42,8 +42,7 @@ public class Tools {
         return df.format(time);
     }
     
-    /**
-     * Transforms text string to time in milliseconds.
+    /** Transforms text string to time in milliseconds.
      * @param text Textual representation of time in format hh:mm:ss.
      * @return Time in milliseconds.
      */
@@ -74,7 +73,7 @@ public class Tools {
         int index = text.indexOf(oldText);
         while (index != -1) {
             text = text.substring(0, index) + newText + text.substring(index + oldText.length());
-            index = text.indexOf(oldText);
+            index = text.indexOf(oldText, index + 1);
         }
         return text;
     }
