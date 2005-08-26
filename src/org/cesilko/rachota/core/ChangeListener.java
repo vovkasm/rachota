@@ -18,23 +18,15 @@ public interface ChangeListener {
      */
     public void eventFired(Object object, int changeType);
     
-    /**
-     * Generic type of change.
-     */
+    /** Generic type of change. */
     public static final int GENERIC_CHANGE = 0;
     
-    /**
-     * Task changed its duration. Usually fired every second by currently running task.
-     */
+    /** Task changed its duration. Usually fired every second by currently running task. */
     public static final int TASK_DURATION_CHANGED = 1;
     
-    /**
-     * New task was created and added to day.
-     */
+    /** New task was created and added to day. */
     public static final int TASK_CREATED = 2;
     
-    /**
-     * Existing task was changed. This event is fired by editing dialog not the task.
-     */
+    /** Existing task was changed. This event is fired by editing dialog not the task. */
     public static final int TASK_CHANGED = 3;
 }

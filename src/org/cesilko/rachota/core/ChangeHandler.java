@@ -16,19 +16,13 @@ import java.util.Vector;
  */
 public class ChangeHandler {
     
-    /**
-     * The only instance of ChangeHandler object in the system.
-     */
+    /** The only instance of ChangeHandler object in the system. */
     private static ChangeHandler ChangeHandler;
     
-    /**
-     * Table of all change event listeners in the system grouped by the changing objects.
-     */
+    /** Table of all change event listeners in the system grouped by the changing objects. */
     private Hashtable changeEventListeners;
     
-    /**
-     * Creates a new instance of ChangeHandler class.
-     */
+    /** Creates a new instance of ChangeHandler class. */
     private ChangeHandler() {
         changeEventListeners = new Hashtable();
     }
