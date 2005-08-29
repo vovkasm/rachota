@@ -22,21 +22,13 @@ import org.cesilko.rachota.gui.Tools;
  */
 public class Day implements ChangeListener {
     
-    /**
-     * Set of all (including regular kind) tasks planned for day.
-     */
+    /** Set of all (including regular kind) tasks planned for day. */
     private Vector tasks;
-    /**
-     * Calendar date representing day.
-     */
+    /** Calendar date representing day. */
     private Date date;
-    /**
-     * Time when the very first task was started.
-     */
+    /** Time when the very first task was started. */
     private Date startTime;
-    /**
-     * Time when the last task was worked on.
-     */
+    /** Time when the last task was worked on. */
     private Date finishTime;
     /**
      * Identification whether day was modified compared to its saved state.
@@ -208,11 +200,12 @@ public class Day implements ChangeListener {
      * @return Total time spent on tasks in milliseconds.
      */
     public long getTotalTime() {
+        Boolean countPrivateTasks = (Boolean) Settings.getDefault().getSetting("countPrivateTasks");
         Iterator iterator = tasks.iterator();
         long totalTime = 0;
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
-            if (!task.privateTask()) totalTime = totalTime + task.getDuration();
+            if (!task.privateTask() || countPrivateTasks.booleanValue()) totalTime = totalTime + task.getDuration();
         }
         return totalTime;
     }
