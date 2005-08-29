@@ -315,7 +315,8 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTasks.add(lblFilters, gridBagConstraints);
 
-        spFilters.setPreferredSize(new java.awt.Dimension(453, 100));
+        spFilters.setMinimumSize(new java.awt.Dimension(453, 80));
+        spFilters.setPreferredSize(new java.awt.Dimension(453, 80));
         tbFilters.setModel(new FiltersTableModel());
         tbFilters.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
