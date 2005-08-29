@@ -69,6 +69,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
         tpViews.add(dayView, TAB_DAY_VIEW);
         ChangeHandler.getDefault().addChangeEventListener(this, dayView);
         HistoryView historyView = new HistoryView();
+        ChangeHandler.getDefault().addChangeEventListener(historyView, dayView);
         tpViews.add(historyView, TAB_HISTORY_VIEW);
         pack();
         setTitle(title + " " + dayView.getTitleSuffix());
@@ -275,7 +276,7 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
     /** Name and version of application. */
     private static final String title = "Rachota 2.0 RC";
     /** Build number. */
-    private static final String build = "#050825";
+    private static final String build = "#050827";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
