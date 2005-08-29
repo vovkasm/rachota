@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Translator;
@@ -20,11 +22,13 @@ import org.cesilko.rachota.core.filters.*;
 /** Panel providing history view on tasks from the past.
  * @author Jiri Kovalsky
  */
-public class HistoryView extends javax.swing.JPanel {
+public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     
     /** Creates new HistoryView panel charts and table. */
     public HistoryView() {
         initComponents();
+        tbFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbTasks.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_DAY));
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_WEEK));
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_MONTH));
@@ -52,6 +56,7 @@ public class HistoryView extends javax.swing.JPanel {
         cmbFilterName.addItem(new DurationFilter().toString());
         cmbFilterName.addItem(new PriorityFilter().toString());
         cmbFilterName.addItem(new StateFilter().toString());
+        cmbFilterName.addItem(new PrivateFilter().toString());
         setComponents();
     }
     
@@ -324,7 +329,6 @@ public class HistoryView extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTasks.add(spFilters, gridBagConstraints);
 
@@ -446,14 +450,10 @@ public class HistoryView extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(tpViews, gridBagConstraints);
 
-       /**
-     * 
-     * @param evt 
-     */
- }
+    }
     // </editor-fold>//GEN-END:initComponents
     
-    /** Method called when highlight tasks checkbox is checked.
+    /** Method called when highlight tasks checkbox is un/checked.
      * @param evt Event that invoked the action.
      */
     private void chbHighlightTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbHighlightTasksActionPerformed
@@ -594,9 +594,8 @@ public class HistoryView extends javax.swing.JPanel {
                 txtDate.setText(sdf.format(period));
                 break;
         }
-        if (tpViews.getSelectedIndex() == VIEW_TIMES) {
-            if (historyChart != null) historyChart.setDays(getDays());
-        } else filterTasks();
+        if (historyChart != null) historyChart.setDays(getDays());
+        filterTasks();
     }//GEN-LAST:event_cmbPeriodItemStateChanged
     
     /** Method called when forward button was pressed.
@@ -623,8 +622,8 @@ public class HistoryView extends javax.swing.JPanel {
         int value = plus.intValue();
         if (value < 0) spPlus.setValue(previousPlus);
         else previousPlus = plus;
-        if (tpViews.getSelectedIndex() == VIEW_TIMES) historyChart.setDays(getDays());
-        else filterTasks();
+        historyChart.setDays(getDays());
+        filterTasks();
     }//GEN-LAST:event_spPlusStateChanged
     
     /** Method called when minus spinner was pressed.
@@ -635,8 +634,8 @@ public class HistoryView extends javax.swing.JPanel {
         int value = minus.intValue();
         if (value > 0) spMinus.setValue(previousMinus);
         else previousMinus = minus;
-        if (tpViews.getSelectedIndex() == VIEW_TIMES) historyChart.setDays(getDays());
-        else filterTasks();
+        historyChart.setDays(getDays());
+        filterTasks();
     }//GEN-LAST:event_spMinusStateChanged
     
     
@@ -676,10 +675,6 @@ public class HistoryView extends javax.swing.JPanel {
     private javax.swing.JTextField txtTotalTime;
     // End of variables declaration//GEN-END:variables
     
-    /** Index of times view tab. */
-    private static final int VIEW_TIMES = 0;
-    /** Index of tasks view tab. */
-    private static final int VIEW_TASKS = 1;
     /** Index of day time scale */
     private static final int SCALE_DAY = 0;
     /** Index of week time scale */
@@ -878,7 +873,20 @@ public class HistoryView extends javax.swing.JPanel {
             taskFilter = new StateFilter();
             taskFilter.setContent("" + cmbContent.getSelectedIndex());
         }
+        if (new PrivateFilter().toString().equals(filterName)) {
+            taskFilter = new PrivateFilter();
+            taskFilter.setContent(Boolean.toString(cmbContent.getSelectedIndex() == 0));
+        }
         taskFilter.setContentRule(cmbContentRule.getSelectedIndex());
         return taskFilter;
+    }
+    
+    /** Given object fired a change event.
+     * @param object Object that was changed.
+     * @param changeType Type of change.
+     */
+    public void eventFired(Object object, int changeType) {
+        historyChart.repaint();
+        filterTasks();
     }
 }
