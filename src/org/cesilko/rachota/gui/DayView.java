@@ -22,6 +22,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import org.cesilko.rachota.core.ChangeHandler;
 import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Clock;
@@ -46,6 +47,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         ChangeHandler.getDefault().addChangeEventListener(this, day);
         Clock.getDefault().addListener(this);
         initComponents();
+        tbPlan.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         Boolean displayFinishedTasks = (Boolean) Settings.getDefault().getSetting("displayFinishedTasks");
         chbShowFinished.setSelected(displayFinishedTasks.booleanValue());
         ImageIcon icon = new ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/table.png"));
