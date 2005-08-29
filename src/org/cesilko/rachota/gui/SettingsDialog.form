@@ -32,6 +32,7 @@
                 <EtchetBorder/>
               </Border>
               <Connection PropertyName="titleX" code="Translator.getTranslation(&quot;SETTINGSDIALOG.BORDER_GENERAL&quot;)" type="code"/>
+              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
               <Color PropertyName="color" blue="ff" green="0" red="0" type="rgb"/>
             </TitledBorder>
           </Border>
@@ -199,6 +200,24 @@
             </Constraint>
           </Constraints>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="chbCountPrivate">
+          <Properties>
+            <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_COUNT_PRIVATE&quot;)" type="code"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="Translator.getTranslation(&quot;SETTINGSDIALOG.CHB_COUNT_PRIVATE&quot;)" type="code"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="Translator.getTranslation(&quot;SETTINGSDIALOG.CHB_COUNT_PRIVATE_TOOLTIP&quot;)" type="code"/>
+            </Property>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="-1" gridY="6" gridWidth="3" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="5" insetsBottom="5" insetsRight="5" anchor="17" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="pnRegularTasks">
@@ -210,6 +229,7 @@
                 <EtchetBorder/>
               </Border>
               <Connection PropertyName="titleX" code="Translator.getTranslation(&quot;SETTINGSDIALOG.BORDER_REGULAR_TASKS&quot;)" type="code"/>
+              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
               <Color PropertyName="color" blue="ff" green="0" red="0" type="rgb"/>
             </TitledBorder>
           </Border>
