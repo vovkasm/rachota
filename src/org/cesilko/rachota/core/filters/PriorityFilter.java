@@ -24,8 +24,8 @@ public class PriorityFilter extends AbstractTaskFilter {
     
     /** Creates new priority filter. Filter accepts only RULE_EQUALS and RULE_EQUALS_NOT
      * content rules. Other rules will cause that tasks will not be filtered at all.
-     * @param contentRule One of three content rules determining allowed value of task priority.
-     * @param priority Priority level that must be equal/greater/smaller than task priority.
+     * @param contentRule One of two content rules determining allowed value of task priority.
+     * @param priority Priority level that must be equal/different than task priority.
      */
     public PriorityFilter(int contentRule, Integer priority) {
         super(contentRule, priority.toString());
@@ -38,7 +38,7 @@ public class PriorityFilter extends AbstractTaskFilter {
         this(RULE_EQUALS, new Integer(Task.PRIORITY_LOW));
     }
     
-    /** Returns all three available content rules of priority filter.
+    /** Returns both two available content rules of priority filter.
      * @return RULE_EQUALS and RULE_EQUALS_NOT content rules.
      */
     public Vector getContentRules() {

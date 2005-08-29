@@ -24,8 +24,8 @@ public class StateFilter extends AbstractTaskFilter {
     
     /** Creates new state filter. Filter accepts only RULE_EQUALS and RULE_EQUALS_NOT
      * content rules. Other rules will cause that tasks will not be filtered at all.
-     * @param contentRule One of three content rules determining allowed value of task state.
-     * @param state State level that must be equal/greater/smaller than task state.
+     * @param contentRule One of two content rules determining allowed value of task state.
+     * @param state State level that must be equal/different than task state.
      */
     public StateFilter(int contentRule, Integer state) {
         super(contentRule, state.toString());
@@ -38,7 +38,7 @@ public class StateFilter extends AbstractTaskFilter {
         this(RULE_EQUALS, new Integer(Task.STATE_NEW));
     }
     
-    /** Returns all three available content rules of state filter.
+    /** Returns both two available content rules of state filter.
      * @return RULE_EQUALS and RULE_EQUALS_NOT content rules.
      */
     public Vector getContentRules() {
