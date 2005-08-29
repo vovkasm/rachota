@@ -13,7 +13,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.Tools;
 
@@ -23,12 +25,9 @@ import org.cesilko.rachota.gui.Tools;
  */
 public class Settings {
     
-    /**
-     * The only instance of Settings object in the system.
-     */
+    /** The only instance of Settings object in the system. */
     private static Settings settings;
-    /**
-     * Map containing all settings. Key is setting name e.g. "displayFinishedTasks"
+    /** Map containing all settings. Key is setting name e.g. "displayFinishedTasks"
      * and value holds the setting value e.g. "true".
      */
     private HashMap settingsMap;
@@ -43,6 +42,7 @@ public class Settings {
         settingsMap.put("archiveNotStarted", new Boolean(false));
         settingsMap.put("checkPriority", new Boolean(true));
         settingsMap.put("displayFinishedTasks", new Boolean(false));
+        settingsMap.put("countPrivateTasks", new Boolean(false));
         settingsMap.put("runningTask", null);
         settingsMap.put("dictionary", "Dictionary_" + Locale.getDefault().getLanguage() + "_" + Locale.getDefault().getCountry() + ".properties");
         
@@ -97,22 +97,13 @@ public class Settings {
         String location = userDir + File.separator + "settings.cfg";
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write("dayWorkHours = " + settings.getSetting("dayWorkHours"));
-            writer.newLine();
-            writer.write("warnHoursNotReached = " + settings.getSetting("warnHoursNotReached"));
-            writer.newLine();
-            writer.write("warnHoursExceeded = " + settings.getSetting("warnHoursExceeded"));
-            writer.newLine();
-            writer.write("moveUnfinished = " + settings.getSetting("moveUnfinished"));
-            writer.newLine();
-            writer.write("archiveNotStarted = " + settings.getSetting("archiveNotStarted"));
-            writer.newLine();
-            writer.write("checkPriority = " + settings.getSetting("checkPriority"));
-            writer.newLine();
-            writer.write("displayFinishedTasks = " + settings.getSetting("displayFinishedTasks"));
-            writer.newLine();
-            writer.write("runningTask = " + settings.getSetting("runningTask"));
-            writer.newLine();
+            Set keys = settings.settingsMap.keySet();
+            Iterator iterator = keys.iterator();
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                writer.write(key + " = " + settings.getSetting(key));
+                writer.newLine();
+            }
             writer.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
