@@ -13,6 +13,8 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JPanel;
+import org.cesilko.rachota.core.ChangeHandler;
+import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
@@ -23,7 +25,7 @@ import org.cesilko.rachota.core.filters.AbstractTaskFilter;
  * period scale.
  * @author Jiri Kovalsky
  */
-public class HistoryChart extends JPanel {
+public class HistoryChart extends JPanel implements ChangeListener {
     
     /** Days whose data should be drawn. */
     private Vector days;
@@ -64,6 +66,7 @@ public class HistoryChart extends JPanel {
         setDays(days);
         setHighlightingFilter(taskFilter);
         setChartType(chartType);
+        ChangeHandler.getDefault().addChangeEventListener(this, Settings.getDefault());
     }
     
     /** Sets which days should be used to draw history chart.
@@ -195,6 +198,7 @@ public class HistoryChart extends JPanel {
         int height = getBounds().height;
         int width = getBounds().width;
         int count = days.size();
+        long totalTimeFiltered = 0;
         for (int i=0; i<count; i++) {
             Day day = (Day) days.get(i);
             if (chartType == TYPE_TOTAL) {
@@ -209,14 +213,18 @@ public class HistoryChart extends JPanel {
                         if (filteredTasks.size() != 0) {
                             Iterator iterator = filteredTasks.iterator();
                             long totalTime = 0;
+                            Boolean countPrivateTasks = (Boolean) Settings.getDefault().getSetting("countPrivateTasks");
                             while (iterator.hasNext()) {
                                 Task task = (Task) iterator.next();
-                                if (!task.privateTask()) totalTime = totalTime + task.getDuration();
+                                if (!task.privateTask() || countPrivateTasks.booleanValue()) totalTime = totalTime + task.getDuration();
                             }
+                            totalTimeFiltered = totalTimeFiltered + totalTime;
                             double filtered = totalTime / (double) (1000*60*60);
                             int filteredTasksHeight = (int) ((height - INSET_BOTTOM - INSET_TOP) * (filtered / maxValueY));
                             graphics.setColor(Color.CYAN);
                             graphics.fillRect(x, height - INSET_BOTTOM - filteredTasksHeight, (int) (xStep > 4 ? xStep - 3 : xStep), filteredTasksHeight);
+                            graphics.setColor(Color.DARK_GRAY);
+                            graphics.drawRect(x, height - INSET_BOTTOM - filteredTasksHeight, (int) (xStep > 4 ? xStep - 3 : xStep), filteredTasksHeight);
                         }
                     }
                     graphics.setColor(Color.DARK_GRAY);
@@ -266,6 +274,16 @@ public class HistoryChart extends JPanel {
                 }
             }
         }
+        if ((chartType == TYPE_TOTAL) && (taskFilter != null)) {
+            String text = Translator.getTranslation("HISTORYCHART.HIGHLIGHTED_TASKS_TIME") + " " + Tools.getTime(totalTimeFiltered);
+            text = text.substring(0, text.lastIndexOf(":"));
+            graphics.setFont(new Font("Monospaced", Font.PLAIN, 10));
+            int widths[] = graphics.getFontMetrics().getWidths();
+            int correction = 0;
+            for (int i=0; i<text.length(); i++) correction = correction + widths[text.charAt(i)];
+            graphics.setColor(Color.BLACK);
+            graphics.drawString(text, width - INSET_RIGHT - correction - 10, INSET_TOP + 15);
+        }
     }
     
     /** Draws reference lines in chart if required.
@@ -311,5 +329,13 @@ public class HistoryChart extends JPanel {
             graphics.drawString(Translator.getTranslation("HISTORYCHART.GIVEN_HOURS"), INSET_LEFT + 5, y - 5);
         }
         graphics.setFont(originalFont);
+    }
+    
+    /** Given object fired a change event.
+     * @param object Object that was changed.
+     * @param changeType Type of change.
+     */
+    public void eventFired(Object object, int changeType) {
+        repaint();
     }
 }
