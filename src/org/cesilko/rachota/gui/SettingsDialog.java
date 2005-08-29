@@ -36,6 +36,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         chbMoveUnfinished.setSelected(((Boolean) Settings.getDefault().getSetting("moveUnfinished")).booleanValue());
         chbArchiveNotStarted.setSelected(((Boolean) Settings.getDefault().getSetting("archiveNotStarted")).booleanValue());
         chbCheckPriority.setSelected(((Boolean) Settings.getDefault().getSetting("checkPriority")).booleanValue());
+        chbCountPrivate.setSelected(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
     
@@ -58,6 +59,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         chbMoveUnfinished = new javax.swing.JCheckBox();
         chbArchiveNotStarted = new javax.swing.JCheckBox();
         chbCheckPriority = new javax.swing.JCheckBox();
+        chbCountPrivate = new javax.swing.JCheckBox();
         pnRegularTasks = new javax.swing.JPanel();
         spRegularTasks = new javax.swing.JScrollPane();
         tbRegularTasks = new javax.swing.JTable();
@@ -166,6 +168,16 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbCheckPriority, gridBagConstraints);
+
+        chbCountPrivate.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_COUNT_PRIVATE"));
+        chbCountPrivate.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_COUNT_PRIVATE"));
+        chbCountPrivate.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_COUNT_PRIVATE_TOOLTIP"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(chbCountPrivate, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
@@ -362,6 +374,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         Settings.getDefault().setSetting("moveUnfinished", new Boolean(chbMoveUnfinished.isSelected()));
         Settings.getDefault().setSetting("archiveNotStarted", new Boolean(chbArchiveNotStarted.isSelected()));
         Settings.getDefault().setSetting("checkPriority", new Boolean(chbCheckPriority.isSelected()));
+        Settings.getDefault().setSetting("countPrivateTasks", new Boolean(chbCountPrivate.isSelected()));
         Plan.getDefault().getRegularTasks().clear();
         Iterator iterator = regularTasks.iterator();
         while (iterator.hasNext()) {
@@ -388,6 +401,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
     private javax.swing.JButton btRemove;
     private javax.swing.JCheckBox chbArchiveNotStarted;
     private javax.swing.JCheckBox chbCheckPriority;
+    private javax.swing.JCheckBox chbCountPrivate;
     private javax.swing.JCheckBox chbHoursExceeded;
     private javax.swing.JCheckBox chbHoursNotReached;
     private javax.swing.JCheckBox chbMoveUnfinished;
