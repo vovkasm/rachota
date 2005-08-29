@@ -33,11 +33,13 @@ public class FilterDialog extends javax.swing.JDialog {
         cmbFilterName.addItem(new DurationFilter());
         cmbFilterName.addItem(new PriorityFilter());
         cmbFilterName.addItem(new StateFilter());
+        cmbFilterName.addItem(new PrivateFilter());
         cmbFilterName.setSelectedIndex(0);
         if (taskFilter instanceof KeywordFilter) cmbFilterName.setSelectedIndex(1);
         if (taskFilter instanceof DurationFilter) cmbFilterName.setSelectedIndex(2);
         if (taskFilter instanceof PriorityFilter) cmbFilterName.setSelectedIndex(3);
         if (taskFilter instanceof StateFilter) cmbFilterName.setSelectedIndex(4);
+        if (taskFilter instanceof PrivateFilter) cmbFilterName.setSelectedIndex(5);
         setComponents(taskFilter == null ? new DescriptionFilter() : taskFilter);
     }
     
@@ -232,12 +234,13 @@ public class FilterDialog extends javax.swing.JDialog {
         }
         if (newTaskFilter instanceof PriorityFilter) content = "" + cmbContent.getSelectedIndex();
         if (newTaskFilter instanceof StateFilter) content = "" + cmbContent.getSelectedIndex();
+        if (newTaskFilter instanceof PrivateFilter) content = Boolean.toString(cmbContent.getSelectedIndex() == 0);
         newTaskFilter.setContent(content);
         if (taskFilter == null) filtersTableModel.addFilter(newTaskFilter);
         else filtersTableModel.replaceFilter(taskFilter, newTaskFilter);
         formWindowClosing(null);
     }//GEN-LAST:event_btOKActionPerformed
-        // Variables declaration - do not modify//GEN-BEGIN:variables
+            // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btOK;
     private javax.swing.JComboBox cmbContent;
