@@ -6,16 +6,27 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Vector;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.filechooser.FileFilter;
 import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
+import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 import org.cesilko.rachota.core.filters.*;
 
@@ -71,6 +82,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
         lblPeriod = new javax.swing.JLabel();
         cmbPeriod = new javax.swing.JComboBox();
+        btReport = new javax.swing.JButton();
         pnPeriod = new javax.swing.JPanel();
         spMinus = new javax.swing.JSpinner();
         btBackward = new javax.swing.JButton();
@@ -124,6 +136,21 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(cmbPeriod, gridBagConstraints);
+
+        btReport.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REPORT"));
+        btReport.setText(Translator.getTranslation("HISTORYVIEW.BT_REPORT"));
+        btReport.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_REPORT_TOOLTIP"));
+        btReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btReportActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        add(btReport, gridBagConstraints);
 
         spMinus.setToolTipText(Translator.getTranslation("HISTORYVIEW.SP_MINUS_TOOLTIP"));
         spMinus.setPreferredSize(new java.awt.Dimension(40, 23));
@@ -179,7 +206,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -445,7 +472,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -453,6 +480,13 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
     }
     // </editor-fold>//GEN-END:initComponents
+    
+    /** Method called when generate report button was clicked.
+     * @param evt Event that invoked the action.
+     */
+    private void btReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReportActionPerformed
+        createReport();
+    }//GEN-LAST:event_btReportActionPerformed
     
     /** Method called when highlight tasks checkbox is un/checked.
      * @param evt Event that invoked the action.
@@ -646,6 +680,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     private javax.swing.JButton btEditFilter;
     private javax.swing.JButton btForward;
     private javax.swing.JButton btRemoveFilter;
+    private javax.swing.JButton btReport;
     private javax.swing.JCheckBox chbGroupTasks;
     private javax.swing.JCheckBox chbHighlightTasks;
     private javax.swing.JComboBox cmbContent;
@@ -880,6 +915,130 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         }
         taskFilter.setContentRule(cmbContentRule.getSelectedIndex());
         return taskFilter;
+    }
+    
+    /** Generates HTML file with work statistics for selected period.
+     */
+    private void createReport() {
+        String location = (String) Settings.getDefault().getSetting("userDir");
+        JFileChooser fileChooser = new JFileChooser(location);
+        fileChooser.setFileFilter(new FileFilter() {
+            public boolean accept(File f) {
+                return (f.isFile() && f.getName().endsWith(".html"));
+            }
+            public String getDescription() {
+                return "All HTML files";
+            }
+        });
+        fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
+        fileChooser.setApproveButtonMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_SELECT"));
+        fileChooser.setApproveButtonToolTipText(Translator.getTranslation("HISTORYVIEW.BT_SELECT_TOOLTIP"));
+        int decision = fileChooser.showOpenDialog(this);
+        if (decision != JFileChooser.APPROVE_OPTION) return;
+        File file = fileChooser.getSelectedFile();
+        String fileName = file.getAbsolutePath();
+        if (!fileName.endsWith(".html")) file = new File(fileName + ".html");
+        fileName = file.getAbsolutePath();
+        fileName = fileName.substring(0, fileName.indexOf("."));
+        if (file.exists()) {
+            decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION);
+            if (decision == JOptionPane.NO_OPTION) return;
+        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            writer.newLine();
+            writer.write("<!--");
+            writer.newLine();
+            writer.write("    Rachota 2.0 report file");
+            writer.newLine();
+            writer.write("    Generated: " + new Date());
+            writer.newLine();
+            writer.write("-->");
+            writer.newLine();
+            writer.write("<html lang=\"" + Locale.getDefault().getLanguage() + "\">");
+            writer.newLine();
+            writer.write("  <head>");
+            writer.newLine();
+            writer.write("    <title>" + Translator.getTranslation("REPORT.TITLE") + "</title>");
+            writer.newLine();
+            writer.write("  </head>");
+            writer.newLine();
+            writer.write("  <body>");
+            writer.newLine();
+            writer.write("    <h1>" + Translator.getTranslation("REPORT.TITLE") + "</h1>");
+            writer.newLine();
+            Vector days = getDays();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.PERIOD") + "</u> " + days.get(0) + " - " + days.get(days.size() - 1) + "</BR>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u> " + days.size() + "<br/><br/>");
+            writer.newLine();
+            writer.write("    <img src=\"" + file.getName().substring(0, file.getName().indexOf(".")) + "_chart.png\" border=\"1\"/><br/><br/>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.APPLIED_FILTERS") + "</u>");
+            writer.newLine();
+            writer.write("    <ul>");
+            writer.newLine();
+            FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
+            int count = filtersTableModel.getRowCount();
+            for (int i=0; i<count; i++) {
+                writer.write("      <li>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_NAME) + " ");
+                writer.write(filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT_RULE) + " ");
+                writer.write("<b>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT) + "</b></li>");
+                writer.newLine();
+            }
+            writer.write("    </ul>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TASKS") + "</u><br/><br/>");
+            writer.newLine();
+            writer.write("    <table border=\"1\">");
+            writer.newLine();
+            writer.write("      <tr bgcolor=\"CCCCCC\">");
+            writer.newLine();
+            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DESCRIPTION") + "</b></td>");
+            writer.newLine();
+            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_TIME") + "</b></td>");
+            writer.newLine();
+            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_DAYS") + "</b></td>");
+            writer.newLine();
+            writer.write("      </tr>");
+            writer.newLine();
+            FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+            count = filteredTasksTableModel.getRowCount();
+            for (int i=0; i<count; i++) {
+                writer.write("      <tr>");
+                writer.newLine();
+                writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DESCRIPTION) + "</td>");
+                writer.newLine();
+                writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_TIME) + "</td>");
+                writer.newLine();
+                writer.write("        <td align=\"right\">" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_DAYS) + "</td>");
+                writer.newLine();
+                writer.write("      </tr>");
+                writer.newLine();
+            }
+            writer.write("    </table><br/>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "</b><br/><br/>");
+            writer.newLine();
+            writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> " + MainWindow.title + " " + "(build " + MainWindow.build + ")<BR/>");
+            writer.newLine();
+            writer.write("    " + new Date());
+            writer.newLine();
+            writer.write("  </body>");
+            writer.newLine();
+            writer.write("</html>");
+            writer.newLine();
+            writer.close();
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileName + "_chart.png"));
+            PNGImageWriter imageWriter = new PNGImageWriter();
+            BufferedImage image = new BufferedImage(historyChart.getBounds().width, historyChart.getBounds().height, BufferedImage.TYPE_INT_RGB);
+            historyChart.paint(image.getGraphics());
+            imageWriter.write(image, out);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+        }
+        JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
     }
     
     /** Given object fired a change event.
