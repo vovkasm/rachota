@@ -98,7 +98,8 @@ public class HistoryChart extends JPanel implements ChangeListener {
      * @param graphics Graphics area where the chart should be drawn.
      */
     public void paint(Graphics graphics) {
-        graphics.clearRect(0, 0, getBounds().width, getBounds().height);
+        graphics.setColor(new Color(240, 240, 240));
+        graphics.fillRect(0, 0, getBounds().width, getBounds().height);
         computeSteps();
         drawAxes(graphics, true);
         drawHours(graphics);
