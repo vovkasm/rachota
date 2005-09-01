@@ -101,6 +101,7 @@ public class Settings {
             Iterator iterator = keys.iterator();
             while (iterator.hasNext()) {
                 String key = (String) iterator.next();
+                if (key.equals("userDir")) continue;
                 writer.write(key + " = " + settings.getSetting(key));
                 writer.newLine();
             }
