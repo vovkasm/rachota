@@ -6,6 +6,9 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -47,7 +50,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         historyChart = new HistoryChart(getDays(), null, HistoryChart.TYPE_TOTAL);
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -69,6 +72,23 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         cmbFilterName.addItem(new StateFilter().toString());
         cmbFilterName.addItem(new PrivateFilter().toString());
         setComponents();
+        tbTasks.getColumn(Translator.getTranslation("TASKS.DESCRIPTION")).setPreferredWidth(280);
+        tbTasks.getColumn(Translator.getTranslation("TASKS.DURATION_DAYS")).setPreferredWidth(50);
+        tbTasks.getTableHeader().addMouseListener(new MouseAdapter() {
+            Point pressedPoint;
+            public void mousePressed(MouseEvent e) {
+                pressedPoint = e.getPoint();
+            }
+            public void mouseReleased(MouseEvent e) {
+                if (!e.getPoint().equals(pressedPoint)) return;
+                int column = tbTasks.getTableHeader().columnAtPoint(e.getPoint());
+                FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+                filteredTasksTableModel.sortTable(column);
+                int columns = tbTasks.getColumnCount();
+                for (int i=0; i<columns; i++)
+                    tbTasks.getColumnModel().getColumn(i).setHeaderValue(filteredTasksTableModel.getColumnName(i));
+            }
+        });
     }
     
     /** This method is called from within the constructor to
@@ -99,6 +119,8 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         cmbContentRule = new javax.swing.JComboBox();
         cmbContent = new javax.swing.JComboBox();
         txtContent = new javax.swing.JTextField();
+        lblTotalTime = new javax.swing.JLabel();
+        txtTotalTime = new javax.swing.JTextField();
         pnTasks = new javax.swing.JPanel();
         lblFilters = new javax.swing.JLabel();
         spFilters = new javax.swing.JScrollPane();
@@ -112,8 +134,8 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         tbTasks = new javax.swing.JTable();
         chbGroupTasks = new javax.swing.JCheckBox();
         pnTotalTime = new javax.swing.JPanel();
-        lblTotalTime = new javax.swing.JLabel();
-        txtTotalTime = new javax.swing.JTextField();
+        lblFilteredTime = new javax.swing.JLabel();
+        txtFilteredTime = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -310,6 +332,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -326,9 +349,26 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(txtContent, gridBagConstraints);
+
+        lblTotalTime.setLabelFor(txtTotalTime);
+        lblTotalTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_TOTAL_TIME"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(lblTotalTime, gridBagConstraints);
+
+        txtTotalTime.setEditable(false);
+        txtTotalTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTotalTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_TOTAL_TIME_TOOLTIP"));
+        txtTotalTime.setPreferredSize(new java.awt.Dimension(80, 19));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(txtTotalTime, gridBagConstraints);
 
         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TIMES_TAB_NAME"), pnTimes);
 
@@ -446,21 +486,22 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
         pnTotalTime.setLayout(new java.awt.GridBagLayout());
 
-        lblTotalTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_TOTAL_TIME"));
+        lblFilteredTime.setLabelFor(txtFilteredTime);
+        lblFilteredTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_FILTERED_TIME"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        pnTotalTime.add(lblTotalTime, gridBagConstraints);
+        pnTotalTime.add(lblFilteredTime, gridBagConstraints);
 
-        txtTotalTime.setEditable(false);
-        txtTotalTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtTotalTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_TOTAL_TIME_TOOLTIP"));
-        txtTotalTime.setPreferredSize(new java.awt.Dimension(80, 19));
+        txtFilteredTime.setEditable(false);
+        txtFilteredTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtFilteredTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_FILTERED_TIME_TOOLTIP"));
+        txtFilteredTime.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        pnTotalTime.add(txtTotalTime, gridBagConstraints);
+        pnTotalTime.add(txtFilteredTime, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 6;
@@ -631,6 +672,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         }
         if (historyChart != null) historyChart.setDays(getDays());
         filterTasks();
+        updateTotalTime();
     }//GEN-LAST:event_cmbPeriodItemStateChanged
     
     /** Method called when forward button was pressed.
@@ -639,6 +681,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     private void btForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btForwardActionPerformed
         period = shiftPeriod(1);
         cmbPeriodItemStateChanged(null);
+        updateTotalTime();
     }//GEN-LAST:event_btForwardActionPerformed
     
     /** Method called when backward button was pressed.
@@ -647,6 +690,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     private void btBackwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBackwardActionPerformed
         period = shiftPeriod(-1);
         cmbPeriodItemStateChanged(null);
+        updateTotalTime();
     }//GEN-LAST:event_btBackwardActionPerformed
     
     /** Method called when plus spinner was pressed.
@@ -659,6 +703,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         else previousPlus = plus;
         historyChart.setDays(getDays());
         filterTasks();
+        updateTotalTime();
     }//GEN-LAST:event_spPlusStateChanged
     
     /** Method called when minus spinner was pressed.
@@ -671,6 +716,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         else previousMinus = minus;
         historyChart.setDays(getDays());
         filterTasks();
+        updateTotalTime();
     }//GEN-LAST:event_spMinusStateChanged
     
     
@@ -688,6 +734,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     private javax.swing.JComboBox cmbFilterName;
     private javax.swing.JComboBox cmbPeriod;
     private javax.swing.JLabel lblChartType;
+    private javax.swing.JLabel lblFilteredTime;
     private javax.swing.JLabel lblFilters;
     private javax.swing.JLabel lblPeriod;
     private javax.swing.JLabel lblTasks;
@@ -708,6 +755,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     private javax.swing.JTabbedPane tpViews;
     private javax.swing.JTextField txtContent;
     private javax.swing.JTextField txtDate;
+    private javax.swing.JTextField txtFilteredTime;
     private javax.swing.JTextField txtTotalTime;
     // End of variables declaration//GEN-END:variables
     
@@ -837,7 +885,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         }
         FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
         filteredTasksTableModel.setTasks(filteredTasks);
-        txtTotalTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+        txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
     }
     
     /** Sets content rules and values according to currently selected task filter.
@@ -1039,6 +1087,17 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
         JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    /** Updates information about total time. */
+    private void updateTotalTime() {
+        long totalTime = 0;
+        Iterator iterator = getDays().iterator();
+        while (iterator.hasNext()) {
+            Day day = (Day) iterator.next();
+            totalTime = totalTime + day.getTotalTime();
+        }
+        txtTotalTime.setText(Tools.getTime(totalTime));
     }
     
     /** Given object fired a change event.
