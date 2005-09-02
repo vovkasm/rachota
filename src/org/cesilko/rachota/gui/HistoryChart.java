@@ -278,7 +278,6 @@ public class HistoryChart extends JPanel implements ChangeListener {
         if ((chartType == TYPE_TOTAL) && (taskFilter != null)) {
             String text = Translator.getTranslation("HISTORYCHART.HIGHLIGHTED_TASKS_TIME") + " " + Tools.getTime(totalTimeFiltered);
             text = text.substring(0, text.lastIndexOf(":"));
-            graphics.setFont(new Font("Monospaced", Font.PLAIN, 10));
             int widths[] = graphics.getFontMetrics().getWidths();
             int correction = 0;
             for (int i=0; i<text.length(); i++) correction = correction + widths[text.charAt(i)];
