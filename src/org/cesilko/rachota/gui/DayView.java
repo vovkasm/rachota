@@ -106,22 +106,16 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
                 int column = tbPlan.getTableHeader().columnAtPoint(e.getPoint());
                 DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
                 dayTableModel.setSortedColumn(column, true);
-                dayTableModel.fireTableStructureChanged();
+                int columns = tbPlan.getColumnCount();
+                for (int i=0; i<columns; i++)
+                    tbPlan.getColumnModel().getColumn(i).setHeaderValue(dayTableModel.getColumnName(i));
             }
         });
         updateInformation(ChangeListener.GENERIC_CHANGE);
         loadRunningTask();
         checkButtons();
-        javax.swing.table.TableColumnModel tableColumnModel = tbPlan.getColumnModel();
-        int count = tableColumnModel.getColumnCount();
-        for (int i=0; i<count; i++) {
-            javax.swing.table.TableColumn tableColumn = tableColumnModel.getColumn(i);
-            String name = (String) tableColumn.getIdentifier();
-            if (name.equals(Translator.getTranslation("TASK_DESCRIPTION")))
-                tableColumn.setPreferredWidth(240);
-            if (name.equals(Translator.getTranslation("TASK_STATE")))
-                tableColumn.setPreferredWidth(100);
-        }
+        tbPlan.getColumn(Translator.getTranslation("TASK_DESCRIPTION")).setPreferredWidth(240);
+        tbPlan.getColumn(Translator.getTranslation("TASK_STATE")).setPreferredWidth(100);
         tbPlan.getTableHeader().setForeground(java.awt.Color.BLUE);
         tbPlan.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
         tbPlan.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
