@@ -47,6 +47,7 @@ public class FilteredTasksTableModel extends AbstractTableModel {
      */
     public void setTasks(Vector tasks) {
         this.tasks = tasks;
+        sortTable(DURATION_TIME);
         fireTableDataChanged();
     }
     
@@ -97,16 +98,18 @@ public class FilteredTasksTableModel extends AbstractTableModel {
      * @return Name of column by given column number.
      */
     public String getColumnName(int column) {
+        String suffix = sortingOrder == ASCENDING ? " [+]" : " [-]";
         switch (column) {
             case DESCRIPTION:
-                return Translator.getTranslation("TASKS.DESCRIPTION");
+                suffix = sortedColumn == DESCRIPTION ? suffix : "";
+                return Translator.getTranslation("TASKS.DESCRIPTION") + suffix;
             case DURATION_TIME:
-                return Translator.getTranslation("TASKS.DURATION_TIME");
+                suffix = sortedColumn == DURATION_TIME ? suffix : "";
+                return Translator.getTranslation("TASKS.DURATION_TIME") + suffix;
             case DURATION_DAYS:
-                return Translator.getTranslation("TASKS.DURATION_DAYS");
-            default:
-                return "N/A";
-        }
+                suffix = sortedColumn == DURATION_DAYS ? suffix : "";
+                return Translator.getTranslation("TASKS.DURATION_DAYS") + suffix;
+        } return null;
     }
     
     /** Returns vector of all unique task descriptions.
@@ -137,8 +140,7 @@ public class FilteredTasksTableModel extends AbstractTableModel {
         return duration;
     }
     
-    /**
-     * Returns vector of three objects that should be displayed at given row
+    /** Returns vector of three objects that should be displayed at given row
      * when tasks with same description are displayed.
      * @param row Number of row whose data will be returned.
      * @return Vector consisting of task description, total duration for all
@@ -161,5 +163,67 @@ public class FilteredTasksTableModel extends AbstractTableModel {
         rowData.add(Tools.getTime(duration));
         rowData.add("" + days);
         return rowData;
+    }
+    
+    /** Currently selected sorting column. */
+    private int sortedColumn = DURATION_TIME;
+    /** Currently selected sorting order. */
+    private boolean sortingOrder = DESCENDING;
+    /** Ascending sorting order. */
+    private static final boolean ASCENDING = true;
+    /** Descending sorting order. */
+    private static final boolean DESCENDING = false;
+    
+    /** Sorts table according to given column and known order.
+     * @param column Column that will be used for sorting.
+     */
+    public void sortTable(int column) {
+        int count = getRowCount();
+        Vector sortedRows = new Vector();
+        for (int i=0; i<count; i++) {
+            Object maxValue = null;
+            int maxRow = -1;
+            for (int row=0; row<count; row++) {
+                if (sortedRows.contains(new Integer(row))) continue;
+                switch(column) {
+                    case DESCRIPTION:
+                        String description = (String) getValueAt(row, column);
+                        if ((maxValue == null) || (description.compareTo((String) maxValue) > 0)) {
+                            maxValue = description;
+                            maxRow = row;
+                        } break;
+                    case DURATION_TIME:
+                        long time = Tools.getTime((String) getValueAt(row, column));
+                        if ((maxValue == null) || (time > ((Long) maxValue).longValue())) {
+                            maxValue = new Long(time);
+                            maxRow = row;
+                        } break;
+                    case DURATION_DAYS:
+                        int days = (Integer.parseInt((String) getValueAt(row, column)));
+                        if ((maxValue == null) || (days > ((Integer) maxValue).intValue())) {
+                            maxValue = new Integer(days);
+                            maxRow = row;
+                        } break;
+                }
+            }
+            sortedRows.add(new Integer(maxRow));
+        }
+        Vector newSortedTasks = new Vector();
+        sortingOrder = sortedColumn == column ? !sortingOrder : ASCENDING;
+        sortedColumn = column;
+        for (int i=0; i<count; i++) {
+            Integer row = (Integer) sortedRows.get(i);
+            String description = (String) getValueAt(row.intValue(), DESCRIPTION);
+            Iterator iterator = tasks.iterator();
+            while (iterator.hasNext()) {
+                Task task = (Task) iterator.next();
+                if (task.getDescription().equals(description)) {
+                    if (sortingOrder == DESCENDING) newSortedTasks.add(task);
+                    else newSortedTasks.insertElementAt(task, 0);
+                }
+            }
+        }
+        tasks = newSortedTasks;
+        fireTableDataChanged();
     }
 }
