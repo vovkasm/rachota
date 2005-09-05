@@ -7,10 +7,10 @@
 package org.cesilko.rachota.core;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.PropertyResourceBundle;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 import org.cesilko.rachota.gui.Tools;
 
 /** Translator class providing localization.
@@ -37,10 +37,15 @@ public class Translator {
                 String fileName = System.getProperty("os.name").indexOf("Windows") == -1 ? "/" : "";
                 fileName = fileName + location.substring(6, location.indexOf(".jar") + 4);
                 JarFile jarFile = new JarFile(fileName);
-                inputStream = jarFile.getInputStream(jarFile.getEntry("org/cesilko/rachota/core/" + dictionaryName));
+                ZipEntry entry = jarFile.getEntry("org/cesilko/rachota/core/" + dictionaryName);
+                if (entry == null) {
+                    entry = jarFile.getEntry("org/cesilko/rachota/core/Dictionary_en_GB.properties");
+                    Settings.getDefault().setSetting("dictionary", "Dictionary_en_GB.properties");
+                }
+                inputStream = jarFile.getInputStream(entry);
             }
             dictionary = new PropertyResourceBundle(inputStream);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Error: Reading from " + dictionaryName + " dictionary failed.");
             e.printStackTrace();
         }
