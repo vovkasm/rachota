@@ -47,7 +47,7 @@ public class FilteredTasksTableModel extends AbstractTableModel {
      */
     public void setTasks(Vector tasks) {
         this.tasks = tasks;
-        sortTable(DURATION_TIME);
+        sortTable(sortedColumn, false);
         fireTableDataChanged();
     }
     
@@ -176,8 +176,9 @@ public class FilteredTasksTableModel extends AbstractTableModel {
     
     /** Sorts table according to given column and known order.
      * @param column Column that will be used for sorting.
+     * @param changeOrder Should the sorting order be changed ?
      */
-    public void sortTable(int column) {
+    public void sortTable(int column, boolean changeOrder) {
         int count = getRowCount();
         Vector sortedRows = new Vector();
         for (int i=0; i<count; i++) {
@@ -209,7 +210,7 @@ public class FilteredTasksTableModel extends AbstractTableModel {
             sortedRows.add(new Integer(maxRow));
         }
         Vector newSortedTasks = new Vector();
-        sortingOrder = sortedColumn == column ? !sortingOrder : ASCENDING;
+        if (changeOrder) sortingOrder = sortedColumn == column ? !sortingOrder : ASCENDING;
         sortedColumn = column;
         for (int i=0; i<count; i++) {
             Integer row = (Integer) sortedRows.get(i);

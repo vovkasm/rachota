@@ -83,7 +83,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
                 if (!e.getPoint().equals(pressedPoint)) return;
                 int column = tbTasks.getTableHeader().columnAtPoint(e.getPoint());
                 FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
-                filteredTasksTableModel.sortTable(column);
+                filteredTasksTableModel.sortTable(column, true);
                 int columns = tbTasks.getColumnCount();
                 for (int i=0; i<columns; i++)
                     tbTasks.getColumnModel().getColumn(i).setHeaderValue(filteredTasksTableModel.getColumnName(i));
