@@ -992,6 +992,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
             decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION);
             if (decision == JOptionPane.NO_OPTION) return;
         }
+        String description = JOptionPane.showInputDialog(this, Translator.getTranslation("QUESTION.REPORT_DESCRIPTION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
@@ -1016,10 +1017,16 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
             writer.newLine();
             writer.write("    <h1>" + Translator.getTranslation("REPORT.TITLE") + "</h1>");
             writer.newLine();
-            Vector days = getDays();
-            writer.write("    <u>" + Translator.getTranslation("REPORT.PERIOD") + "</u> " + days.get(0) + " - " + days.get(days.size() - 1) + "</BR>");
+            writer.write("    <table>");
             writer.newLine();
-            writer.write("    <u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u> " + days.size() + "<br/><br/>");
+            writer.write("      <tr><td><u>" + Translator.getTranslation("QUESTION.REPORT_DESCRIPTION") + "</u></td><td width=\"20\"/><td>" + description + "</td></tr>");
+            writer.newLine();
+            Vector days = getDays();
+            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.PERIOD") + "</u></td><td width=\"20\"/><td>" + days.get(0) + " - " + days.get(days.size() - 1) + "</td></tr>");
+            writer.newLine();
+            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u></td><td width=\"20\"/><td>" + days.size() + "</td></tr>");
+            writer.newLine();
+            writer.write("    </table><br/>");
             writer.newLine();
             writer.write("    <img src=\"" + file.getName().substring(0, file.getName().indexOf(".")) + "_chart.png\" border=\"1\"/><br/><br/>");
             writer.newLine();
@@ -1067,7 +1074,9 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
             }
             writer.write("    </table><br/>");
             writer.newLine();
-            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "</b><br/><br/>");
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_FILTERED_TIME") + "</u> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "<br/>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(updateTotalTime()) + "</b><br/><br/>");
             writer.newLine();
             writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> " + MainWindow.title + " " + "(build " + MainWindow.build + ")<BR/>");
             writer.newLine();
@@ -1089,8 +1098,10 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
     }
     
-    /** Updates information about total time. */
-    private void updateTotalTime() {
+    /** Updates information about total time and returns the time.
+     * @param Total time spent on all tasks in selected period.
+     */
+    private long updateTotalTime() {
         long totalTime = 0;
         Iterator iterator = getDays().iterator();
         while (iterator.hasNext()) {
@@ -1098,6 +1109,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
             totalTime = totalTime + day.getTotalTime();
         }
         txtTotalTime.setText(Tools.getTime(totalTime));
+        return totalTime;
     }
     
     /** Given object fired a change event.
