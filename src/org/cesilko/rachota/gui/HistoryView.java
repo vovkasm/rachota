@@ -803,32 +803,35 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         return calendar.getTime();
     }
     
+    /** Identification of the first date within selected preiod. */
+    private static final boolean FIRST_DATE = true;
+    /** Identification of the last date within selected preiod. */
+    private static final boolean LAST_DATE = false;
+    
     /** Returns either first or last date of selected period interval
      * whose data should be processed in the history view.
-     * @param firstDate If true, first date of period interval will be
+     * @param date If true, first date of period interval will be
      * returned or last interval date if false.
      * @return First or last date of period interval.
      */
-    private Date getDate(boolean firstDate) {
+    private Date getDate(boolean date) {
         Calendar calendar = Calendar.getInstance();
-        int offset = firstDate ? previousMinus.intValue() : previousPlus.intValue();
+        int offset = date == FIRST_DATE ? previousMinus.intValue() : previousPlus.intValue();
         calendar.setTime(shiftPeriod(offset));
         int scale = cmbPeriod.getSelectedIndex();
         offset = 1;
         switch (scale) {
             case (SCALE_YEAR):
-                if (!firstDate) offset = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
+                if (date == LAST_DATE) offset = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
                 calendar.set(Calendar.DAY_OF_YEAR, offset);
                 break;
             case (SCALE_MONTH):
-                if (!firstDate) offset = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                if (date == LAST_DATE) offset = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 calendar.set(Calendar.DAY_OF_MONTH, offset);
                 break;
             case (SCALE_WEEK):
-                if (firstDate)
-                    offset = calendar.getFirstDayOfWeek();
-                else
-                    offset = calendar.getActualMaximum(Calendar.DAY_OF_WEEK) + 1;
+                offset = calendar.getFirstDayOfWeek();
+                if (date == LAST_DATE) offset = offset + 6;
                 calendar.set(Calendar.DAY_OF_WEEK, offset);
         }
         return calendar.getTime();
@@ -842,8 +845,8 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         Calendar calendar = Calendar.getInstance();
         Plan plan = Plan.getDefault();
         
-        Date firstDate = getDate(true);
-        Date lastDate = getDate(false);
+        Date firstDate = getDate(FIRST_DATE);
+        Date lastDate = getDate(LAST_DATE);
         
         calendar.setTime(lastDate);
         String lastDayID = plan.getDayID(calendar);
