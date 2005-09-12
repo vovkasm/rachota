@@ -159,6 +159,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(cmbPeriod, gridBagConstraints);
 
+        btReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/report.png")));
         btReport.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REPORT"));
         btReport.setText(Translator.getTranslation("HISTORYVIEW.BT_REPORT"));
         btReport.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_REPORT_TOOLTIP"));
@@ -402,6 +403,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 
         pnButtons.setLayout(new java.awt.GridBagLayout());
 
+        btAddFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/new_filter.png")));
         btAddFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_ADD_FILTER"));
         btAddFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_ADD_FILTER"));
         btAddFilter.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_ADD_FILTER_TOOLTIP"));
@@ -412,9 +414,11 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btAddFilter, gridBagConstraints);
 
+        btEditFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/edit_filter.png")));
         btEditFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_EDIT_FILTER"));
         btEditFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_EDIT_FILTER"));
         btEditFilter.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_EDIT_FILTER_TOOLTIP"));
@@ -428,6 +432,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btEditFilter, gridBagConstraints);
 
+        btRemoveFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/remove_filter.png")));
         btRemoveFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REMOVE_FILTER"));
         btRemoveFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_REMOVE_FILTER"));
         btRemoveFilter.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_REMOVE_FILTER_TOOLTIP"));
@@ -438,6 +443,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
         });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btRemoveFilter, gridBagConstraints);
 
