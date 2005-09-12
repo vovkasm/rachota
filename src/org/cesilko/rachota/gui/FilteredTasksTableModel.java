@@ -210,17 +210,20 @@ public class FilteredTasksTableModel extends AbstractTableModel {
             sortedRows.add(new Integer(maxRow));
         }
         Vector newSortedTasks = new Vector();
+        Vector oldTasks = (Vector) tasks.clone();
         if (changeOrder) sortingOrder = sortedColumn == column ? !sortingOrder : ASCENDING;
         sortedColumn = column;
         for (int i=0; i<count; i++) {
             Integer row = (Integer) sortedRows.get(i);
             String description = (String) getValueAt(row.intValue(), DESCRIPTION);
-            Iterator iterator = tasks.iterator();
+            Iterator iterator = oldTasks.iterator();
             while (iterator.hasNext()) {
                 Task task = (Task) iterator.next();
                 if (task.getDescription().equals(description)) {
                     if (sortingOrder == DESCENDING) newSortedTasks.add(task);
                     else newSortedTasks.insertElementAt(task, 0);
+                    oldTasks.remove(task);
+                    iterator = oldTasks.iterator();
                 }
             }
         }
