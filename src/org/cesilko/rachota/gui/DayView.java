@@ -523,7 +523,6 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
             int ignorePriority = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.IGNORE_PRIORITY"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (ignorePriority == JOptionPane.NO_OPTION) return;
         }
-        if ((task != null) && (task.isRunning())) btRelaxActionPerformed(null);
         setTask(selectedTask, false);
         checkButtons();
     }//GEN-LAST:event_btSelectActionPerformed
@@ -952,6 +951,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
      * @param startTask Whether the task should be started.
      */
     private void setTask(Task task, boolean startTask) {
+        if ((this.task != null) && (this.task.isRunning())) btRelaxActionPerformed(null);
         this.task = task;
         txtTask.setText(task.getDescription());
         updateInformation(ChangeListener.GENERIC_CHANGE);
