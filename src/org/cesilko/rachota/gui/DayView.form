@@ -55,6 +55,7 @@
     <Component class="javax.swing.JTextField" name="txtDate">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;DAYVIEW.TXT_DATE_TOOLTIP&quot;)" type="code"/>
         </Property>
