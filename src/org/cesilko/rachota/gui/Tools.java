@@ -53,9 +53,11 @@ public class Tools {
             df.applyPattern("HH:mm");
             try { time = df.parse(text).getTime(); } catch (ParseException e) { e.printStackTrace(); }
         } else {
-            int hours = Integer.parseInt(text.substring(0, 2));
-            int minutes = Integer.parseInt(text.substring(3, 5));
-            int seconds = Integer.parseInt(text.substring(6, 8));
+	    int firstColon = text.indexOf(":");
+	    int secondColon = text.lastIndexOf(":");
+            int hours = Integer.parseInt(text.substring(0, firstColon));
+            int minutes = Integer.parseInt(text.substring(firstColon + 1, secondColon));
+            int seconds = Integer.parseInt(text.substring(secondColon + 1, text.length()));
             time = seconds * 1000;
             time = time + minutes * 1000 * 60;
             time = time + hours * 1000 * 60 * 60;
