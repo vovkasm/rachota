@@ -19,14 +19,14 @@ public class Tools {
      * @param time Time in milliseconds.
      * @return Textual representation of time in format hh:mm:ss.
      */
-    public static String getTime(long time) {
-        int hours = (int) time/(1000*60*60);
+    public static String getTime(double time) {
+        long hours = (long) time/(1000*60*60);
         String text = ((hours > 9) ? "" : "0") + hours;
         time = time - hours * (1000*60*60);
-        int minutes = (int) time/(1000*60);
+        long minutes = (long) time/(1000*60);
         text = text + ":" + ((minutes > 9) ? "" : "0") + minutes;
         time = time - minutes*(1000*60);
-        int seconds = (int) time/1000;
+        long seconds = (long) time/1000;
         text = text + ":" + ((seconds > 9) ? "" : "0") + seconds;
         return text;
     }
@@ -53,14 +53,19 @@ public class Tools {
             df.applyPattern("HH:mm");
             try { time = df.parse(text).getTime(); } catch (ParseException e) { e.printStackTrace(); }
         } else {
-	    int firstColon = text.indexOf(":");
-	    int secondColon = text.lastIndexOf(":");
-            int hours = Integer.parseInt(text.substring(0, firstColon));
-            int minutes = Integer.parseInt(text.substring(firstColon + 1, secondColon));
-            int seconds = Integer.parseInt(text.substring(secondColon + 1, text.length()));
-            time = seconds * 1000;
-            time = time + minutes * 1000 * 60;
-            time = time + hours * 1000 * 60 * 60;
+            try {
+                int firstColon = text.indexOf(":");
+                int secondColon = text.lastIndexOf(":");
+                int hours = Integer.parseInt(text.substring(0, firstColon));
+                int minutes = Integer.parseInt(text.substring(firstColon + 1, secondColon));
+                int seconds = Integer.parseInt(text.substring(secondColon + 1, text.length()));
+                time = seconds * 1000;
+                time = time + minutes * 1000 * 60;
+                time = time + hours * 1000 * 60 * 60;
+            } catch (Exception e) {
+                System.out.println("Text: " + text);
+                e.printStackTrace();
+            }
         }
         return time;
     }
