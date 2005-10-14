@@ -1128,5 +1128,6 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     public void eventFired(Object object, int changeType) {
         historyChart.repaint();
         filterTasks();
+        updateTotalTime();
     }
 }
