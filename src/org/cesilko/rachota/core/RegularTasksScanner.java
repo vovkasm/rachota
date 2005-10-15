@@ -34,15 +34,15 @@ public class RegularTasksScanner {
      * @param document XML regular tasks document to be loaded.
      */
     public RegularTasksScanner(Document document) {
-        this.document = document;
+	this.document = document;
     }
     
     /**
      * Loads XML regular tasks document given in the scanner constructor.
      */
     public void loadDocument() {
-        Element planElement = document.getDocumentElement();
-        loadPlan(planElement);
+	Element planElement = document.getDocumentElement();
+	loadPlan(planElement);
     }
     
     /**
@@ -50,14 +50,14 @@ public class RegularTasksScanner {
      * @param element XML element representing a plan of regular tasks.
      */
     private void loadPlan(Element element) {
-        NodeList nodes = element.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element regularTaskElement = (Element) node;
-                loadRegularTask(regularTaskElement);
-            }
-        }
+	NodeList nodes = element.getChildNodes();
+	for (int i = 0; i < nodes.getLength(); i++) {
+	    Node node = nodes.item(i);
+	    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		Element regularTaskElement = (Element) node;
+		loadRegularTask(regularTaskElement);
+	    }
+	}
     }
     
     /**
@@ -65,44 +65,44 @@ public class RegularTasksScanner {
      * @param regularTaskElement XML element representing a regular task.
      */
     private void loadRegularTask(Element regularTaskElement) {
-        long duration = Tools.getTime(regularTaskElement.getAttributeNode("duration").getValue());
-        int state = Integer.parseInt(regularTaskElement.getAttributeNode("state").getValue());
-        RegularTask regularTask = null;
-        int priority = 0;
-        String description = null;
-        String keyword = null;
-        String notes = null;
-        long notification = -1;
-        boolean automaticStart = false;
-        boolean privateTask = false;
-        int repetition = -1;
-        
-        NodeList nodes = regularTaskElement.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element nodeElement = (Element) node;
-                if (nodeElement.getTagName().equals("priority"))
-                    priority = loadPriority(nodeElement);
-                if (nodeElement.getTagName().equals("description"))
-                    description = loadDescription(nodeElement);
-                if (nodeElement.getTagName().equals("keyword"))
-                    keyword = loadKeyword(nodeElement);
-                if (nodeElement.getTagName().equals("notes"))
-                    notes = loadNotes(nodeElement);
-                if (nodeElement.getTagName().equals("notification")) {
-                    notification = loadNotification(nodeElement);
-                    automaticStart = loadAutomaticStart(nodeElement);
-                }
-                if (nodeElement.getTagName().equals("private"))
-                    privateTask = true;
-                if (nodeElement.getTagName().equals("repetition"))
-                    repetition = loadRepetition(nodeElement);
-            }
-        }
-        Date notificationTime = (notification == -1 ? null : new Date(notification));
-        regularTask = new RegularTask(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask, repetition);
-        Plan.getDefault().addRegularTask(regularTask);
+	long duration = Tools.getTime(regularTaskElement.getAttributeNode("duration").getValue());
+	int state = Integer.parseInt(regularTaskElement.getAttributeNode("state").getValue());
+	RegularTask regularTask = null;
+	int priority = 0;
+	String description = "";
+	String keyword = "";
+	String notes = "";
+	long notification = -1;
+	boolean automaticStart = false;
+	boolean privateTask = false;
+	int repetition = -1;
+	
+	NodeList nodes = regularTaskElement.getChildNodes();
+	for (int i = 0; i < nodes.getLength(); i++) {
+	    Node node = nodes.item(i);
+	    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		Element nodeElement = (Element) node;
+		if (nodeElement.getTagName().equals("priority"))
+		    priority = loadPriority(nodeElement);
+		if (nodeElement.getTagName().equals("description"))
+		    description = loadDescription(nodeElement);
+		if (nodeElement.getTagName().equals("keyword"))
+		    keyword = loadKeyword(nodeElement);
+		if (nodeElement.getTagName().equals("notes"))
+		    notes = loadNotes(nodeElement);
+		if (nodeElement.getTagName().equals("notification")) {
+		    notification = loadNotification(nodeElement);
+		    automaticStart = loadAutomaticStart(nodeElement);
+		}
+		if (nodeElement.getTagName().equals("private"))
+		    privateTask = true;
+		if (nodeElement.getTagName().equals("repetition"))
+		    repetition = loadRepetition(nodeElement);
+	    }
+	}
+	Date notificationTime = (notification == -1 ? null : new Date(notification));
+	regularTask = new RegularTask(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask, repetition);
+	Plan.getDefault().addRegularTask(regularTask);
     }
     
     /**
@@ -111,9 +111,9 @@ public class RegularTasksScanner {
      * @return Priority loaded from given XML element.
      */
     private int loadPriority(Element priorityElement) {
-        NodeList nodes = priorityElement.getChildNodes();
-        Node node = nodes.item(0);
-        return Integer.parseInt(((Text) node).getData());
+	NodeList nodes = priorityElement.getChildNodes();
+	Node node = nodes.item(0);
+	return Integer.parseInt(((Text) node).getData());
     }
     
     /**
@@ -122,9 +122,9 @@ public class RegularTasksScanner {
      * @return Description loaded from given XML element.
      */
     private String loadDescription(Element descriptionElement) {
-        NodeList nodes = descriptionElement.getChildNodes();
-        Node node = nodes.item(0);
-        return ((Text) node).getData();
+	NodeList nodes = descriptionElement.getChildNodes();
+	Node node = nodes.item(0);
+	return ((Text) node).getData();
     }
     
     /**
@@ -133,9 +133,9 @@ public class RegularTasksScanner {
      * @return Keyword loaded from given XML element.
      */
     private String loadKeyword(Element keywordElement) {
-        NodeList nodes = keywordElement.getChildNodes();
-        Node node = nodes.item(0);
-        return ((Text) node).getData();
+	NodeList nodes = keywordElement.getChildNodes();
+	Node node = nodes.item(0);
+	return ((Text) node).getData();
     }
     
     /**
@@ -144,9 +144,9 @@ public class RegularTasksScanner {
      * @return Notes loaded from given XML element.
      */
     private String loadNotes(Element notesElement) {
-        NodeList nodes = notesElement.getChildNodes();
-        Node node = nodes.item(0);
-        return ((Text) node).getData();
+	NodeList nodes = notesElement.getChildNodes();
+	Node node = nodes.item(0);
+	return ((Text) node).getData();
     }
     
     /**
@@ -155,8 +155,8 @@ public class RegularTasksScanner {
      * @return Notification time loaded from given XML element.
      */
     private long loadNotification(Element notificationElement) {
-        long notificationTime = Tools.getTime(notificationElement.getAttributeNode("time").getValue());
-        return notificationTime;
+	long notificationTime = Tools.getTime(notificationElement.getAttributeNode("time").getValue());
+	return notificationTime;
     }
     
     /**
@@ -165,8 +165,8 @@ public class RegularTasksScanner {
      * @return Automatic start option loaded from given XML element.
      */
     private boolean loadAutomaticStart(Element notificationElement) {
-        boolean automaticStart = Boolean.parseBoolean(notificationElement.getAttributeNode("switch").getValue());
-        return automaticStart;
+	boolean automaticStart = Boolean.parseBoolean(notificationElement.getAttributeNode("switch").getValue());
+	return automaticStart;
     }
     
     /**
@@ -175,30 +175,30 @@ public class RegularTasksScanner {
      * @return Repetition loaded from given XML element.
      */
     private int loadRepetition(Element repetitionElement) {
-        int repetition = Integer.parseInt(repetitionElement.getAttributeNode("frequency").getValue());
-        return repetition;
+	int repetition = Integer.parseInt(repetitionElement.getAttributeNode("frequency").getValue());
+	return repetition;
     }
     
     /**
      * Creates regular_tasks.dtd file that is used for automatic XML validation of regular tasks plan files.
      */
     public static void createDTD() {
-        String userDir = (String) Settings.getDefault().getSetting("userDir");
-        String dtdFileName = userDir + File.separator + "regular_tasks.dtd";
-        File dtdFile = new File(dtdFileName);
-        try {
-            if (dtdFile.exists()) return;
-            BufferedWriter writer = new BufferedWriter(new FileWriter(dtdFile));
-            StringTokenizer data = new StringTokenizer(dtd, "&", true);
-            while (data.hasMoreTokens()) {
-                String token = data.nextToken();
-                if (token.equals("&")) writer.newLine();
-                else writer.write(token);
-            }
-            writer.close();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {dtdFileName}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-        }
+	String userDir = (String) Settings.getDefault().getSetting("userDir");
+	String dtdFileName = userDir + File.separator + "regular_tasks.dtd";
+	File dtdFile = new File(dtdFileName);
+	try {
+	    if (dtdFile.exists()) return;
+	    BufferedWriter writer = new BufferedWriter(new FileWriter(dtdFile));
+	    StringTokenizer data = new StringTokenizer(dtd, "&", true);
+	    while (data.hasMoreTokens()) {
+		String token = data.nextToken();
+		if (token.equals("&")) writer.newLine();
+		else writer.write(token);
+	    }
+	    writer.close();
+	} catch (IOException e) {
+	    JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {dtdFileName}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+	}
     }
     
     /**

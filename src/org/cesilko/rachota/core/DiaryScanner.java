@@ -36,15 +36,15 @@ public class DiaryScanner {
      * @param document XML diary document to be loaded.
      */
     public DiaryScanner(Document document) {
-        this.document = document;
+	this.document = document;
     }
     
     /**
      * Loads XML diary document given in the scanner constructor.
      */
     public void loadDocument() {
-        Element weekElement = document.getDocumentElement();
-        loadWeek(weekElement);
+	Element weekElement = document.getDocumentElement();
+	loadWeek(weekElement);
     }
     
     /**
@@ -52,17 +52,17 @@ public class DiaryScanner {
      * @param element XML element representing a week.
      */
     private void loadWeek(Element element) {
-        int week_id = Integer.parseInt(element.getAttributeNode("id").getValue());
-        int week_year = Integer.parseInt(element.getAttributeNode("year").getValue());
-        
-        NodeList nodes = element.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element dayElement = (Element) node;
-                loadDay(dayElement, week_id, week_year);
-            }
-        }
+	int week_id = Integer.parseInt(element.getAttributeNode("id").getValue());
+	int week_year = Integer.parseInt(element.getAttributeNode("year").getValue());
+	
+	NodeList nodes = element.getChildNodes();
+	for (int i = 0; i < nodes.getLength(); i++) {
+	    Node node = nodes.item(i);
+	    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		Element dayElement = (Element) node;
+		loadDay(dayElement, week_id, week_year);
+	    }
+	}
     }
     
     /**
@@ -72,29 +72,28 @@ public class DiaryScanner {
      * @param week_year Number of year to which this day belongs.
      */
     private void loadDay(Element dayElement, int week_id, int week_year) {
-        int day_id = Integer.parseInt(dayElement.getAttributeNode("id").getValue());
-        String start = dayElement.getAttributeNode("start").getValue();
-        String finish = dayElement.getAttributeNode("finish").getValue();
-        Date start_time = start.equals("00:00") ? null : new Date(Tools.getTime(start));
-        Date finish_time = finish.equals("00:00") ? null : new Date(Tools.getTime(finish));
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, week_year);
-        calendar.set(Calendar.WEEK_OF_YEAR, week_id);
-        calendar.set(Calendar.DAY_OF_WEEK, day_id);
-        Vector tasks = new Vector();
-        Day day = new Day(tasks, calendar.getTime(), start_time, finish_time);
-        
-        NodeList nodes = dayElement.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element taskElement = (Element) node;
-                Task task = loadTask(taskElement);
-                day.addTask(task);
-                ChangeHandler.getDefault().addChangeEventListener(day, task);
-            }
-        }
-        Plan.getDefault().addDay(day);
+	int day_id = Integer.parseInt(dayElement.getAttributeNode("id").getValue());
+	String start = dayElement.getAttributeNode("start").getValue();
+	String finish = dayElement.getAttributeNode("finish").getValue();
+	Date start_time = start.equals("00:00") ? null : new Date(Tools.getTime(start));
+	Date finish_time = finish.equals("00:00") ? null : new Date(Tools.getTime(finish));
+	Calendar calendar = Calendar.getInstance();
+	calendar.set(Calendar.YEAR, week_year);
+	calendar.set(Calendar.WEEK_OF_YEAR, week_id);
+	calendar.set(Calendar.DAY_OF_WEEK, day_id);
+	Vector tasks = new Vector();
+	Day day = new Day(tasks, calendar.getTime(), start_time, finish_time);
+	
+	NodeList nodes = dayElement.getChildNodes();
+	for (int i = 0; i < nodes.getLength(); i++) {
+	    Node node = nodes.item(i);
+	    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		Element taskElement = (Element) node;
+		Task task = loadTask(taskElement);
+		day.addTask(task);
+	    }
+	}
+	Plan.getDefault().addDay(day);
     }
     
     /**
@@ -103,46 +102,46 @@ public class DiaryScanner {
      * @return Task loaded from given XML element.
      */
     private Task loadTask(Element taskElement) {
-        long duration = Tools.getTime(taskElement.getAttributeNode("duration").getValue());
-        int state = Integer.parseInt(taskElement.getAttributeNode("state").getValue());
-        Task task = null;
-        int priority = 0;
-        String description = null;
-        String keyword = null;
-        String notes = null;
-        long notification = -1;
-        boolean automaticStart = false;
-        boolean privateTask = false;
-        int repetition = -1;
-        
-        NodeList nodes = taskElement.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element nodeElement = (Element) node;
-                if (nodeElement.getTagName().equals("priority"))
-                    priority = loadPriority(nodeElement);
-                if (nodeElement.getTagName().equals("description"))
-                    description = loadDescription(nodeElement);
-                if (nodeElement.getTagName().equals("keyword"))
-                    keyword = loadKeyword(nodeElement);
-                if (nodeElement.getTagName().equals("notes"))
-                    notes = loadNotes(nodeElement);
-                if (nodeElement.getTagName().equals("notification")) {
-                    notification = loadNotification(nodeElement);
-                    automaticStart = loadAutomaticStart(nodeElement);
-                }
-                if (nodeElement.getTagName().equals("private"))
-                    privateTask = true;
-                if (nodeElement.getTagName().equals("repetition"))
-                    repetition = loadRepetition(nodeElement);
-            }
-        }
-        Date notificationTime = (notification == -1 ? null : new Date(notification));
-        if (repetition != -1)
-            task = new RegularTask(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask, repetition);
-        else task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
-        return task;
+	long duration = Tools.getTime(taskElement.getAttributeNode("duration").getValue());
+	int state = Integer.parseInt(taskElement.getAttributeNode("state").getValue());
+	Task task = null;
+	int priority = 0;
+	String description = "";
+	String keyword = "";
+	String notes = "";
+	long notification = -1;
+	boolean automaticStart = false;
+	boolean privateTask = false;
+	int repetition = -1;
+	
+	NodeList nodes = taskElement.getChildNodes();
+	for (int i = 0; i < nodes.getLength(); i++) {
+	    Node node = nodes.item(i);
+	    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		Element nodeElement = (Element) node;
+		if (nodeElement.getTagName().equals("priority"))
+		    priority = loadPriority(nodeElement);
+		if (nodeElement.getTagName().equals("description"))
+		    description = loadDescription(nodeElement);
+		if (nodeElement.getTagName().equals("keyword"))
+		    keyword = loadKeyword(nodeElement);
+		if (nodeElement.getTagName().equals("notes"))
+		    notes = loadNotes(nodeElement);
+		if (nodeElement.getTagName().equals("notification")) {
+		    notification = loadNotification(nodeElement);
+		    automaticStart = loadAutomaticStart(nodeElement);
+		}
+		if (nodeElement.getTagName().equals("private"))
+		    privateTask = true;
+		if (nodeElement.getTagName().equals("repetition"))
+		    repetition = loadRepetition(nodeElement);
+	    }
+	}
+	Date notificationTime = (notification == -1 ? null : new Date(notification));
+	if (repetition != -1)
+	    task = new RegularTask(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask, repetition);
+	else task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
+	return task;
     }
     
     /**
@@ -151,9 +150,9 @@ public class DiaryScanner {
      * @return Priority loaded from given XML element.
      */
     private int loadPriority(Element priorityElement) {
-        NodeList nodes = priorityElement.getChildNodes();
-        Node node = nodes.item(0);
-        return Integer.parseInt(((Text) node).getData());
+	NodeList nodes = priorityElement.getChildNodes();
+	Node node = nodes.item(0);
+	return Integer.parseInt(((Text) node).getData());
     }
     
     /**
@@ -162,9 +161,9 @@ public class DiaryScanner {
      * @return Description loaded from given XML element.
      */
     private String loadDescription(Element descriptionElement) {
-        NodeList nodes = descriptionElement.getChildNodes();
-        Node node = nodes.item(0);
-        return ((Text) node).getData();
+	NodeList nodes = descriptionElement.getChildNodes();
+	Node node = nodes.item(0);
+	return ((Text) node).getData();
     }
     
     /**
@@ -173,9 +172,9 @@ public class DiaryScanner {
      * @return Keyword loaded from given XML element.
      */
     private String loadKeyword(Element keywordElement) {
-        NodeList nodes = keywordElement.getChildNodes();
-        Node node = nodes.item(0);
-        return ((Text) node).getData();
+	NodeList nodes = keywordElement.getChildNodes();
+	Node node = nodes.item(0);
+	return ((Text) node).getData();
     }
     
     /**
@@ -184,9 +183,9 @@ public class DiaryScanner {
      * @return Notes loaded from given XML element.
      */
     private String loadNotes(Element notesElement) {
-        NodeList nodes = notesElement.getChildNodes();
-        Node node = nodes.item(0);
-        return ((Text) node).getData();
+	NodeList nodes = notesElement.getChildNodes();
+	Node node = nodes.item(0);
+	return ((Text) node).getData();
     }
     
     /**
@@ -195,8 +194,8 @@ public class DiaryScanner {
      * @return Notification time loaded from given XML element.
      */
     private long loadNotification(Element notificationElement) {
-        long notificationTime = Tools.getTime(notificationElement.getAttributeNode("time").getValue());
-        return notificationTime;
+	long notificationTime = Tools.getTime(notificationElement.getAttributeNode("time").getValue());
+	return notificationTime;
     }
     
     /**
@@ -205,8 +204,8 @@ public class DiaryScanner {
      * @return Automatic start option loaded from given XML element.
      */
     private boolean loadAutomaticStart(Element notificationElement) {
-        boolean automaticStart = Boolean.parseBoolean(notificationElement.getAttributeNode("switch").getValue());
-        return automaticStart;
+	boolean automaticStart = Boolean.parseBoolean(notificationElement.getAttributeNode("switch").getValue());
+	return automaticStart;
     }
     
     /**
@@ -215,30 +214,30 @@ public class DiaryScanner {
      * @return Repetition loaded from given XML element.
      */
     private int loadRepetition(Element repetitionElement) {
-        int repetition = Integer.parseInt(repetitionElement.getAttributeNode("frequency").getValue());
-        return repetition;
+	int repetition = Integer.parseInt(repetitionElement.getAttributeNode("frequency").getValue());
+	return repetition;
     }
     
     /**
      * Creates diary.dtd file that is used for automatic XML validation of diary files.
      */
     public static void createDTD() {
-        String userDir = (String) Settings.getDefault().getSetting("userDir");
-        String dtdFileName = userDir + File.separator + "diary.dtd";
-        File dtdFile = new File(dtdFileName);
-        try {
-            if (dtdFile.exists()) return;
-            BufferedWriter writer = new BufferedWriter(new FileWriter(dtdFile));
-            StringTokenizer data = new StringTokenizer(dtd, "&", true);
-            while (data.hasMoreTokens()) {
-                String token = data.nextToken();
-                if (token.equals("&")) writer.newLine();
-                else writer.write(token);
-            }
-            writer.close();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {dtdFileName}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-        }
+	String userDir = (String) Settings.getDefault().getSetting("userDir");
+	String dtdFileName = userDir + File.separator + "diary.dtd";
+	File dtdFile = new File(dtdFileName);
+	try {
+	    if (dtdFile.exists()) return;
+	    BufferedWriter writer = new BufferedWriter(new FileWriter(dtdFile));
+	    StringTokenizer data = new StringTokenizer(dtd, "&", true);
+	    while (data.hasMoreTokens()) {
+		String token = data.nextToken();
+		if (token.equals("&")) writer.newLine();
+		else writer.write(token);
+	    }
+	    writer.close();
+	} catch (IOException e) {
+	    JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {dtdFileName}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+	}
     }
     
     /**
