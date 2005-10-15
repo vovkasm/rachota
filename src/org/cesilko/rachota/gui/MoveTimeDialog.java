@@ -26,17 +26,18 @@ public class MoveTimeDialog extends javax.swing.JDialog {
      * @param task Source task whose time will be transferred to another task.
      */
     public MoveTimeDialog(Task task) {
-        this.task = task;
-        initComponents();
-        setLocationRelativeTo(null);
-        Day today = Plan.getDefault().getDay(new Date());
-        Iterator iterator = today.getTasks().iterator();
-        while (iterator.hasNext()) {
-            task = (Task) iterator.next();
-            if (task.getState() == Task.STATE_DONE) continue;
-            if (task.equals(this.task)) continue;
-            cmbSelectTask.addItem(task);
-        }
+	this.task = task;
+	initComponents();
+	setSize(350, 150);
+	setLocationRelativeTo(null);
+	Day today = Plan.getDefault().getDay(new Date());
+	Iterator iterator = today.getTasks().iterator();
+	while (iterator.hasNext()) {
+	    task = (Task) iterator.next();
+	    if (task.getState() == Task.STATE_DONE) continue;
+	    if (task.equals(this.task)) continue;
+	    cmbSelectTask.addItem(task);
+	}
     }
     
     /** This method is called from within the constructor to
@@ -88,7 +89,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         getContentPane().add(lbSelectTime, gridBagConstraints);
 
         spHours.setToolTipText(Translator.getTranslation("MOVETIMEDIALOG.HOURS_TOOLTIP"));
-        spHours.setPreferredSize(new java.awt.Dimension(40, 20));
+        spHours.setPreferredSize(new java.awt.Dimension(50, 20));
         spHours.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spHoursStateChanged(evt);
@@ -107,7 +108,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         getContentPane().add(lbColumn1, gridBagConstraints);
 
         spMinutes.setToolTipText(Translator.getTranslation("MOVETIMEDIALOG.MINUTES_TOOLTIP"));
-        spMinutes.setPreferredSize(new java.awt.Dimension(40, 20));
+        spMinutes.setPreferredSize(new java.awt.Dimension(50, 20));
         spMinutes.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spMinutesStateChanged(evt);
@@ -125,7 +126,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         getContentPane().add(lbColumn2, gridBagConstraints);
 
         spSeconds.setToolTipText(Translator.getTranslation("MOVETIMEDIALOG.SECONDS_TOOLTIP"));
-        spSeconds.setPreferredSize(new java.awt.Dimension(40, 20));
+        spSeconds.setPreferredSize(new java.awt.Dimension(50, 20));
         spSeconds.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spSecondsStateChanged(evt);
@@ -173,52 +174,52 @@ public class MoveTimeDialog extends javax.swing.JDialog {
      * @param evt Event that invoked this method call.
      */
     private void spSecondsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spSecondsStateChanged
-        Integer seconds = (Integer) spSeconds.getValue();
-        int value = seconds.intValue();
-        if ((value < 0) || (value > 59)) spSeconds.setValue(previousSeconds);
-        else checkDuration();
+	Integer seconds = (Integer) spSeconds.getValue();
+	int value = seconds.intValue();
+	if ((value < 0) || (value > 59)) spSeconds.setValue(previousSeconds);
+	else checkDuration();
     }//GEN-LAST:event_spSecondsStateChanged
     
     /** Method called when minutes were be changed.
      * @param evt Event that invoked this method call.
      */
     private void spMinutesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spMinutesStateChanged
-        Integer minutes = (Integer) spMinutes.getValue();
-        int value = minutes.intValue();
-        if ((value < 0) || (value > 59)) spMinutes.setValue(previousMinutes);
-        else checkDuration();
+	Integer minutes = (Integer) spMinutes.getValue();
+	int value = minutes.intValue();
+	if ((value < 0) || (value > 59)) spMinutes.setValue(previousMinutes);
+	else checkDuration();
     }//GEN-LAST:event_spMinutesStateChanged
     
     /** Method called when hours were be changed.
      * @param evt Event that invoked this method call.
      */
     private void spHoursStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spHoursStateChanged
-        Integer hours = (Integer) spHours.getValue();
-        int value = hours.intValue();
-        if ((value < 0) || (value > 23)) spHours.setValue(previousHours);
-        else checkDuration();
+	Integer hours = (Integer) spHours.getValue();
+	int value = hours.intValue();
+	if ((value < 0) || (value > 23)) spHours.setValue(previousHours);
+	else checkDuration();
     }//GEN-LAST:event_spHoursStateChanged
     
     /** Method called when cancel button was pressed.
      * @param evt Event that invoked this method call.
      */
     private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
-        setVisible(false);
+	setVisible(false);
     }//GEN-LAST:event_btCancelActionPerformed
     
     /** Method called when ok button was pressed.
      * @param evt Event that invoked this method call.
      */
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
-        setVisible(false);
-        Task targetTask = (Task) cmbSelectTask.getSelectedItem();
-        long duration = previousHours.intValue()*1000*60*60 + previousMinutes.intValue()*1000*60 + previousSeconds.intValue()*1000;
-        targetTask.addDuration(duration);
-        targetTask.setState(Task.STATE_STARTED);
-        task.addDuration(-duration);
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+	setVisible(false);
+	Task targetTask = (Task) cmbSelectTask.getSelectedItem();
+	long duration = previousHours.intValue()*1000*60*60 + previousMinutes.intValue()*1000*60 + previousSeconds.intValue()*1000;
+	targetTask.addDuration(duration);
+	targetTask.setState(Task.STATE_STARTED);
+	task.addDuration(-duration);
+	ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
     }//GEN-LAST:event_btOKActionPerformed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+        // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btOK;
     private javax.swing.JComboBox cmbSelectTask;
@@ -244,18 +245,18 @@ public class MoveTimeDialog extends javax.swing.JDialog {
      * duration of the source task.
      */
     private void checkDuration() {
-        Integer seconds = (Integer) spSeconds.getValue();
-        Integer minutes = (Integer) spMinutes.getValue();
-        Integer hours = (Integer) spHours.getValue();
-        long duration = seconds.intValue()*1000 + minutes.intValue()*1000*60 + hours.intValue()*1000*60*60;
-        if (duration > task.getDuration()) {
-            spSeconds.setValue(previousSeconds);
-            spMinutes.setValue(previousMinutes);
-            spHours.setValue(previousHours);
-        } else {
-            previousSeconds = (Integer) spSeconds.getValue();
-            previousMinutes = (Integer) spMinutes.getValue();
-            previousHours = (Integer) spHours.getValue();
-        }
+	Integer seconds = (Integer) spSeconds.getValue();
+	Integer minutes = (Integer) spMinutes.getValue();
+	Integer hours = (Integer) spHours.getValue();
+	long duration = seconds.intValue()*1000 + minutes.intValue()*1000*60 + hours.intValue()*1000*60*60;
+	if (duration > task.getDuration()) {
+	    spSeconds.setValue(previousSeconds);
+	    spMinutes.setValue(previousMinutes);
+	    spHours.setValue(previousHours);
+	} else {
+	    previousSeconds = (Integer) spSeconds.getValue();
+	    previousMinutes = (Integer) spMinutes.getValue();
+	    previousHours = (Integer) spHours.getValue();
+	}
     }
 }
