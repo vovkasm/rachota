@@ -43,29 +43,29 @@ public class Tools {
     }
     
     /** Transforms text string to time in milliseconds.
-     * @param text Textual representation of time in format hh:mm:ss.
      * @return Time in milliseconds.
+     * @param text Textual representation of time in format hh:mm or hh:mm:ss.
+     * @throws NumberFormatException in case format of time does not comply with hh:mm:ss format.
      */
-    public static long getTime(String text) {
+    public static long getTime(String text) throws NumberFormatException {
         long time = 0;
         if (text.length() == 5) {
             SimpleDateFormat df = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
             df.applyPattern("HH:mm");
-            try { time = df.parse(text).getTime(); } catch (ParseException e) { e.printStackTrace(); }
-        } else {
             try {
-                int firstColon = text.indexOf(":");
-                int secondColon = text.lastIndexOf(":");
-                int hours = Integer.parseInt(text.substring(0, firstColon));
-                int minutes = Integer.parseInt(text.substring(firstColon + 1, secondColon));
-                int seconds = Integer.parseInt(text.substring(secondColon + 1, text.length()));
-                time = seconds * 1000;
-                time = time + minutes * 1000 * 60;
-                time = time + hours * 1000 * 60 * 60;
-            } catch (Exception e) {
-                System.out.println("Text: " + text);
-                e.printStackTrace();
+                time = df.parse(text).getTime();
+            } catch (ParseException ex) {
+                throw new NumberFormatException("Error: Time does not comply with hh:mm format: " + text);
             }
+        } else {
+            int firstColon = text.indexOf(":");
+            int secondColon = text.lastIndexOf(":");
+            int hours = Integer.parseInt(text.substring(0, firstColon));
+            int minutes = Integer.parseInt(text.substring(firstColon + 1, secondColon));
+            int seconds = Integer.parseInt(text.substring(secondColon + 1, text.length()));
+            time = seconds * 1000;
+            time = time + minutes * 1000 * 60;
+            time = time + hours * 1000 * 60 * 60;
         }
         return time;
     }
