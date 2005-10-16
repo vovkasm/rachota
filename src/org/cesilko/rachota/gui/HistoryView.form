@@ -88,7 +88,7 @@
               <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.SP_MINUS_TOOLTIP&quot;)" type="code"/>
             </Property>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[40, 23]"/>
+              <Dimension value="[60, 23]"/>
             </Property>
           </Properties>
           <Events>
@@ -142,7 +142,7 @@
               <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.SP_PLUS_TOOLTIP&quot;)" type="code"/>
             </Property>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[40, 23]"/>
+              <Dimension value="[60, 23]"/>
             </Property>
           </Properties>
           <Events>
