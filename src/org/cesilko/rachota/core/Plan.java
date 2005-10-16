@@ -246,7 +246,7 @@ public class Plan {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         DiaryScanner.createDTD();
-        ProgressMonitor pm = new ProgressMonitor(null, Translator.getTranslation("MESSAGE.PROGRESS"), null, 0,  diaries.length - 1);
+        ProgressMonitor pm = new ProgressMonitor(null, Translator.getTranslation("MESSAGE.PROGRESS_LOADING"), null, 0,  diaries.length - 1);
         for (int i=0; i<diaries.length; i++) {
             try {
                 DiaryScanner scanner = scanner = new DiaryScanner(builder.parse(diaries[i]));
@@ -309,12 +309,16 @@ public class Plan {
         scanner.loadDocument();
     }
     
-    /** Copies all unfinished tasks from yesterday to today.
+    /** Copies all unfinished tasks from previous working day to today.
      */
     public void copyUnfinishedTasks() {
         Day today = getDay(new Date());
-        Day yesterday = getDayBefore(today);
-        Iterator iterator = yesterday.getTasks().iterator();
+        Day previousWorkingDay = getDayBefore(today);
+        while (previousWorkingDay.getTotalTime() == 0) {
+            if (!existsDayBefore(previousWorkingDay)) return;
+            previousWorkingDay = getDayBefore(previousWorkingDay);
+        }
+        Iterator iterator = previousWorkingDay.getTasks().iterator();
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
             if (task.getState() != Task.STATE_DONE)
@@ -337,8 +341,23 @@ public class Plan {
             if (regularTask.isPlannedFor(day) && (day.getTask(regularTask.getDescription()) == null)) {
                 RegularTask clone = (RegularTask) regularTask.cloneTask();
                 day.addTask(clone);
-                ChangeHandler.getDefault().addChangeEventListener(day, clone);
             }
         }
+    }
+
+    /** Finds out if there is any day in plan before specified day.
+     * @param day Day whose predecessor existence should be verified.
+     * @return True if any day before given day exists in plan. False
+     * otherwise.
+     */
+    private boolean existsDayBefore(Day day) {
+        Iterator iterator = days.values().iterator();
+        int index = 0;
+        while (iterator.hasNext()) {
+            Day indexedDay = (Day) iterator.next();
+            if (day.equals(indexedDay)) break;
+            index++;
+        }
+        return (index != 0);
     }
 }
