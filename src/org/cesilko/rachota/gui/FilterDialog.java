@@ -240,7 +240,7 @@ public class FilterDialog extends javax.swing.JDialog {
         else filtersTableModel.replaceFilter(taskFilter, newTaskFilter);
         formWindowClosing(null);
     }//GEN-LAST:event_btOKActionPerformed
-            // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btOK;
     private javax.swing.JComboBox cmbContent;
