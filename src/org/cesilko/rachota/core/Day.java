@@ -6,6 +6,9 @@
 
 package org.cesilko.rachota.core;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -20,7 +23,7 @@ import org.cesilko.rachota.gui.Tools;
  *
  * @author  Jiri Kovalsky
  */
-public class Day implements ChangeListener {
+public class Day implements ChangeListener, PropertyChangeListener {
     
     /** Set of all (including regular kind) tasks planned for day. */
     private Vector tasks;
@@ -36,6 +39,8 @@ public class Day implements ChangeListener {
      * task is removed or its start or finish times are changed.
      */
     private boolean modified;
+    /** Class containing all registered listeners interested in task. */
+    private PropertyChangeSupport propertyChangeSupport;
     
     /** Creates a new instance of day.
      * @param tasks Vector of tasks planned for day.
@@ -44,6 +49,7 @@ public class Day implements ChangeListener {
      * @param finishTime Last time when some task was worked on.
      */
     public Day(Vector tasks, Date date, Date startTime, Date finishTime) {
+        propertyChangeSupport = new PropertyChangeSupport(this);
         setTasks(tasks);
         setDate(date);
         setStartTime(startTime);
@@ -67,13 +73,28 @@ public class Day implements ChangeListener {
         return tasks;
     }
     
+    /** Adds new listener to set of objects interested in this day.
+     * @param listener Object interested in this day.
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /** Adds new listener to set of objects interested in this day.
+     * @param listener Object interested in this day.
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+    
     /** Adds new task to plan of day.
      * @param task New task to be added.
      */
     public void addTask(Task task) {
         tasks.add(task);
         if (!(task instanceof RegularTask)) modified = true;
-        ChangeHandler.getDefault().fireEvent(this, TASK_CREATED);
+        task.addPropertyChangeListener(this);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "tasks", null, tasks));
     }
     
     /** Removes given task from plan of day.
@@ -82,7 +103,8 @@ public class Day implements ChangeListener {
     public void removeTask(Task task) {
         tasks.remove(task);
         modified = true;
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        task.removePropertyChangeListener(this);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "tasks", null, tasks));
     }
     
     /** Removes all not started regular tasks from plan of day.
@@ -135,7 +157,7 @@ public class Day implements ChangeListener {
      */
     public void setDate(Date date) {
         this.date = date;
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "date", null, tasks));
     }
     
     /** Returns identification of day.
@@ -263,5 +285,17 @@ public class Day implements ChangeListener {
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         String text = df.format(date);
         return text.substring(0, text.length() - 3);
+    }
+
+    /** Method called when some property of task was changed.
+     * @param evt Event describing what was changed.
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        boolean today = Plan.getDefault().isToday(this);
+        if (today & (evt.getPropertyName().equals("duration"))) {
+            if (startTime == null)
+                startTime = new Date();
+            setFinishTime(new Date());
+        } else ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
     }
 }
