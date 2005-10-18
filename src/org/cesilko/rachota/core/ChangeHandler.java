@@ -5,13 +5,11 @@
  */
 
 package org.cesilko.rachota.core;
-
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
 /** Singleton responsible for distribution of all change events fired in the system.
- *
  * @author  Jiri Kovalsky
  */
 public class ChangeHandler {
@@ -40,7 +38,7 @@ public class ChangeHandler {
      * @param changeEventListener New change event listener for registration.
      * @param object Object that is listener interested in.
      */
-    public void addChangeEventListener(ChangeListener changeEventListener, Object object) {
+    public synchronized void addChangeEventListener(ChangeListener changeEventListener, Object object) {
         Vector allObjectChangeEventListeners = (Vector) changeEventListeners.get(object);
         if (allObjectChangeEventListeners == null) {
             allObjectChangeEventListeners = new Vector();
@@ -54,19 +52,20 @@ public class ChangeHandler {
      * @param changeEventListener Registered change event listener.
      * @param object Object that is listener interested in.
      */
-    public void removeChangeEventListener(ChangeListener changeEventListener, Object object) {
+    public synchronized void removeChangeEventListener(ChangeListener changeEventListener, Object object) {
         Vector allObjectChangeEventListeners = (Vector) changeEventListeners.get(object);
-        if (allObjectChangeEventListeners != null)
+        if (allObjectChangeEventListeners != null) {
             allObjectChangeEventListeners.remove(changeEventListener);
-        if (allObjectChangeEventListeners.size() == 0)
-            changeEventListeners.remove(object);
+            if (allObjectChangeEventListeners.size() == 0)
+                changeEventListeners.remove(object);
+        }
     }
     
     /** Informs all of registered listeners with interest in given object about the event.
      * @param object Object that fired the event.
      * @param changeType Type of change that happened on object.
      */
-    public void fireEvent(Object object, int changeType) {
+    public synchronized void fireEvent(Object object, int changeType) {
         Vector allObjectChangeEventListeners = (Vector) changeEventListeners.get(object);
         if (allObjectChangeEventListeners != null) {
             Iterator iterator = allObjectChangeEventListeners.iterator();
