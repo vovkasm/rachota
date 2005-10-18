@@ -5,6 +5,9 @@
  */
 
 package org.cesilko.rachota.core;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Date;
@@ -37,6 +40,8 @@ public class Task implements ClockListener {
     private Date timeStamp;
     /** Whether this task is private i.e. its duration should not be counted to whole day duration. */
     private boolean privateTask;
+    /** Class containing all registered listeners interested in task. */
+    private PropertyChangeSupport propertyChangeSupport;
     
     /** State representing not started task. */
     public static int STATE_NEW = 0;
@@ -65,6 +70,7 @@ public class Task implements ClockListener {
      * @param privateTask Is this task private ?
      */
     public Task(String description, String keyword, String notes, int priority, int state, long duration, Date notificationTime, boolean automaticStart, boolean privateTask) {
+        propertyChangeSupport = new PropertyChangeSupport(this);
         setDescription(description);
         setKeyword(keyword);
         setNotes(notes);
@@ -96,7 +102,7 @@ public class Task implements ClockListener {
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "keyword", null, keyword));
     }
     
     /** Returns keyword of this task.
@@ -191,7 +197,7 @@ public class Task implements ClockListener {
      */
     public void setNotificationTime(Date notificationTime) {
         this.notificationTime = notificationTime;
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "notificationTime", null, notificationTime));
     }
     
     /** Returns time when system should warn about task or null if no warning is required.
@@ -228,6 +234,20 @@ public class Task implements ClockListener {
      */
     public boolean privateTask() {
         return privateTask;
+    }
+    
+    /** Adds new listener to set of objects interested in this task.
+     * @param listener Object interested in this task.
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /** Adds new listener to set of objects interested in this task.
+     * @param listener Object interested in this task.
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
     
     /**
@@ -300,7 +320,7 @@ public class Task implements ClockListener {
         Date now = new Date();
         addDuration(now.getTime() - timeStamp.getTime());
         timeStamp = null;
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.TASK_DURATION_CHANGED);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
     
     /** Method called when user finished to work on task.
@@ -313,7 +333,7 @@ public class Task implements ClockListener {
             timeStamp = null;
         }
         setState(STATE_DONE);
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.TASK_DURATION_CHANGED);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
     
     /** Returns whether task is being worked on or not.
@@ -332,7 +352,7 @@ public class Task implements ClockListener {
         Plan.savePlan();
         Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
         Settings.saveSettings();
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.TASK_DURATION_CHANGED);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
     
     /**
