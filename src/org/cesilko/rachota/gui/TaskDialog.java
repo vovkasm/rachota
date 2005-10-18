@@ -396,7 +396,6 @@ public class TaskDialog extends javax.swing.JDialog {
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
                 day.addTask(task);
-                ChangeHandler.getDefault().addChangeEventListener(day, task);
             }
             ChangeHandler.getDefault().fireEvent(this, ChangeListener.TASK_CREATED);
         }
