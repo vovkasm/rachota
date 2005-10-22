@@ -5,12 +5,12 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import org.cesilko.rachota.core.ChangeHandler;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
@@ -20,7 +20,7 @@ import org.cesilko.rachota.core.Translator;
 /** Main window of the Rachota application.
  * @author Jiri Kovalsky
  */
-public class MainWindow extends javax.swing.JFrame implements ChangeListener {
+public class MainWindow extends javax.swing.JFrame implements PropertyChangeListener {
     
     /**
      * Main method called when application is started.
@@ -67,9 +67,9 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
         initComponents();
         DayView dayView = new DayView();
         tpViews.add(dayView, TAB_DAY_VIEW);
-        ChangeHandler.getDefault().addChangeEventListener(this, dayView);
+        dayView.addPropertyChangeListener(this);
         HistoryView historyView = new HistoryView();
-        ChangeHandler.getDefault().addChangeEventListener(historyView, dayView);
+        dayView.addPropertyChangeListener(historyView);
         tpViews.add(historyView, TAB_HISTORY_VIEW);
         pack();
         setTitle(title + " " + dayView.getTitleSuffix());
@@ -212,8 +212,9 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
      */
     private void mnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSettingsActionPerformed
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-        ChangeHandler.getDefault().addChangeEventListener(dayView, Settings.getDefault());
-        new SettingsDialog(this).setVisible(true);
+        SettingsDialog dialog = new SettingsDialog(this);
+        dialog.addPropertyChangeListener(dayView);
+        dialog.setVisible(true);
     }//GEN-LAST:event_mnSettingsActionPerformed
     
     /** Method called when exit application action was invoked.
@@ -276,17 +277,16 @@ public class MainWindow extends javax.swing.JFrame implements ChangeListener {
     /** Name and version of application. */
     protected static final String title = "Rachota 2.0 RC";
     /** Build number. */
-    protected static final String build = "#051018";
+    protected static final String build = "#051022";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
     private static final int TAB_HISTORY_VIEW = 1;
     
-    /** Given object fired a change event.
-     * @param object Object that was changed.
-     * @param changeType Type of change.
+    /** Method called when some property of task was changed.
+     * @param evt Event describing what was changed.
      */
-    public void eventFired(Object object, int changeType) {
+    public void propertyChange(PropertyChangeEvent evt) {
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         setTitle(title + " " + dayView.getTitleSuffix());
     }
