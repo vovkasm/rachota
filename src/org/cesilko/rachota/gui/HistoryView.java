@@ -10,6 +10,8 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,7 +29,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileFilter;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
@@ -37,7 +38,7 @@ import org.cesilko.rachota.core.filters.*;
 /** Panel providing history view on tasks from the past.
  * @author Jiri Kovalsky
  */
-public class HistoryView extends javax.swing.JPanel implements ChangeListener {
+public class HistoryView extends javax.swing.JPanel implements PropertyChangeListener {
     
     /** Creates new HistoryView panel charts and table. */
     public HistoryView() {
@@ -1110,7 +1111,7 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
     }
     
     /** Updates information about total time and returns the time.
-     * @param Total time spent on all tasks in selected period.
+     * @return Total time spent on all tasks in selected period.
      */
     private long updateTotalTime() {
 	long totalTime = 0;
@@ -1123,13 +1124,14 @@ public class HistoryView extends javax.swing.JPanel implements ChangeListener {
 	return totalTime;
     }
     
-    /** Given object fired a change event.
-     * @param object Object that was changed.
-     * @param changeType Type of change.
+    /** Method called when some property of task was changed.
+     * @param evt Event describing what was changed.
      */
-    public void eventFired(Object object, int changeType) {
-	filterTasks();
-	historyChart.repaint();
+    public void propertyChange(PropertyChangeEvent evt) {
+	FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+        filteredTasksTableModel.fireTableDataChanged();
+	txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+	historyChart.setDays(getDays());
 	updateTotalTime();
     }
 }
