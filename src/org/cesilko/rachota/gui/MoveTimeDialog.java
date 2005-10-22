@@ -8,27 +8,22 @@ package org.cesilko.rachota.gui;
 
 import java.util.Date;
 import java.util.Iterator;
-import org.cesilko.rachota.core.ChangeHandler;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
-/**
- * Dialog for user friendly transfer of time from one task to another one.
+/** Dialog for user friendly transfer of time from one task to another one.
  * @author Jiri Kovalsky
  */
 public class MoveTimeDialog extends javax.swing.JDialog {
     
-    /**
-     * Creates new dialog for moving time between two tasks.
+    /** Creates new dialog for moving time between two tasks.
      * @param task Source task whose time will be transferred to another task.
      */
     public MoveTimeDialog(Task task) {
 	this.task = task;
 	initComponents();
-	setSize(350, 150);
 	setLocationRelativeTo(null);
 	Day today = Plan.getDefault().getDay(new Date());
 	Iterator iterator = today.getTasks().iterator();
@@ -38,6 +33,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
 	    if (task.equals(this.task)) continue;
 	    cmbSelectTask.addItem(task);
 	}
+        pack();
     }
     
     /** This method is called from within the constructor to
@@ -217,7 +213,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
 	targetTask.addDuration(duration);
 	targetTask.setState(Task.STATE_STARTED);
 	task.addDuration(-duration);
-	ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("time_changed", null, null);
     }//GEN-LAST:event_btOKActionPerformed
         // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
