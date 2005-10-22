@@ -22,9 +22,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.xml.sax.SAXParseException;
 
-
-/**
- * Plan containing all days that have some tasks planned. Plan also contains
+/** Plan containing all days that have some tasks planned. Plan also contains
  * all regular tasks.
  * @author Jiri Kovalsky
  */
@@ -43,8 +41,7 @@ public class Plan {
         regularTasks = new Vector();
     }
     
-    /**
-     * Returns the only available instance of plan.
+    /** Returns the only available instance of plan.
      * @return The only instance of Plan object in system.
      */
     public static Plan getDefault() {
@@ -138,7 +135,6 @@ public class Plan {
      */
     public void addRegularTask(RegularTask regularTask) {
         regularTasks.add(regularTask);
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
     }
     
     /** Removes existing regular task from plan.
@@ -231,8 +227,7 @@ public class Plan {
         }
     }
     
-    /**
-     * Loads all planned days and history.
+    /** Loads all planned days and history.
      * @throws java.lang.Exception Exception thrown whenever any problem while loading plan occurs.
      */
     public static void loadPlan() throws Exception {
@@ -294,8 +289,7 @@ public class Plan {
         }
     }
     
-    /**
-     * Loads plan of regular tasks.
+    /** Loads plan of regular tasks.
      * @throws java.lang.Exception Exception thrown whenever any problem while loading regular tasks occurs.
      */
     public static void loadRegularTasks() throws Exception {
@@ -313,6 +307,7 @@ public class Plan {
      */
     public void copyUnfinishedTasks() {
         Day today = getDay(new Date());
+        if (!existsDayBefore(today)) return;
         Day previousWorkingDay = getDayBefore(today);
         while (previousWorkingDay.getTotalTime() == 0) {
             if (!existsDayBefore(previousWorkingDay)) return;
@@ -356,7 +351,7 @@ public class Plan {
         while (iterator.hasNext()) {
             Day indexedDay = (Day) iterator.next();
             if (day.equals(indexedDay)) break;
-            index++;
+            if (indexedDay.getDate().before(day.getDate())) index++;
         }
         return (index != 0);
     }
