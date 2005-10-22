@@ -23,7 +23,7 @@ import org.cesilko.rachota.gui.Tools;
  *
  * @author  Jiri Kovalsky
  */
-public class Day implements ChangeListener, PropertyChangeListener {
+public class Day implements PropertyChangeListener {
     
     /** Set of all (including regular kind) tasks planned for day. */
     private Vector tasks;
@@ -33,13 +33,12 @@ public class Day implements ChangeListener, PropertyChangeListener {
     private Date startTime;
     /** Time when the last task was worked on. */
     private Date finishTime;
-    /**
-     * Identification whether day was modified compared to its saved state.
+    /** Identification whether day was modified compared to its saved state.
      * Day gets modified when irregular task is added to its plan or any
      * task is removed or its start or finish times are changed.
      */
     private boolean modified;
-    /** Class containing all registered listeners interested in task. */
+    /** Class containing all registered listeners interested in day. */
     private PropertyChangeSupport propertyChangeSupport;
     
     /** Creates a new instance of day.
@@ -57,13 +56,12 @@ public class Day implements ChangeListener, PropertyChangeListener {
         modified = false;
     }
     
-    /**
-     * Sets tasks of day.
+    /** Sets tasks of day.
      * @param tasks Tasks of day.
      */
     public void setTasks(Vector tasks) {
         this.tasks = tasks;
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "tasks", null, tasks));
     }
     
     /** Returns tasks planned for day.
@@ -204,20 +202,6 @@ public class Day implements ChangeListener, PropertyChangeListener {
         return modified;
     }
     
-    /**
-     * Given object fired a change event of given type.
-     * @param changeType Type of change event.
-     * @param object Object that was changed.
-     */
-    public void eventFired(Object object, int changeType) {
-        boolean today = Plan.getDefault().isToday(this);
-        if (today & (changeType == ChangeListener.TASK_DURATION_CHANGED)) {
-            if (startTime == null)
-                startTime = new Date();
-            setFinishTime(new Date());
-        } else ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
-    }
-    
     /** Get total time spent on tasks.
      * @return Total time spent on tasks in milliseconds.
      */
@@ -251,8 +235,7 @@ public class Day implements ChangeListener, PropertyChangeListener {
         tasks = sortedTasks;
     }
     
-    /**
-     * Write day to given writer.
+    /** Write day to given writer.
      * @param writer File writer where day will be written.
      * @throws java.io.IOException Input/Output exception thrown whenever any problem while writing day occurs.
      */
@@ -296,6 +279,6 @@ public class Day implements ChangeListener, PropertyChangeListener {
             if (startTime == null)
                 startTime = new Date();
             setFinishTime(new Date());
-        } else ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        } else propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "generic", null, tasks));
     }
 }
