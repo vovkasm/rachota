@@ -25,8 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import org.cesilko.rachota.core.ChangeHandler;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.ClockListener;
 import org.cesilko.rachota.core.Day;
@@ -38,7 +36,7 @@ import org.cesilko.rachota.core.Translator;
 /** Panel showing tasks planned for one day and manipulation with them.
  * @author Jiri Kovalsky
  */
-public class DayView extends javax.swing.JPanel implements ChangeListener, ClockListener, PropertyChangeListener {
+public class DayView extends javax.swing.JPanel implements ClockListener, PropertyChangeListener {
     
     /** Creates new DayView panel containing tasks planned for given day.
      */
@@ -113,7 +111,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
                     tbPlan.getColumnModel().getColumn(i).setHeaderValue(dayTableModel.getColumnName(i));
             }
         });
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
         loadRunningTask();
         checkButtons();
         tbPlan.getColumn(Translator.getTranslation("TASK_DESCRIPTION")).setPreferredWidth(240);
@@ -469,13 +467,13 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
      */
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
         if (day.isModified()) Plan.getDefault().addDay(day);
-        ChangeHandler.getDefault().removeChangeEventListener(this, day);
+        day.removePropertyChangeListener(this);
         day = Plan.getDefault().getDay(new Date());
         Plan.getDefault().addRegularTasks(day);
-        ChangeHandler.getDefault().addChangeEventListener(this, day);
+        day.addPropertyChangeListener(this);
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         dayTableModel.setDay(day);
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
         // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
         checkButtons();
     }//GEN-LAST:event_txtDateMouseClicked
@@ -534,7 +532,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
      */
     private void chbShowFinishedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbShowFinishedActionPerformed
         Settings.getDefault().setSetting("displayFinishedTasks", new Boolean(chbShowFinished.isSelected()));
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
     }//GEN-LAST:event_chbShowFinishedActionPerformed
     
     /** Method called when next button is pressed.
@@ -548,7 +546,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         day.addPropertyChangeListener(this);
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         dayTableModel.setDay(day);
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
         // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
         checkButtons();
     }//GEN-LAST:event_btNextActionPerformed
@@ -564,7 +562,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         day.addPropertyChangeListener(this);
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         dayTableModel.setDay(day);
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
         // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
         checkButtons();
     }//GEN-LAST:event_btPreviousActionPerformed
@@ -584,7 +582,6 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         task.workDone();
         Settings.getDefault().setSetting("runningTask", null);
         Settings.saveSettings();
-        task = null;
         txtTask.setText("");
         double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
         double totalTime = (double) day.getTotalTime()/(60 * 60 * 1000);
@@ -593,7 +590,8 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         pbProgress.setString(Tools.getTime(day.getTotalTime()));
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         dayTableModel.fireTableDataChanged();
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("task_done", task, null);
+        task = null;
         checkButtons();
     }//GEN-LAST:event_btDoneActionPerformed
     
@@ -605,7 +603,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         Settings.getDefault().setSetting("runningTask", null);
         Settings.saveSettings();
         task.removePropertyChangeListener(this);
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("task_suspended", task, null);
         checkButtons();
     }//GEN-LAST:event_btRelaxActionPerformed
     
@@ -615,7 +613,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
     private void btWorkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkActionPerformed
         task.startWork();
         task.addPropertyChangeListener(this);
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("task_resumed", null, task);
         checkButtons();
     }//GEN-LAST:event_btWorkActionPerformed
     
@@ -624,7 +622,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
      */
     private void tbPlanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPlanMouseClicked
         checkButtons();
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("plan_clicked", null, null);
         if (selectButtonEnabled) { // Selected task can be started
             Date now = new Date();
             long delay = 1000;
@@ -686,9 +684,10 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
     
     /** Method called when some information needs to be updated. This means that
      * start and finish times will be updated or information about selected task.
-     * @param changeType Type of change that happened influencing what will be updated.
+     * @param taskDurationChanged If true, only task row will be updated and working
+     * hours will be checked. Otherwise whole table gets updated.
      */
-    private void updateInformation(int changeType) {
+    private void updateInformation(boolean taskDurationChanged) {
         SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
         sdf.applyPattern("EEEEEEEEEEE - d. MMMMMMMMMMMMM, yyyy");
         txtDate.setText(sdf.format(day.getDate()));
@@ -716,7 +715,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         if (task != null)
             txtTask.setText(task.getDescription());
         boolean today = Plan.getDefault().isToday(day);
-        if (changeType == ChangeListener.TASK_DURATION_CHANGED) {
+        if (taskDurationChanged) {
             if (today) {
                 row = dayTableModel.getRow(task);
                 dayTableModel.fireTableRowsUpdated(row, row);
@@ -735,7 +734,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
                 }
             }
         } else dayTableModel.fireTableDataChanged();
-        ChangeHandler.getDefault().fireEvent(this, ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("view_updated", null, null);
     }
     
     /** Check availability of buttons according to current state of view.
@@ -799,7 +798,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
             return;
         }
         MoveTimeDialog moveTimeDialog = new MoveTimeDialog(selectedTask);
-        ChangeHandler.getDefault().addChangeEventListener(this, moveTimeDialog);
+        moveTimeDialog.addPropertyChangeListener(this);
         moveTimeDialog.setVisible(true);
     }
     
@@ -834,7 +833,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
      */
     public void setFinishedTasksVisibility(boolean visibility) {
         Settings.getDefault().setSetting("displayFinishedTasks", new Boolean(visibility));
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
     }
     
     /** Get suffix to be appended to title of application.
@@ -847,15 +846,6 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         Day today = Plan.getDefault().getDay(new Date());
         suffix = suffix + " [" + Tools.getTime(today.getTotalTime()) + "]";
         return suffix;
-    }
-    
-    /** Given object fired a change event.
-     * @param object Object that was changed.
-     * @param changeType Type of change that happened to given object.
-     */
-    public void eventFired(Object object, int changeType) {
-        if (object instanceof Settings) Plan.getDefault().addRegularTasks(day);
-        updateInformation(changeType);
     }
     
     /** Tries to load restarting task and run it.
@@ -907,7 +897,7 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             dayTableModel.setDay(day);
             dayTableModel.fireTableDataChanged();
-            updateInformation(ChangeListener.GENERIC_CHANGE);
+            updateInformation(false);
             requiredDay = true;
         } */
         Iterator iterator = day.getTasks().iterator();
@@ -950,18 +940,22 @@ public class DayView extends javax.swing.JPanel implements ChangeListener, Clock
         if ((this.task != null) && (this.task.isRunning())) btRelaxActionPerformed(null);
         this.task = task;
         txtTask.setText(task.getDescription());
-        updateInformation(ChangeListener.GENERIC_CHANGE);
+        updateInformation(false);
         if (startTask) btWorkActionPerformed(null);
     }
 
+    /** Method called when some property of task was changed.
+     * @param evt Event describing what was changed.
+     */
     public void propertyChange(PropertyChangeEvent evt) {
-        int changeType = ChangeListener.GENERIC_CHANGE;
-        if (evt.getPropertyName().equals("duration")) changeType = ChangeListener.TASK_DURATION_CHANGED;
+        boolean taskDurationChanged = false;
+        if (evt.getPropertyName().equals("settings")) Plan.getDefault().addRegularTasks(day);
+        if (evt.getPropertyName().equals("duration")) taskDurationChanged = true;
         else if (evt.getPropertyName().equals("tasks")) {
             Plan.getDefault().addDay(day);
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             dayTableModel.resortRows();
         }
-        updateInformation(changeType);
+        updateInformation(taskDurationChanged);
     }
 }
