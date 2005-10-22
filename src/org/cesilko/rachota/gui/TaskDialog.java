@@ -9,8 +9,6 @@ package org.cesilko.rachota.gui;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import org.cesilko.rachota.core.ChangeHandler;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.RegularTask;
 import org.cesilko.rachota.core.Task;
@@ -387,8 +385,7 @@ public class TaskDialog extends javax.swing.JDialog {
                 RegularTask regularTask = (RegularTask) task;
                 regularTask.setFrequency(cmbRepetition.getSelectedIndex());
             }
-            ChangeHandler.getDefault().fireEvent(task, ChangeListener.GENERIC_CHANGE);
-            ChangeHandler.getDefault().fireEvent(this, ChangeListener.TASK_CHANGED);
+            firePropertyChange("task_changed", null, task);
         } else {
             if (chbRegular.isSelected()) {
                 RegularTask regularTask = new RegularTask(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask, cmbRepetition.getSelectedIndex());
@@ -397,7 +394,7 @@ public class TaskDialog extends javax.swing.JDialog {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
                 day.addTask(task);
             }
-            ChangeHandler.getDefault().fireEvent(this, ChangeListener.TASK_CREATED);
+            firePropertyChange("task_created", null, task);
         }
         closeDialog(null);
     }//GEN-LAST:event_btOKActionPerformed
