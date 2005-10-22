@@ -6,21 +6,22 @@
 
 package org.cesilko.rachota.gui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import org.cesilko.rachota.core.ChangeHandler;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.RegularTask;
 import org.cesilko.rachota.core.Settings;
+import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
 /** Dialog with system settings.
  * @author Jiri Kovalsky
  */
-public class SettingsDialog extends javax.swing.JDialog implements ChangeListener {
+public class SettingsDialog extends javax.swing.JDialog implements PropertyChangeListener {
     
     /** Creates new dialog with system settings.
      * @param parent Parent component of this dialog i.e. main window.
@@ -38,6 +39,11 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         chbCheckPriority.setSelected(((Boolean) Settings.getDefault().getSetting("checkPriority")).booleanValue());
         chbCountPrivate.setSelected(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbRegularTasks.getColumn(Translator.getTranslation("TASK_DESCRIPTION")).setPreferredWidth(250);
+        tbRegularTasks.getColumn(Translator.getTranslation("TASK_REGULAR")).setPreferredWidth(100);
+        tbRegularTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
+        tbRegularTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
+        tbRegularTasks.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
     }
     
     /** This method is called from within the constructor to
@@ -322,7 +328,8 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         int decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.REMOVE_REGULAR_TASK", new String[] {description}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION);
         if (decision == JOptionPane.NO_OPTION) return;
         regularTasks.remove(regularTask);
-        eventFired(null, ChangeListener.GENERIC_CHANGE);
+        RegularTasksTableModel regularTasksTableModel = (RegularTasksTableModel) tbRegularTasks.getModel();
+        regularTasksTableModel.fireTableDataChanged();
         checkButtons();
     }//GEN-LAST:event_btRemoveActionPerformed
     
@@ -334,7 +341,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         int row = tbRegularTasks.getSelectedRow();
         RegularTask regularTask = (RegularTask) regularTasks.get(row);
         TaskDialog taskDialog = new TaskDialog(regularTask);
-        ChangeHandler.getDefault().addChangeEventListener(this, taskDialog);
+        taskDialog.addPropertyChangeListener(this);
         taskDialog.setVisible(true);
     }//GEN-LAST:event_btEditActionPerformed
     
@@ -344,7 +351,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
         if (!workHoursValid()) return;
         TaskDialog taskDialog = new TaskDialog();
-        ChangeHandler.getDefault().addChangeEventListener(this, taskDialog);
+        taskDialog.addPropertyChangeListener(this);
         taskDialog.setVisible(true);
     }//GEN-LAST:event_btAddActionPerformed
     
@@ -381,7 +388,7 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
             RegularTask regularTask = (RegularTask) iterator.next();
             Plan.getDefault().addRegularTask(regularTask);
         }
-        ChangeHandler.getDefault().fireEvent(Settings.getDefault(), ChangeListener.GENERIC_CHANGE);
+        firePropertyChange("settings", null, Settings.getDefault());
         Plan.saveRegularTasks();
         Settings.saveSettings();
     }//GEN-LAST:event_btOKActionPerformed
@@ -427,19 +434,6 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
         btRemove.setEnabled(row != -1);
     }
     
-    /** Given object fired a change event.
-     * @param object Object that was changed.
-     * @param changeType Type of change.
-     */
-    public void eventFired(Object object, int changeType) {
-        if (changeType == ChangeListener.TASK_CREATED) {
-            TaskDialog taskDialog = (TaskDialog) object;
-            regularTasks.add(taskDialog.getTask());
-        }
-        RegularTasksTableModel regularTasksTableModel = (RegularTasksTableModel) tbRegularTasks.getModel();
-        regularTasksTableModel.fireTableDataChanged();
-    }
-    
     /** Check validity of number provided as working hours and warn user if it is invalid.
      * @return True if number provided as working hours is valid double number e.g. 8.5 or false otherwise.
      */
@@ -453,5 +447,17 @@ public class SettingsDialog extends javax.swing.JDialog implements ChangeListene
             valid = false;
         }
         return valid;
+    }
+
+    /** Method called when some property of task was changed.
+     * @param evt Event describing what was changed.
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("task_created")) {
+            Task task = (Task) evt.getNewValue();
+            regularTasks.add(task);
+        }
+        RegularTasksTableModel regularTasksTableModel = (RegularTasksTableModel) tbRegularTasks.getModel();
+        regularTasksTableModel.fireTableDataChanged();
     }
 }
