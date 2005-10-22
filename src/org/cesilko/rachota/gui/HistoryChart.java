@@ -9,12 +9,12 @@ package org.cesilko.rachota.gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.cesilko.rachota.core.ChangeHandler;
-import org.cesilko.rachota.core.ChangeListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
@@ -25,7 +25,7 @@ import org.cesilko.rachota.core.filters.AbstractTaskFilter;
  * period scale.
  * @author Jiri Kovalsky
  */
-public class HistoryChart extends JPanel implements ChangeListener {
+public class HistoryChart extends JPanel implements PropertyChangeListener {
     
     /** Days whose data should be drawn. */
     private Vector days;
@@ -66,7 +66,7 @@ public class HistoryChart extends JPanel implements ChangeListener {
         setDays(days);
         setHighlightingFilter(taskFilter);
         setChartType(chartType);
-        ChangeHandler.getDefault().addChangeEventListener(this, Settings.getDefault());
+        Settings.getDefault().addPropertyChangeListener(this);
     }
     
     /** Sets which days should be used to draw history chart.
@@ -331,11 +331,10 @@ public class HistoryChart extends JPanel implements ChangeListener {
         graphics.setFont(originalFont);
     }
     
-    /** Given object fired a change event.
-     * @param object Object that was changed.
-     * @param changeType Type of change.
+    /** Method called when some property of task was changed.
+     * @param evt Event describing what was changed.
      */
-    public void eventFired(Object object, int changeType) {
+    public void propertyChange(PropertyChangeEvent evt) {
         repaint();
     }
 }
