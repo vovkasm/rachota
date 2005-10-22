@@ -6,6 +6,8 @@
 
 package org.cesilko.rachota.core;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,9 +33,12 @@ public class Settings {
      * and value holds the setting value e.g. "true".
      */
     private HashMap settingsMap;
+    /** Class containing all registered listeners interested in settings. */
+    private PropertyChangeSupport propertyChangeSupport;
     
     /** Creates private instance of Settings object. */
     private Settings() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
         settingsMap = new HashMap();
         settingsMap.put("dayWorkHours", "8.0");
         settingsMap.put("warnHoursNotReached", new Boolean(true));
@@ -76,6 +81,7 @@ public class Settings {
     public boolean setSetting(String setting, Object value) {
         if (settingsMap.containsKey(setting)) {
             settingsMap.put(setting, value);
+            propertyChangeSupport.firePropertyChange("settings", null, setting);
             return true;
         }
         return false;
@@ -87,6 +93,20 @@ public class Settings {
      */
     public Object getSetting(String setting) {
         return settingsMap.get(setting);
+    }
+    
+    /** Adds new listener to set of objects interested in this settings.
+     * @param listener Object interested in this settings.
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /** Adds new listener to set of objects interested in this settings.
+     * @param listener Object interested in this settings.
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
     
     /** Saves all settings into settings.cfg file.
