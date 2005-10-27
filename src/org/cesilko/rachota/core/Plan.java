@@ -225,6 +225,7 @@ public class Plan {
                 if (day != null) day.write(writer);
             }
             writer.write("</week>");
+            writer.flush();
             writer.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
@@ -289,6 +290,7 @@ public class Plan {
                 regularTask.write(writer);
             }
             writer.write("    </regular_tasks>");
+            writer.flush();
             writer.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
