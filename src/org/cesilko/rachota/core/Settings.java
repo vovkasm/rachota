@@ -125,6 +125,7 @@ public class Settings {
                 writer.write(key + " = " + settings.getSetting(key));
                 writer.newLine();
             }
+            writer.flush();
             writer.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
