@@ -152,17 +152,20 @@ public class Plan {
     }
     
     /** Saves all days to XML files.
+     * @return True if plan was saved successfully, false otherwise
      */
-    public static void savePlan() {
+    public static boolean savePlan() {
         Plan plan = Plan.getDefault();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         int thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         int weekToSave = plan.getNextWeekToSave(thisWeek - 2);
+        boolean planSaved = true;
         while (weekToSave != -1) {
-            plan.saveWeek(weekToSave);
+            planSaved = planSaved & plan.saveWeek(weekToSave);
             weekToSave = plan.getNextWeekToSave(weekToSave);
         }
+        return planSaved;
     }
     
     /** Returns index of next week to be saved after given week.
@@ -191,8 +194,9 @@ public class Plan {
     
     /** Saves week with given index of year.
      * @param week Index of year to be saved.
+     * @return True if week was successfully saved, false otherwise.
      */
-    private void saveWeek(int week) {
+    private boolean saveWeek(int week) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         String location = (String) Settings.getDefault().getSetting("userDir");
@@ -225,6 +229,8 @@ public class Plan {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
+        File diaryFile = new File(location);
+        return (diaryFile.length() != 0);
     }
     
     /** Loads all planned days and history.

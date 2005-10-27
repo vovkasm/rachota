@@ -10,6 +10,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.Day;
@@ -257,7 +258,27 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 Settings.saveSettings();
             }
         }
-        Plan.savePlan();
+        int attempts = 0;
+        while (true) {
+            boolean planSaved = Plan.savePlan();
+            attempts++;
+            if (planSaved) break;
+            if (attempts == 10) {
+                int decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.SELECT_LOCATION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (decision == JOptionPane.NO_OPTION) break;
+                String location = (String) Settings.getDefault().getSetting("userdir");
+                JFileChooser fileChooser = new JFileChooser(location);
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
+                fileChooser.setApproveButtonMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_SELECT"));
+                decision = fileChooser.showOpenDialog(this);
+                attempts = 0;
+                if (decision == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    Settings.getDefault().setSetting("userdir", file.getAbsolutePath());
+                }
+            }
+        }
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
     
