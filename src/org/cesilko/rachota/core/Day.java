@@ -275,10 +275,12 @@ public class Day implements PropertyChangeListener {
      */
     public void propertyChange(PropertyChangeEvent evt) {
         boolean today = Plan.getDefault().isToday(this);
-        if (today & (evt.getPropertyName().equals("duration"))) {
+        if (today & (evt.getPropertyName().equals("duration")))
+            modified = true;
+            Plan.getDefault().addDay(this);
             if (startTime == null)
                 startTime = new Date();
             setFinishTime(new Date());
-        } else propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "generic", null, tasks));
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "generic", null, tasks));
     }
 }
