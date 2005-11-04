@@ -718,7 +718,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         if (taskDurationChanged) {
             if (today) {
                 row = dayTableModel.getRow(task);
-                dayTableModel.fireTableRowsUpdated(row, row);
+                if (row != -1) dayTableModel.fireTableRowsUpdated(row, row);
             }
             boolean warnHoursExceeded = ((Boolean) Settings.getDefault().getSetting("warnHoursExceeded")).booleanValue();
             if (warnHoursExceeded && !warningConfirmed) {
