@@ -951,7 +951,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	    taskFilter = new DurationFilter();
 	    taskFilter.setContent(Tools.getTime(0));
 	    try {
-		taskFilter.setContent(Tools.getTime(Tools.getTime(txtContent.getText())));
+                String text = txtContent.getText();
+		if (text.equals("")) txtContent.setText(Tools.getTime(0));
+                else taskFilter.setContent(Tools.getTime(Tools.getTime(text)));
 	    } catch (NumberFormatException e) {
 		txtContent.setText(Tools.getTime(0));
 		e.printStackTrace();
