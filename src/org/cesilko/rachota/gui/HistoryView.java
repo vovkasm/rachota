@@ -952,7 +952,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	    taskFilter.setContent(Tools.getTime(0));
 	    try {
                 String text = txtContent.getText();
-		if (text.equals("")) txtContent.setText(Tools.getTime(0));
+                if (text.equals("")) {
+                    text = Tools.getTime(0);
+                    txtContent.setText(Tools.getTime(0));
+                }
+		if (text.length() != 8) throw new NumberFormatException("Error: invalid task duration specified: " + text);
                 else taskFilter.setContent(Tools.getTime(Tools.getTime(text)));
 	    } catch (NumberFormatException e) {
 		txtContent.setText(Tools.getTime(0));
@@ -983,10 +987,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	JFileChooser fileChooser = new JFileChooser(location);
 	fileChooser.setFileFilter(new FileFilter() {
 	    public boolean accept(File f) {
-		return (f.isFile() && f.getName().endsWith(".html"));
+		return (f.isDirectory() || f.isFile() && f.getName().endsWith(".html"));
 	    }
 	    public String getDescription() {
-		return "All HTML files";
+		return "All HTML Files";
 	    }
 	});
 	fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
@@ -1044,6 +1048,13 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	    writer.newLine();
 	    writer.write("    <img src=\"" + file.getName().substring(0, file.getName().indexOf(".")) + "_chart.png\" border=\"1\"/><br/><br/>");
 	    writer.newLine();
+            AbstractTaskFilter filter = getFilter();
+            if (filter != null) {
+                writer.write("    <u>" + Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS") + "</u>");
+                writer.newLine();
+                writer.write("    <ul><li>" + filter.toString() + " " + filter.getContentRules().get(filter.getContentRule()) + " <b>" + filter.getContent() + "</b></li></ul>");
+                writer.newLine();
+            }
 	    writer.write("    <u>" + Translator.getTranslation("REPORT.APPLIED_FILTERS") + "</u>");
 	    writer.newLine();
 	    writer.write("    <ul>");
@@ -1092,7 +1103,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	    writer.newLine();
 	    writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(updateTotalTime()) + "</b><br/><br/>");
 	    writer.newLine();
-	    writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> " + MainWindow.title + " " + "(build " + MainWindow.build + ")<BR/>");
+	    writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + MainWindow.title + "</a> " + "(build " + MainWindow.build + ")<br/>");
 	    writer.newLine();
 	    writer.write("    " + new Date());
 	    writer.newLine();
