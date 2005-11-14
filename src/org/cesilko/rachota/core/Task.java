@@ -42,6 +42,8 @@ public class Task implements ClockListener {
     private boolean privateTask;
     /** Class containing all registered listeners interested in task. */
     private PropertyChangeSupport propertyChangeSupport;
+    /** Time in miliseconds from previous saving of diary and settings files. */
+    private long lastSaving;
     
     /** State representing not started task. */
     public static int STATE_NEW = 0;
@@ -81,6 +83,7 @@ public class Task implements ClockListener {
         setAutomaticStart(automaticStart);
         setPrivateTask(privateTask);
         timeStamp = null;
+        lastSaving = 0;
     }
     
     /** Sets description of this task.
@@ -347,11 +350,17 @@ public class Task implements ClockListener {
      */
     public void tick() {
         Date now = new Date();
-        addDuration(now.getTime() - timeStamp.getTime());
+        long timeSinceLastTick = now.getTime() - timeStamp.getTime();
+        addDuration(timeSinceLastTick);
         timeStamp = new Date();
-        Plan.savePlan();
-        Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
-        Settings.saveSettings();
+        lastSaving = lastSaving + timeSinceLastTick;
+        int savingPeriod = Integer.parseInt((String) Settings.getDefault().getSetting("savingPeriod")) * 1000;
+        if (lastSaving > savingPeriod) {
+            Plan.savePlan();
+            Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
+            Settings.saveSettings();
+            lastSaving = 0;
+        }
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
     
