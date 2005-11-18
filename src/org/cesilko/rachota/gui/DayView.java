@@ -723,7 +723,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             boolean warnHoursExceeded = ((Boolean) Settings.getDefault().getSetting("warnHoursExceeded")).booleanValue();
             if (warnHoursExceeded && !warningConfirmed) {
                 double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
-                double totalTime = (double) day.getTotalTime()/(60 * 60 * 1000);
+                double totalTime = (double) Plan.getDefault().getDay(new Date()).getTotalTime()/(60 * 60 * 1000);
                 if (totalTime > dayWorkHours) {
                     warningConfirmed = true;
                     new Thread() {
