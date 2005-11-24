@@ -352,12 +352,12 @@ public class Task implements ClockListener {
         Date now = new Date();
         long timeSinceLastTick = now.getTime() - timeStamp.getTime();
         addDuration(timeSinceLastTick);
+        Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
         timeStamp = new Date();
         lastSaving = lastSaving + timeSinceLastTick;
         int savingPeriod = Integer.parseInt((String) Settings.getDefault().getSetting("savingPeriod")) * 1000;
         if (lastSaving > savingPeriod) {
             Plan.savePlan();
-            Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
             Settings.saveSettings();
             lastSaving = 0;
         }
