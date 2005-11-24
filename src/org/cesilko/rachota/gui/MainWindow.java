@@ -253,10 +253,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         if ((task != null) && !task.equals("null")) {
             task = task.substring(0, task.indexOf("["));
             int decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (decision == JOptionPane.NO_OPTION) {
-                Settings.getDefault().setSetting("runningTask", null);
-                Settings.saveSettings();
-            }
+            if (decision == JOptionPane.NO_OPTION) Settings.getDefault().setSetting("runningTask", null);
+            Settings.saveSettings();
         }
         int attempts = 0;
         while (true) {
@@ -298,7 +296,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.0 RC";
     /** Build number. */
-    protected static final String build = "#051118";
+    protected static final String build = "#051124";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
