@@ -49,6 +49,7 @@ public class Settings {
         settingsMap.put("displayFinishedTasks", new Boolean(false));
         settingsMap.put("countPrivateTasks", new Boolean(false));
         settingsMap.put("runningTask", null);
+        settingsMap.put("savingPeriod", "30");
         settingsMap.put("dictionary", "Dictionary_" + Locale.getDefault().getLanguage() + "_" + Locale.getDefault().getCountry() + ".properties");
         
         java.net.URL url = Settings.class.getResource("Settings.class");
@@ -61,6 +62,7 @@ public class Settings {
             userDir = userDir.substring(userDir.indexOf(":") + 1, userDir.indexOf(".jar!"));
             userDir = userDir.substring(index, userDir.lastIndexOf((index == 1) ? "\\" : "/"));
         }
+        userDir = Tools.replaceAll(userDir, "%20", " "); // Space in path is replaced by %20 and this needs to be changed
         settingsMap.put("userDir", userDir);
     }
     
