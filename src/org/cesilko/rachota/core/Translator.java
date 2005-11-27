@@ -36,6 +36,7 @@ public class Translator {
             else {
                 String fileName = System.getProperty("os.name").indexOf("Windows") == -1 ? "/" : "";
                 fileName = fileName + location.substring(6, location.indexOf(".jar") + 4);
+                fileName = Tools.replaceAll(fileName, "%20", " "); // Space in path is replaced by %20 and this needs to be changed
                 JarFile jarFile = new JarFile(fileName);
                 ZipEntry entry = jarFile.getEntry("org/cesilko/rachota/core/" + dictionaryName);
                 if (entry == null) {
