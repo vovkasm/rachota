@@ -111,6 +111,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                     tbPlan.getColumnModel().getColumn(i).setHeaderValue(dayTableModel.getColumnName(i));
             }
         });
+        DayTableModel tableModel = (DayTableModel) tbPlan.getModel();
+        tableModel.setSortedColumn(DayTableModel.TASK_PRIORITY, false);
         updateInformation(false);
         loadRunningTask();
         checkButtons();

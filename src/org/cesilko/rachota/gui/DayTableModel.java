@@ -85,7 +85,7 @@ public class DayTableModel extends AbstractTableModel {
         setSelectedColumn(TASK_KEYWORD, false);
         setSelectedColumn(TASK_PRIVATE, false);
         sortedColumn = TASK_PRIORITY;
-        sortedAscending = true;
+        sortedAscending = false;
     }
     
     /**
