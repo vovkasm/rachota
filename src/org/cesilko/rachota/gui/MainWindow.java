@@ -311,7 +311,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.0 RC";
     /** Build number. */
-    protected static final String build = "#051213";
+    protected static final String build = "#051221";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
