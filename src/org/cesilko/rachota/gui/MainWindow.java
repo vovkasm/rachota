@@ -75,7 +75,18 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         tpViews.add(historyView, TAB_HISTORY_VIEW);
         pack();
         setTitle(title + " " + dayView.getTitleSuffix());
-        setLocationRelativeTo(null);
+        String size = (String) Settings.getDefault().getSetting("size");
+        String location = (String) Settings.getDefault().getSetting("location");
+        if (size != null) {
+            int width = Integer.parseInt(size.substring(1, size.indexOf(",")));
+            int height = Integer.parseInt(size.substring(size.indexOf(",") + 1, size.length() - 1));
+            setSize(width, height);
+        }
+        if (location != null) {
+            int x = Integer.parseInt(location.substring(1, location.indexOf(",")));
+            int y = Integer.parseInt(location.substring(location.indexOf(",") + 1, location.length() - 1));
+            setLocation(x, y);
+        } else setLocationRelativeTo(null);
         Clock.getDefault().start();
     }
     
@@ -250,6 +261,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 if (decision == JOptionPane.NO_OPTION) return;
             }
         }
+        Settings.getDefault().setSetting("size", "[" + (int) getBounds().getWidth() + "," + (int) getBounds().getHeight() + "]");
+        Settings.getDefault().setSetting("location", "[" + (int) getBounds().getLocation().getX() + "," + (int) getBounds().getLocation().getY() + "]");
+        Settings.saveSettings();
         String task = (String) Settings.getDefault().getSetting("runningTask");
         if ((task != null) && !task.equals("null")) {
             task = task.substring(0, task.indexOf("["));
