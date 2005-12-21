@@ -51,6 +51,8 @@ public class Settings {
         settingsMap.put("runningTask", null);
         settingsMap.put("savingPeriod", "30");
         settingsMap.put("dictionary", "Dictionary_" + Locale.getDefault().getLanguage() + "_" + Locale.getDefault().getCountry() + ".properties");
+        settingsMap.put("size", null);
+        settingsMap.put("location", null);
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
