@@ -243,6 +243,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     private void mnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAboutActionPerformed
         String text = title + " (build " + build + ")\n";
         text = text + Translator.getTranslation("INFORMATION.PROGRAM");
+        text = text + "\n<html><body><a href=\"http://rachota.sourceforge.net\">http://rachota.sourceforge.net</a></body";
         text = text + "\n\njiri.kovalsky@centrum.cz\n2005 (c)";
         JOptionPane.showMessageDialog(this, text, Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mnAboutActionPerformed
@@ -309,9 +310,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     // End of variables declaration//GEN-END:variables
     
     /** Name and version of application. */
-    protected static final String title = "Rachota 2.0 RC";
+    protected static final String title = "Rachota 2.0";
     /** Build number. */
-    protected static final String build = "#051221";
+    protected static final String build = "#060111";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
