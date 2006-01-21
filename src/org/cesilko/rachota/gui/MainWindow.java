@@ -50,8 +50,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         if (printHelp) {
             System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar Rachota.jar [-userdir=<diary_folder>] where:");
             System.out.println("      <diary_folder> is directory with settings and diary files e.g. C:\\Rachota");
-            System.out.println("      <language_id> is Java language code e.g. cs, de or en");
-            System.out.println("      <country_id> is Java country code e.g. CZ, DE, GB or US");
+            System.out.println("      <language_id> is Java language code e.g. cs, de, en or pt");
+            System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, GB or US");
             System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
         Settings.loadSettings();
