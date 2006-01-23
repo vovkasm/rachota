@@ -76,6 +76,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	setComponents();
 	tbTasks.getColumn(Translator.getTranslation("TASKS.DESCRIPTION")).setPreferredWidth(280);
 	tbTasks.getColumn(Translator.getTranslation("TASKS.DURATION_DAYS")).setPreferredWidth(50);
+        tbTasks.setRowSelectionAllowed(false);
 	tbTasks.getTableHeader().addMouseListener(new MouseAdapter() {
 	    Point pressedPoint;
 	    public void mousePressed(MouseEvent e) {
