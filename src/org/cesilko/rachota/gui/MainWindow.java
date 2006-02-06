@@ -258,7 +258,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             Day today = Plan.getDefault().getDay(new Date());
             double totalTime = (double) today.getTotalTime()/(60 * 60 * 1000);
             if (totalTime < dayWorkHours) {
-                int decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("WARNING.HOURS_NOT_REACHED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+                int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("WARNING.HOURS_NOT_REACHED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
                 if (decision == JOptionPane.NO_OPTION) return;
             }
         }
@@ -268,7 +269,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         String task = (String) Settings.getDefault().getSetting("runningTask");
         if ((task != null) && !task.equals("null")) {
             task = task.substring(0, task.indexOf("["));
-            int decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+            int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
             if (decision == JOptionPane.NO_OPTION) Settings.getDefault().setSetting("runningTask", null);
             Settings.saveSettings();
         }
@@ -278,7 +280,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             attempts++;
             if (planSaved) break;
             if (attempts == 10) {
-                int decision = JOptionPane.showConfirmDialog(this, Translator.getTranslation("QUESTION.SELECT_LOCATION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+                int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.SELECT_LOCATION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
                 if (decision == JOptionPane.NO_OPTION) break;
                 String location = (String) Settings.getDefault().getSetting("userdir");
                 JFileChooser fileChooser = new JFileChooser(location);
@@ -312,7 +315,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.0";
     /** Build number. */
-    protected static final String build = "#060111";
+    protected static final String build = "#060206";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
