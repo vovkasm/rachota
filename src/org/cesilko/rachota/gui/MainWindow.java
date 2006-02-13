@@ -113,6 +113,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_small.png")).getImage());
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -201,8 +202,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         setJMenuBar(mbMenu);
 
         pack();
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     /** Method called when move time action is required.
      * @param evt Event that invoked the action.
@@ -315,7 +315,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.0";
     /** Build number. */
-    protected static final String build = "#060206";
+    protected static final String build = "#060111";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
