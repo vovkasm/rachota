@@ -40,8 +40,8 @@ public class Translator {
                 JarFile jarFile = new JarFile(fileName);
                 ZipEntry entry = jarFile.getEntry("org/cesilko/rachota/core/" + dictionaryName);
                 if (entry == null) {
-                    entry = jarFile.getEntry("org/cesilko/rachota/core/Dictionary_en_GB.properties");
-                    Settings.getDefault().setSetting("dictionary", "Dictionary_en_GB.properties");
+                    entry = jarFile.getEntry("org/cesilko/rachota/core/Dictionary_en_US.properties");
+                    Settings.getDefault().setSetting("dictionary", "Dictionary_en_US.properties");
                 }
                 inputStream = jarFile.getInputStream(entry);
             }
