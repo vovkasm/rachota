@@ -403,6 +403,7 @@ public class TaskDialog extends javax.swing.JDialog {
      * @param evt Event that invoked this method call.
      */
     private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
+        firePropertyChange("task_unchanged", task, null);
         closeDialog(null);
     }//GEN-LAST:event_btCancelActionPerformed
     

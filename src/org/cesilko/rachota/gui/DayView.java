@@ -505,7 +505,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         int row = tbPlan.getSelectedRow();
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         Task selectedTask = dayTableModel.getTask(row);
-        TaskDialog dialog= new TaskDialog(selectedTask, day);
+        TaskDialog dialog = new TaskDialog(selectedTask, day);
         dialog.addPropertyChangeListener(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_btEditActionPerformed
@@ -960,7 +960,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      */
     public void propertyChange(PropertyChangeEvent evt) {
         boolean taskDurationChanged = false;
-        if (evt.getPropertyName().equals("task_changed")) {
+        if (evt.getPropertyName().startsWith("task_")) {
             TaskDialog taskDialog = (TaskDialog) evt.getSource();
             taskDialog.removePropertyChangeListener(this);
             checkButtons();

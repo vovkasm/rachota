@@ -453,6 +453,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
      * @param evt Event describing what was changed.
      */
     public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().startsWith("task_")) {
+            TaskDialog taskDialog = (TaskDialog) evt.getSource();
+            taskDialog.removePropertyChangeListener(this);
+            checkButtons();
+        }
         if (evt.getPropertyName().equals("task_created")) {
             Task task = (Task) evt.getNewValue();
             regularTasks.add(task);
