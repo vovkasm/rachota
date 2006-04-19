@@ -8,6 +8,7 @@ package org.cesilko.rachota.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -233,9 +234,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                     String value = Tools.getTime(day.getTotalTime());
                     value = value.substring(0, value.lastIndexOf(":"));
                     if (hours < 10) value = value.substring(1);
-                    int widths[] = graphics.getFontMetrics().getWidths();
-                    int correction = 0;
-                    for (int j=0; j<value.length(); j++) correction = correction + widths[value.charAt(j)];
+                    int correction = graphics.getFontMetrics().stringWidth(value);
                     graphics.setColor(Color.DARK_GRAY);
                     if (correction <= xStep + 2)
                         graphics.drawString(value, (int) (x + xStep/2 - correction/2 - 1), height - INSET_BOTTOM - columnHeight - 10);
@@ -262,11 +261,8 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                     if (start.charAt(0) == '0') start = start.substring(1);
                     String finish = Tools.getTime(day.getFinishTime());
                     if (finish.charAt(0) == '0') finish = finish.substring(1);
-                    int widths[] = graphics.getFontMetrics().getWidths();
-                    int widthStart = 0;
-                    int widthFinish = 0;
-                    for (int j=0; j<start.length(); j++) widthStart = widthStart + widths[start.charAt(j)];
-                    for (int j=0; j<finish.length(); j++) widthFinish = widthFinish + widths[finish.charAt(j)];
+                    int widthStart = graphics.getFontMetrics().stringWidth(start);
+                    int widthFinish = graphics.getFontMetrics().stringWidth(finish);
                     graphics.setColor(Color.DARK_GRAY);
                     if ((!start.equals("0:00")) && (widthStart <= xStep + 2))
                         graphics.drawString(start, (int) (x + xStep/2 - widthStart/2 - 1), y1 + y2 - 10);
@@ -278,9 +274,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
         if ((chartType == TYPE_TOTAL) && (taskFilter != null)) {
             String text = Translator.getTranslation("HISTORYCHART.HIGHLIGHTED_TASKS_TIME") + " " + Tools.getTime(totalTimeFiltered);
             text = text.substring(0, text.lastIndexOf(":"));
-            int widths[] = graphics.getFontMetrics().getWidths();
-            int correction = 0;
-            for (int i=0; i<text.length(); i++) correction = correction + widths[text.charAt(i)];
+            int correction = graphics.getFontMetrics().stringWidth(text);
             graphics.setColor(Color.BLACK);
             graphics.drawString(text, width - INSET_RIGHT - correction - 10, INSET_TOP + 15);
         }
@@ -313,9 +307,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
             int y = (int) (height - INSET_BOTTOM - yStep * averageWork);
             graphics.drawLine(INSET_LEFT, y, width - INSET_RIGHT, y);
             String legend = Translator.getTranslation("HISTORYCHART.AVERAGE_WORK");
-            int widths[] = graphics.getFontMetrics().getWidths();
-            int correction = 0;
-            for (int i=0; i<legend.length(); i++) correction = correction + widths[legend.charAt(i)];
+            int correction = graphics.getFontMetrics().stringWidth(legend);
             graphics.drawString(legend, width - INSET_RIGHT - correction, y - 5);
             graphics.setColor(Color.MAGENTA);
             y = (int) (height - INSET_BOTTOM - yStep * averageAll);
