@@ -32,10 +32,13 @@
                 <EtchetBorder/>
               </Border>
               <Connection PropertyName="titleX" code="Translator.getTranslation(&quot;SETTINGSDIALOG.BORDER_GENERAL&quot;)" type="code"/>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
+              <Connection PropertyName="font" component="Form" name="getFont" type="method"/>
               <Color PropertyName="color" blue="ff" green="0" red="0" type="rgb"/>
             </TitledBorder>
           </Border>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
       </Properties>
       <Constraints>
@@ -50,6 +53,9 @@
           <Properties>
             <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.LBL_WORKING_HOURS&quot;)" type="code"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
             </Property>
             <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="txtHours"/>
@@ -85,6 +91,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblHours">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;SETTINGSDIALOG.LBL_HOURS&quot;)" type="code"/>
             </Property>
@@ -97,6 +106,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblWarn">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;SETTINGSDIALOG.LBL_WARN&quot;)" type="code"/>
             </Property>
@@ -109,6 +121,9 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbHoursNotReached">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_HOURS_NOT_REACHED&quot;)" type="code"/>
             </Property>
@@ -128,6 +143,9 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbHoursExceeded">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_HOURS_EXCEEDED&quot;)" type="code"/>
             </Property>
@@ -146,6 +164,9 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbMoveUnfinished">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_MOVE_UNFINISHED&quot;)" type="code"/>
             </Property>
@@ -165,6 +186,9 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbArchiveNotStarted">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED&quot;)" type="code"/>
             </Property>
@@ -183,6 +207,9 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbCheckPriority">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_CHECK_PRIORITY&quot;)" type="code"/>
             </Property>
@@ -202,6 +229,9 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbCountPrivate">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.CHB_COUNT_PRIVATE&quot;)" type="code"/>
             </Property>
@@ -229,10 +259,13 @@
                 <EtchetBorder/>
               </Border>
               <Connection PropertyName="titleX" code="Translator.getTranslation(&quot;SETTINGSDIALOG.BORDER_REGULAR_TASKS&quot;)" type="code"/>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
+              <Connection PropertyName="font" component="Form" name="getFont" type="method"/>
               <Color PropertyName="color" blue="ff" green="0" red="0" type="rgb"/>
             </TitledBorder>
           </Border>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
       </Properties>
       <Constraints>
@@ -259,6 +292,9 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="tbRegularTasks">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="new RegularTasksTableModel(regularTasks)" type="code"/>
                 </Property>
@@ -281,6 +317,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="btAdd">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.BT_ADD&quot;)" type="code"/>
                 </Property>
@@ -297,6 +336,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btEdit">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.BT_EDIT&quot;)" type="code"/>
                 </Property>
@@ -314,6 +356,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btRemove">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.BT_REMOVE&quot;)" type="code"/>
                 </Property>
@@ -335,6 +380,9 @@
     </Container>
     <Component class="javax.swing.JButton" name="btOK">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.BT_OK&quot;)" type="code"/>
         </Property>
@@ -356,6 +404,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="btCancel">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;SETTINGSDIALOG.BT_CANCEL&quot;)" type="code"/>
         </Property>

@@ -6,6 +6,7 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -43,7 +44,17 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         tbRegularTasks.getColumn(Translator.getTranslation("TASK_REGULAR")).setPreferredWidth(100);
         tbRegularTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
         tbRegularTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
-        tbRegularTasks.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
+        tbRegularTasks.getTableHeader().setFont(getFont());
+        tbRegularTasks.setFont(getFont());
+        tbRegularTasks.setRowHeight(getFont().getSize() + 2);
+    }
+    
+    /** Returns font that should be used for all widgets in this component
+     * based on the language preferences specified by user.
+     * @return Font to be used in this component.
+     */
+    public java.awt.Font getFont() {
+        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     }
     
     /** This method is called from within the constructor to
@@ -88,8 +99,10 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         pnGeneral.setLayout(new java.awt.GridBagLayout());
 
-        pnGeneral.setBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(0, 0, 255)));
+        pnGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
+        pnGeneral.setFont(getFont());
         lblWorkingHours.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_WORKING_HOURS"));
+        lblWorkingHours.setFont(getFont());
         lblWorkingHours.setLabelFor(txtHours);
         lblWorkingHours.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_WORKING_HOURS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -109,18 +122,21 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(txtHours, gridBagConstraints);
 
+        lblHours.setFont(getFont());
         lblHours.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_HOURS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblHours, gridBagConstraints);
 
+        lblWarn.setFont(getFont());
         lblWarn.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_WARN"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblWarn, gridBagConstraints);
 
+        chbHoursNotReached.setFont(getFont());
         chbHoursNotReached.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_HOURS_NOT_REACHED"));
         chbHoursNotReached.setSelected(true);
         chbHoursNotReached.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_NOT_REACHED"));
@@ -132,6 +148,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbHoursNotReached, gridBagConstraints);
 
+        chbHoursExceeded.setFont(getFont());
         chbHoursExceeded.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_HOURS_EXCEEDED"));
         chbHoursExceeded.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_EXCEEDED"));
         chbHoursExceeded.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_EXCEEDED_TOOLTIP"));
@@ -143,6 +160,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbHoursExceeded, gridBagConstraints);
 
+        chbMoveUnfinished.setFont(getFont());
         chbMoveUnfinished.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_MOVE_UNFINISHED"));
         chbMoveUnfinished.setSelected(true);
         chbMoveUnfinished.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_MOVE_UNFINISHED"));
@@ -154,6 +172,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbMoveUnfinished, gridBagConstraints);
 
+        chbArchiveNotStarted.setFont(getFont());
         chbArchiveNotStarted.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED"));
         chbArchiveNotStarted.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED"));
         chbArchiveNotStarted.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED_TOOLTIP"));
@@ -164,6 +183,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbArchiveNotStarted, gridBagConstraints);
 
+        chbCheckPriority.setFont(getFont());
         chbCheckPriority.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_CHECK_PRIORITY"));
         chbCheckPriority.setSelected(true);
         chbCheckPriority.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_CHECK_PRIORITY"));
@@ -175,6 +195,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbCheckPriority, gridBagConstraints);
 
+        chbCountPrivate.setFont(getFont());
         chbCountPrivate.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_COUNT_PRIVATE"));
         chbCountPrivate.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_COUNT_PRIVATE"));
         chbCountPrivate.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_COUNT_PRIVATE_TOOLTIP"));
@@ -193,8 +214,10 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         pnRegularTasks.setLayout(new java.awt.GridBagLayout());
 
-        pnRegularTasks.setBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(0, 0, 255)));
+        pnRegularTasks.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
+        pnRegularTasks.setFont(getFont());
         spRegularTasks.setPreferredSize(new java.awt.Dimension(350, 150));
+        tbRegularTasks.setFont(getFont());
         tbRegularTasks.setModel(new RegularTasksTableModel(regularTasks));
         tbRegularTasks.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -216,6 +239,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnRegularTasks.add(spRegularTasks, gridBagConstraints);
 
+        btAdd.setFont(getFont());
         btAdd.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.BT_ADD"));
         btAdd.setText(Translator.getTranslation("SETTINGSDIALOG.BT_ADD"));
         btAdd.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.BT_ADD_TOOLTIP"));
@@ -227,6 +251,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         pnButtons.add(btAdd);
 
+        btEdit.setFont(getFont());
         btEdit.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.BT_EDIT"));
         btEdit.setText(Translator.getTranslation("SETTINGSDIALOG.BT_EDIT"));
         btEdit.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.BT_EDIT_TOOLTIP"));
@@ -239,6 +264,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         pnButtons.add(btEdit);
 
+        btRemove.setFont(getFont());
         btRemove.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.BT_REMOVE"));
         btRemove.setText(Translator.getTranslation("SETTINGSDIALOG.BT_REMOVE"));
         btRemove.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.BT_REMOVE_TOOLTIP"));
@@ -264,6 +290,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(pnRegularTasks, gridBagConstraints);
 
+        btOK.setFont(getFont());
         btOK.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.BT_OK"));
         btOK.setText(Translator.getTranslation("SETTINGSDIALOG.BT_OK"));
         btOK.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.BT_OK_TOOLTIP"));
@@ -280,6 +307,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(btOK, gridBagConstraints);
 
+        btCancel.setFont(getFont());
         btCancel.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.BT_CANCEL"));
         btCancel.setText(Translator.getTranslation("SETTINGSDIALOG.BT_CANCEL"));
         btCancel.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.BT_CANCEL_TOOLTIP"));
@@ -298,8 +326,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         getContentPane().add(btCancel, gridBagConstraints);
 
         pack();
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     /** Method called when any key was released while table with regular tasks had focus.
      * @param evt Event that invoked this method call.

@@ -30,6 +30,9 @@
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.LBL_DESCRIPTION&quot;)" type="code"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="txtDescription"/>
         </Property>
@@ -45,6 +48,9 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtDescription">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;TASKDIALOG.TXT_DESCRIPTION_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -59,6 +65,9 @@
       <Properties>
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.LBL_CATEGORY&quot;)" type="code"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="txtCategory"/>
@@ -75,6 +84,9 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtCategory">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;TASKDIALOG.TXT_CATEGORY_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -89,6 +101,9 @@
       <Properties>
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.LBL_NOTES&quot;)" type="code"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="taNotes"/>
@@ -114,6 +129,9 @@
       <SubComponents>
         <Component class="javax.swing.JTextArea" name="taNotes">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="rows" type="int" value="3"/>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;TASKDIALOG.TXT_NOTES_TOOLTIP&quot;)" type="code"/>
@@ -126,6 +144,9 @@
       <Properties>
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.LBL_PRIORITY&quot;)" type="code"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="cmbPriority"/>
@@ -142,6 +163,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbPriority">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" preCode="for (int i=Task.PRIORITY_HIGH; i&lt;=Task.PRIORITY_LOW; i++)&#xa;    cmbPriority.addItem(Task.getPriority(i));">
           <Connection code="Task.PRIORITY_MEDIUM" type="code"/>
         </Property>
@@ -157,6 +181,9 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="chbNotification">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.CHB_NOTIFICATION&quot;)" type="code"/>
         </Property>
@@ -231,6 +258,9 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="chbAutoStart">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.CHB_AUTOSTART&quot;)" type="code"/>
         </Property>
@@ -249,6 +279,9 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="chbRegular">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;TASKDIALOG.CHB_REGULAR&quot;)" type="code"/>
         </Property>
@@ -264,6 +297,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbRepetition">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" preCode="for (int i=RegularTask.FREQUENCY_DAILY; i&lt;=RegularTask.FREQUENCY_SUNDAY; i++)&#xa;    cmbRepetition.addItem(RegularTask.getFrequency(i));">
           <Connection code="RegularTask.FREQUENCY_DAILY" type="code"/>
         </Property>
@@ -279,6 +315,9 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="chbPrivate">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.CHB_PRIVATE&quot;)" type="code"/>
         </Property>
@@ -306,6 +345,9 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btOK">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.BT_OK_NAME&quot;)" type="code"/>
             </Property>
@@ -322,6 +364,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btCancel">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;TASKDIALOG.BT_CANCEL_NAME&quot;)" type="code"/>
             </Property>

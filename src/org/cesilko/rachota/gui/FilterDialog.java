@@ -7,6 +7,7 @@
 package org.cesilko.rachota.gui;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 import org.cesilko.rachota.core.filters.*;
 
@@ -41,6 +42,14 @@ public class FilterDialog extends javax.swing.JDialog {
         if (taskFilter instanceof StateFilter) cmbFilterName.setSelectedIndex(4);
         if (taskFilter instanceof PrivateFilter) cmbFilterName.setSelectedIndex(5);
         setComponents(taskFilter == null ? new DescriptionFilter() : taskFilter);
+    }
+    
+    /** Returns font that should be used for all widgets in this component
+     * based on the language preferences specified by user.
+     * @return Font to be used in this component.
+     */
+    public java.awt.Font getFont() {
+        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     }
     
     /** Creates new form filter dialog for creating new task filter.
@@ -81,6 +90,7 @@ public class FilterDialog extends javax.swing.JDialog {
         });
 
         lbFilterName.setDisplayedMnemonic(Translator.getMnemonic("FILTERDIALOG.NAME"));
+        lbFilterName.setFont(getFont());
         lbFilterName.setLabelFor(cmbFilterName);
         lbFilterName.setText(Translator.getTranslation("FILTERDIALOG.NAME"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -88,6 +98,7 @@ public class FilterDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lbFilterName, gridBagConstraints);
 
+        cmbFilterName.setFont(getFont());
         cmbFilterName.setToolTipText(Translator.getTranslation("FILTERDIALOG.NAME_TOOLTIP"));
         cmbFilterName.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -103,6 +114,7 @@ public class FilterDialog extends javax.swing.JDialog {
         getContentPane().add(cmbFilterName, gridBagConstraints);
 
         lblContentRule.setDisplayedMnemonic(Translator.getMnemonic("FILTERDIALOG.CONTENT_RULE"));
+        lblContentRule.setFont(getFont());
         lblContentRule.setLabelFor(cmbContentRule);
         lblContentRule.setText(Translator.getTranslation("FILTERDIALOG.CONTENT_RULE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -111,6 +123,7 @@ public class FilterDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lblContentRule, gridBagConstraints);
 
+        cmbContentRule.setFont(getFont());
         cmbContentRule.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_RULE_TOOLTIP"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -120,6 +133,7 @@ public class FilterDialog extends javax.swing.JDialog {
         getContentPane().add(cmbContentRule, gridBagConstraints);
 
         lblContent.setDisplayedMnemonic(Translator.getMnemonic("FILTERDIALOG.CONTENT"));
+        lblContent.setFont(getFont());
         lblContent.setLabelFor(txtContent);
         lblContent.setText(Translator.getTranslation("FILTERDIALOG.CONTENT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -128,6 +142,7 @@ public class FilterDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lblContent, gridBagConstraints);
 
+        cmbContent.setFont(getFont());
         cmbContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
         cmbContent.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -138,6 +153,7 @@ public class FilterDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(cmbContent, gridBagConstraints);
 
+        txtContent.setFont(getFont());
         txtContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
         txtContent.setPreferredSize(new java.awt.Dimension(100, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -149,6 +165,7 @@ public class FilterDialog extends javax.swing.JDialog {
 
         pnButtons.setLayout(new java.awt.GridBagLayout());
 
+        btOK.setFont(getFont());
         btOK.setMnemonic(Translator.getMnemonic("FILTERDIALOG.BT_OK"));
         btOK.setText(Translator.getTranslation("FILTERDIALOG.BT_OK"));
         btOK.setToolTipText(Translator.getTranslation("FILTERDIALOG.BT_OK_TOOLTIP"));
@@ -163,6 +180,7 @@ public class FilterDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btOK, gridBagConstraints);
 
+        btCancel.setFont(getFont());
         btCancel.setMnemonic(Translator.getMnemonic("FILTERDIALOG.BT_CANCEL"));
         btCancel.setText(Translator.getTranslation("FILTERDIALOG.BT_CANCEL"));
         btCancel.setToolTipText(Translator.getTranslation("FILTERDIALOG.BT_CANCEL_TOOLTIP"));
@@ -184,8 +202,7 @@ public class FilterDialog extends javax.swing.JDialog {
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-265)/2, (screenSize.height-240)/2, 265, 240);
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     /** Method called when any filter is selected.
      * @param evt Event that invoked this action.

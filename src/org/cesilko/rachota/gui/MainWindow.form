@@ -3,6 +3,11 @@
 <Form version="1.0" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="mbMenu">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
+      </Properties>
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="mnSystem">
           <Properties>
@@ -15,10 +20,16 @@
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;MAINWINDOW.MN_SYSTEM_TOOLTIP&quot;)" type="code"/>
             </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnAbout">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/org/cesilko/rachota/gui/images/info.png"/>
                 </Property>
@@ -38,6 +49,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnSettings">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/org/cesilko/rachota/gui/images/service.png"/>
                 </Property>
@@ -59,6 +73,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnExit">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/org/cesilko/rachota/gui/images/exit.png"/>
                 </Property>
@@ -89,10 +106,16 @@
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;MAINWINDOW.MN_TASK_TOOLTIP&quot;)" type="code"/>
             </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnCopyTask">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/org/cesilko/rachota/gui/images/move_task.png"/>
                 </Property>
@@ -112,6 +135,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnMoveTime">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/org/cesilko/rachota/gui/images/move_time.png"/>
                 </Property>

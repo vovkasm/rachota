@@ -120,7 +120,17 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         tbPlan.getColumn(Translator.getTranslation("TASK_STATE")).setPreferredWidth(100);
         tbPlan.getTableHeader().setForeground(java.awt.Color.BLUE);
         tbPlan.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
-        tbPlan.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
+        tbPlan.getTableHeader().setFont(getFont());
+        tbPlan.setFont(getFont());
+        tbPlan.setRowHeight(getFont().getSize() + 2);
+    }
+    
+    /** Returns font that should be used for all widgets in this component
+     * based on the language preferences specified by user.
+     * @return Font to be used in this component.
+     */
+    public java.awt.Font getFont() {
+        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     }
     
     /** This method is called from within the constructor to
@@ -164,6 +174,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         setLayout(new java.awt.GridBagLayout());
 
         setName(Translator.getTranslation("DAYVIEW.TB_NAME"));
+        btPrevious.setFont(getFont());
         btPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/previous.png")));
         btPrevious.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_PREVIOUS"));
         btPrevious.setText(Translator.getTranslation("DAYVIEW.BT_PREVIOUS"));
@@ -180,12 +191,14 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 5, 5);
         add(btPrevious, gridBagConstraints);
 
+        lblDate.setFont(getFont());
         lblDate.setText(Translator.getTranslation("DAYVIEW.LBL_DATE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(lblDate, gridBagConstraints);
 
         txtDate.setEditable(false);
+        txtDate.setFont(getFont());
         txtDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDate.setToolTipText(Translator.getTranslation("DAYVIEW.TXT_DATE_TOOLTIP"));
         txtDate.setDoubleBuffered(true);
@@ -202,6 +215,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(txtDate, gridBagConstraints);
 
+        lblWeek.setFont(getFont());
         lblWeek.setText(Translator.getTranslation("DAYVIEW.LBL_WEEK"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -210,6 +224,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         add(lblWeek, gridBagConstraints);
 
         txtWeek.setEditable(false);
+        txtWeek.setFont(getFont());
         txtWeek.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtWeek.setDoubleBuffered(true);
         txtWeek.setMinimumSize(new java.awt.Dimension(40, 19));
@@ -220,6 +235,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(txtWeek, gridBagConstraints);
 
+        btNext.setFont(getFont());
         btNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/next.png")));
         btNext.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_NEXT"));
         btNext.setText(Translator.getTranslation("DAYVIEW.BT_NEXT"));
@@ -239,6 +255,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         pnDayView.setLayout(new java.awt.GridBagLayout());
 
+        lblStart.setFont(getFont());
         lblStart.setText(Translator.getTranslation("DAYVIEW.LBL_START"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -248,6 +265,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         txtStart.setColumns(5);
         txtStart.setEditable(false);
+        txtStart.setFont(getFont());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -255,6 +273,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDayView.add(txtStart, gridBagConstraints);
 
+        lblEnd.setFont(getFont());
         lblEnd.setText(Translator.getTranslation("DAYVIEW.LBL_END"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -264,6 +283,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         txtEnd.setColumns(5);
         txtEnd.setEditable(false);
+        txtEnd.setFont(getFont());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -272,6 +292,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDayView.add(txtEnd, gridBagConstraints);
 
+        lblProgress.setFont(getFont());
         lblProgress.setText(Translator.getTranslation("DAYVIEW.LBL_PROGRESS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
@@ -279,6 +300,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDayView.add(lblProgress, gridBagConstraints);
 
+        pbProgress.setFont(getFont().deriveFont(java.awt.Font.BOLD));
         pbProgress.setMinimumSize(new java.awt.Dimension(10, 19));
         pbProgress.setPreferredSize(new java.awt.Dimension(148, 19));
         pbProgress.setStringPainted(true);
@@ -289,6 +311,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDayView.add(pbProgress, gridBagConstraints);
 
+        lblTask.setFont(getFont());
         lblTask.setText(Translator.getTranslation("DAYVIEW.LBL_TASK"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
@@ -297,6 +320,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         pnDayView.add(lblTask, gridBagConstraints);
 
         txtTask.setEditable(false);
+        txtTask.setFont(getFont());
         txtTask.setDoubleBuffered(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
@@ -306,6 +330,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDayView.add(txtTask, gridBagConstraints);
 
+        btWork.setFont(getFont());
         btWork.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/work.png")));
         btWork.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_WORK"));
         btWork.setText(Translator.getTranslation("DAYVIEW.BT_WORK"));
@@ -318,6 +343,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         pnWorkButtons.add(btWork);
 
+        btRelax.setFont(getFont());
         btRelax.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/paint.png")));
         btRelax.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_RELAX"));
         btRelax.setText(Translator.getTranslation("DAYVIEW.BT_RELAX"));
@@ -330,6 +356,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         pnWorkButtons.add(btRelax);
 
+        btDone.setFont(getFont());
         btDone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/done.png")));
         btDone.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_DONE"));
         btDone.setText(Translator.getTranslation("DAYVIEW.BT_DONE"));
@@ -350,6 +377,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         pnDayView.add(pnWorkButtons, gridBagConstraints);
 
         lblPlan.setDisplayedMnemonic(Translator.getMnemonic("DAYVIEW.LBL_PLAN"));
+        lblPlan.setFont(getFont());
         lblPlan.setLabelFor(tbPlan);
         lblPlan.setText(Translator.getTranslation("DAYVIEW.LBL_PLAN"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -359,6 +387,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         pnDayView.add(lblPlan, gridBagConstraints);
 
         spPlan.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        spPlan.setFont(getFont());
         spPlan.setPreferredSize(new java.awt.Dimension(400, 200));
         tbPlan.setModel(new DayTableModel(day));
         tbPlan.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -391,6 +420,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
         add(pnDayView, gridBagConstraints);
 
+        chbShowFinished.setFont(getFont());
         chbShowFinished.setMnemonic(Translator.getMnemonic("DAYVIEW.CHB_SHOWFINISHED"));
         chbShowFinished.setText(Translator.getTranslation("DAYVIEW.CHB_SHOWFINISHED"));
         chbShowFinished.setToolTipText(Translator.getTranslation("DAYVIEW.CHB_SHOWFINISHED_TOOLTIP"));
@@ -407,6 +437,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         add(chbShowFinished, gridBagConstraints);
 
+        btSelect.setFont(getFont());
         btSelect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/select.png")));
         btSelect.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_SELECT"));
         btSelect.setText(Translator.getTranslation("DAYVIEW.BT_SELECT"));
@@ -419,6 +450,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         pnButtons.add(btSelect);
 
+        btAdd.setFont(getFont());
         btAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/add.png")));
         btAdd.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_ADD"));
         btAdd.setText(Translator.getTranslation("DAYVIEW.BT_ADD"));
@@ -431,6 +463,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         pnButtons.add(btAdd);
 
+        btEdit.setFont(getFont());
         btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/edit.png")));
         btEdit.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_EDIT"));
         btEdit.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
@@ -443,6 +476,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         pnButtons.add(btEdit);
 
+        btRemove.setFont(getFont());
         btRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/delete.png")));
         btRemove.setMnemonic(Translator.getMnemonic("DAYVIEW.BT_REMOVE"));
         btRemove.setText(Translator.getTranslation("DAYVIEW.BT_REMOVE"));
@@ -461,8 +495,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 10, 5);
         add(pnButtons, gridBagConstraints);
 
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     /** Method called when date textfield is clicked.
      * @param evt Event that invoked the action.

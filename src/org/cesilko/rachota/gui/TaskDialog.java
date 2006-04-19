@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.RegularTask;
+import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
@@ -94,6 +95,14 @@ public class TaskDialog extends javax.swing.JDialog {
         cmbRepetition.setEnabled(true);
     }
     
+    /** Returns font that should be used for all widgets in this component
+     * based on the language preferences specified by user.
+     * @return Font to be used in this component.
+     */
+    public java.awt.Font getFont() {
+        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -135,6 +144,7 @@ public class TaskDialog extends javax.swing.JDialog {
         });
 
         lblDescription.setDisplayedMnemonic(Translator.getMnemonic("TASKDIALOG.LBL_DESCRIPTION"));
+        lblDescription.setFont(getFont());
         lblDescription.setLabelFor(txtDescription);
         lblDescription.setText(Translator.getTranslation("TASKDIALOG.LBL_DESCRIPTION"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -142,6 +152,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lblDescription, gridBagConstraints);
 
+        txtDescription.setFont(getFont());
         txtDescription.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_DESCRIPTION_TOOLTIP"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
@@ -152,6 +163,7 @@ public class TaskDialog extends javax.swing.JDialog {
         getContentPane().add(txtDescription, gridBagConstraints);
 
         lblCategory.setDisplayedMnemonic(Translator.getMnemonic("TASKDIALOG.LBL_CATEGORY"));
+        lblCategory.setFont(getFont());
         lblCategory.setLabelFor(txtCategory);
         lblCategory.setText(Translator.getTranslation("TASKDIALOG.LBL_CATEGORY"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -160,6 +172,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lblCategory, gridBagConstraints);
 
+        txtCategory.setFont(getFont());
         txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_CATEGORY_TOOLTIP"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -169,6 +182,7 @@ public class TaskDialog extends javax.swing.JDialog {
         getContentPane().add(txtCategory, gridBagConstraints);
 
         lblNotes.setDisplayedMnemonic(Translator.getMnemonic("TASKDIALOG.LBL_NOTES"));
+        lblNotes.setFont(getFont());
         lblNotes.setLabelFor(taNotes);
         lblNotes.setText(Translator.getTranslation("TASKDIALOG.LBL_NOTES"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -177,6 +191,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lblNotes, gridBagConstraints);
 
+        taNotes.setFont(getFont());
         taNotes.setRows(3);
         taNotes.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_NOTES_TOOLTIP"));
         spNotes.setViewportView(taNotes);
@@ -191,6 +206,7 @@ public class TaskDialog extends javax.swing.JDialog {
         getContentPane().add(spNotes, gridBagConstraints);
 
         lblPriority.setDisplayedMnemonic(Translator.getMnemonic("TASKDIALOG.LBL_PRIORITY"));
+        lblPriority.setFont(getFont());
         lblPriority.setLabelFor(cmbPriority);
         lblPriority.setText(Translator.getTranslation("TASKDIALOG.LBL_PRIORITY"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -199,6 +215,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lblPriority, gridBagConstraints);
 
+        cmbPriority.setFont(getFont());
         for (int i=Task.PRIORITY_HIGH; i<=Task.PRIORITY_LOW; i++)
         cmbPriority.addItem(Task.getPriority(i));
         cmbPriority.setSelectedIndex(Task.PRIORITY_MEDIUM);
@@ -210,6 +227,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(cmbPriority, gridBagConstraints);
 
+        chbNotification.setFont(getFont());
         chbNotification.setMnemonic(Translator.getMnemonic("TASKDIALOG.CHB_NOTIFICATION"));
         chbNotificationChanged(null);
         chbNotification.setText(Translator.getTranslation("TASKDIALOG.CHB_NOTIFICATION"));
@@ -263,6 +281,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(spMinutes, gridBagConstraints);
 
+        chbAutoStart.setFont(getFont());
         chbAutoStart.setMnemonic(Translator.getMnemonic("TASKDIALOG.CHB_AUTOSTART"));
         chbAutoStart.setText(Translator.getTranslation("TASKDIALOG.CHB_AUTOSTART"));
         chbAutoStart.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_AUTOSTART_TOOLTIP"));
@@ -274,6 +293,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(chbAutoStart, gridBagConstraints);
 
+        chbRegular.setFont(getFont());
         chbRegular.setText(Translator.getTranslation("TASKDIALOG.CHB_REGULAR"));
         chbRegular.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_REGULAR_TOOLTIP"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -283,6 +303,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(chbRegular, gridBagConstraints);
 
+        cmbRepetition.setFont(getFont());
         for (int i=RegularTask.FREQUENCY_DAILY; i<=RegularTask.FREQUENCY_SUNDAY; i++)
         cmbRepetition.addItem(RegularTask.getFrequency(i));
         cmbRepetition.setSelectedIndex(RegularTask.FREQUENCY_DAILY);
@@ -294,6 +315,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(cmbRepetition, gridBagConstraints);
 
+        chbPrivate.setFont(getFont());
         chbPrivate.setMnemonic(Translator.getMnemonic("TASKDIALOG.CHB_PRIVATE"));
         chbPrivate.setText(Translator.getTranslation("TASKDIALOG.CHB_PRIVATE"));
         chbPrivate.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_PRIVATE_TOOLTIP"));
@@ -304,6 +326,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(chbPrivate, gridBagConstraints);
 
+        btOK.setFont(getFont());
         btOK.setMnemonic(Translator.getMnemonic("TASKDIALOG.BT_OK_NAME"));
         btOK.setText(Translator.getTranslation("TASKDIALOG.BT_OK_NAME"));
         btOK.setToolTipText(Translator.getTranslation("TASKDIALOG.BT_OK_TOOLTIP"));
@@ -315,6 +338,7 @@ public class TaskDialog extends javax.swing.JDialog {
 
         pnButtons.add(btOK);
 
+        btCancel.setFont(getFont());
         btCancel.setMnemonic(Translator.getMnemonic("TASKDIALOG.BT_CANCEL_NAME"));
         btCancel.setText(Translator.getTranslation("TASKDIALOG.BT_CANCEL_NAME"));
         btCancel.setToolTipText(Translator.getTranslation("TASKDIALOG.BT_CANCEL_TOOLTIP"));
@@ -335,8 +359,7 @@ public class TaskDialog extends javax.swing.JDialog {
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-400)/2, (screenSize.height-364)/2, 400, 364);
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     /** Method called when ok button was pressed.
      * @param evt Event that invoked this method call.

@@ -80,15 +80,10 @@ public class Settings {
      * Sets given setting to given value.
      * @param setting Setting to be set.
      * @param value New value of setting.
-     * @return True if given setting was set, false if invalid setting was provided.
      */
-    public boolean setSetting(String setting, Object value) {
-        if (settingsMap.containsKey(setting)) {
-            settingsMap.put(setting, value);
-            propertyChangeSupport.firePropertyChange("settings", null, setting);
-            return true;
-        }
-        return false;
+    public void setSetting(String setting, Object value) {
+        settingsMap.put(setting, value);
+        propertyChangeSupport.firePropertyChange("settings", null, setting);
     }
     
     /** Returns value of given setting.
@@ -96,7 +91,13 @@ public class Settings {
      * @return Value of given setting or null if it does not exist.
      */
     public Object getSetting(String setting) {
-        return settingsMap.get(setting);
+        if (!setting.startsWith("font"))
+            return settingsMap.get(setting);
+        if (settingsMap.containsKey(setting))
+            return settingsMap.get(setting);
+        String bundleValue = Translator.getTranslation("FONT." + setting.substring(4).toUpperCase());
+        setSetting(setting, bundleValue);
+        return bundleValue;
     }
     
     /** Adds new listener to set of objects interested in this settings.

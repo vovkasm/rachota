@@ -63,10 +63,14 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 	filterTasks();
 	tbFilters.getTableHeader().setForeground(java.awt.Color.BLUE);
 	tbFilters.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
-	tbFilters.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
+        tbFilters.getTableHeader().setFont(getFont());
+        tbFilters.setFont(getFont());
+        tbFilters.setRowHeight(getFont().getSize() + 2);
 	tbTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
 	tbTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
-	tbTasks.getTableHeader().setFont(new java.awt.Font("Arial Bold",  java.awt.Font.BOLD, 12));
+        tbTasks.getTableHeader().setFont(getFont());
+        tbTasks.setFont(getFont());
+        tbTasks.setRowHeight(getFont().getSize() + 2);
 	cmbFilterName.addItem(new DescriptionFilter().toString());
 	cmbFilterName.addItem(new KeywordFilter().toString());
 	cmbFilterName.addItem(new DurationFilter().toString());
@@ -92,6 +96,14 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 		    tbTasks.getColumnModel().getColumn(i).setHeaderValue(filteredTasksTableModel.getColumnName(i));
 	    }
 	});
+    }
+    
+    /** Returns font that should be used for all widgets in this component
+     * based on the language preferences specified by user.
+     * @return Font to be used in this component.
+     */
+    public java.awt.Font getFont() {
+        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     }
     
     /** This method is called from within the constructor to
@@ -144,12 +156,14 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         setName(Translator.getTranslation("HISTORYVIEW.TB_NAME"));
         lblPeriod.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_PERIOD"));
+        lblPeriod.setFont(getFont());
         lblPeriod.setLabelFor(cmbPeriod);
         lblPeriod.setText(Translator.getTranslation("HISTORYVIEW.LBL_PERIOD"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(lblPeriod, gridBagConstraints);
 
+        cmbPeriod.setFont(getFont());
         cmbPeriod.setToolTipText(Translator.getTranslation("HISTORYVIEW.PERIOD_TOOLTIP"));
         cmbPeriod.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -162,6 +176,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(cmbPeriod, gridBagConstraints);
 
+        btReport.setFont(getFont());
         btReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/report.png")));
         btReport.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REPORT"));
         btReport.setText(Translator.getTranslation("HISTORYVIEW.BT_REPORT"));
@@ -199,6 +214,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnPeriod.add(btBackward);
 
         txtDate.setEditable(false);
+        txtDate.setFont(getFont());
         txtDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDate.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_DATE_TOOLTIP"));
         txtDate.setPreferredSize(new java.awt.Dimension(150, 23));
@@ -238,9 +254,12 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(pnPeriod, gridBagConstraints);
 
+        tpViews.setFont(getFont());
         pnTimes.setLayout(new java.awt.GridBagLayout());
 
+        pnTimes.setFont(getFont());
         lblChartType.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_CHART_TYPE"));
+        lblChartType.setFont(getFont());
         lblChartType.setLabelFor(rbFromTo);
         lblChartType.setText(Translator.getTranslation("HISTORYVIEW.LBL_CHART_TYPE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -248,6 +267,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(lblChartType, gridBagConstraints);
 
+        rbTotal.setFont(getFont());
         rbTotal.setSelected(true);
         rbTotal.setText(Translator.getTranslation("HISTORYVIEW.TYPE_TOTAL"));
         rbTotal.setToolTipText(Translator.getTranslation("HISTORYVIEW.TYPE_TOTAL_TOOLTIP"));
@@ -264,6 +284,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(rbTotal, gridBagConstraints);
 
+        rbFromTo.setFont(getFont());
         rbFromTo.setText(Translator.getTranslation("HISTORYVIEW.TYPE_FROM_TO"));
         rbFromTo.setToolTipText(Translator.getTranslation("HISTORYVIEW.TYPE_FROM_TO_TOOLTIP"));
         rbFromTo.addActionListener(new java.awt.event.ActionListener() {
@@ -280,6 +301,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
         pnTimes.add(rbFromTo, gridBagConstraints);
 
+        chbHighlightTasks.setFont(getFont());
         chbHighlightTasks.setMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_HIGHLIGHT_TASKS"));
         chbHighlightTasks.setText(Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS"));
         chbHighlightTasks.setToolTipText(Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS_TOOLTIP"));
@@ -296,6 +318,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(chbHighlightTasks, gridBagConstraints);
 
+        cmbFilterName.setFont(getFont());
         cmbFilterName.setToolTipText(Translator.getTranslation("FILTERDIALOG.NAME_TOOLTIP"));
         cmbFilterName.setEnabled(false);
         cmbFilterName.addItemListener(new java.awt.event.ItemListener() {
@@ -310,6 +333,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(cmbFilterName, gridBagConstraints);
 
+        cmbContentRule.setFont(getFont());
         cmbContentRule.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_RULE_TOOLTIP"));
         cmbContentRule.setEnabled(false);
         cmbContentRule.setPreferredSize(new java.awt.Dimension(100, 22));
@@ -325,6 +349,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(cmbContentRule, gridBagConstraints);
 
+        cmbContent.setFont(getFont());
         cmbContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
         cmbContent.setEnabled(false);
         cmbContent.setPreferredSize(new java.awt.Dimension(100, 22));
@@ -342,6 +367,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(cmbContent, gridBagConstraints);
 
+        txtContent.setFont(getFont());
         txtContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
         txtContent.setEnabled(false);
         txtContent.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -358,6 +384,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(txtContent, gridBagConstraints);
 
+        lblTotalTime.setFont(getFont());
         lblTotalTime.setLabelFor(txtTotalTime);
         lblTotalTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_TOTAL_TIME"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -366,6 +393,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnTimes.add(lblTotalTime, gridBagConstraints);
 
         txtTotalTime.setEditable(false);
+        txtTotalTime.setFont(getFont());
         txtTotalTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_TOTAL_TIME_TOOLTIP"));
         txtTotalTime.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -378,7 +406,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         pnTasks.setLayout(new java.awt.GridBagLayout());
 
+        pnTasks.setFont(getFont());
         lblFilters.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_FILTERS"));
+        lblFilters.setFont(getFont());
         lblFilters.setLabelFor(tbFilters);
         lblFilters.setText(Translator.getTranslation("HISTORYVIEW.LBL_FILTERS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -388,6 +418,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         spFilters.setMinimumSize(new java.awt.Dimension(453, 80));
         spFilters.setPreferredSize(new java.awt.Dimension(453, 80));
+        tbFilters.setFont(getFont());
         tbFilters.setModel(new FiltersTableModel());
         tbFilters.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -406,6 +437,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         pnButtons.setLayout(new java.awt.GridBagLayout());
 
+        btAddFilter.setFont(getFont());
         btAddFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/new_filter.png")));
         btAddFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_ADD_FILTER"));
         btAddFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_ADD_FILTER"));
@@ -421,6 +453,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btAddFilter, gridBagConstraints);
 
+        btEditFilter.setFont(getFont());
         btEditFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/edit_filter.png")));
         btEditFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_EDIT_FILTER"));
         btEditFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_EDIT_FILTER"));
@@ -435,6 +468,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btEditFilter, gridBagConstraints);
 
+        btRemoveFilter.setFont(getFont());
         btRemoveFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/remove_filter.png")));
         btRemoveFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REMOVE_FILTER"));
         btRemoveFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_REMOVE_FILTER"));
@@ -457,6 +491,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnTasks.add(pnButtons, gridBagConstraints);
 
         lblTasks.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_TASKS"));
+        lblTasks.setFont(getFont());
         lblTasks.setLabelFor(tbTasks);
         lblTasks.setText(Translator.getTranslation("HISTORYVIEW.LBL_TASKS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -477,6 +512,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTasks.add(spTasks, gridBagConstraints);
 
+        chbGroupTasks.setFont(getFont());
         chbGroupTasks.setMnemonic(Translator.getMnemonic("HISTORYVIEW.CHB_GROUP_TASKS"));
         chbGroupTasks.setSelected(true);
         chbGroupTasks.setText(Translator.getTranslation("HISTORYVIEW.CHB_GROUP_TASKS"));
@@ -495,6 +531,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         pnTotalTime.setLayout(new java.awt.GridBagLayout());
 
+        lblFilteredTime.setFont(getFont());
         lblFilteredTime.setLabelFor(txtFilteredTime);
         lblFilteredTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_FILTERED_TIME"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -504,6 +541,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnTotalTime.add(lblFilteredTime, gridBagConstraints);
 
         txtFilteredTime.setEditable(false);
+        txtFilteredTime.setFont(getFont());
         txtFilteredTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtFilteredTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_FILTERED_TIME_TOOLTIP"));
         txtFilteredTime.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -528,8 +566,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(tpViews, gridBagConstraints);
 
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
     
     /** Method called when generate report button was clicked.
      * @param evt Event that invoked the action.

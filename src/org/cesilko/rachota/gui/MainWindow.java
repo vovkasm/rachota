@@ -69,6 +69,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         initComponents();
         DayView dayView = new DayView();
         tpViews.add(dayView, TAB_DAY_VIEW);
+        tpViews.setFont(getFont());
         dayView.addPropertyChangeListener(this);
         HistoryView historyView = new HistoryView();
         dayView.addPropertyChangeListener(historyView);
@@ -88,6 +89,14 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             setLocation(x, y);
         } else setLocationRelativeTo(null);
         Clock.getDefault().start();
+    }
+    
+    /** Returns font that should be used for all widgets in this component
+     * based on the language preferences specified by user.
+     * @return Font to be used in this component.
+     */
+    public java.awt.Font getFont() {
+        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     }
     
     /** This method is called from within the constructor to
@@ -127,9 +136,12 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
         getContentPane().add(tpViews, gridBagConstraints);
 
+        mbMenu.setFont(getFont());
         mnSystem.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_SYSTEM"));
         mnSystem.setText(Translator.getTranslation("MAINWINDOW.MN_SYSTEM"));
         mnSystem.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_SYSTEM_TOOLTIP"));
+        mnSystem.setFont(getFont());
+        mnAbout.setFont(getFont());
         mnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/info.png")));
         mnAbout.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_ABOUT"));
         mnAbout.setText(Translator.getTranslation("MAINWINDOW.MN_ABOUT"));
@@ -142,6 +154,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         mnSystem.add(mnAbout);
 
+        mnSettings.setFont(getFont());
         mnSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/service.png")));
         mnSettings.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_SETTINGS"));
         mnSettings.setText(Translator.getTranslation("MAINWINDOW.MN_SETTINGS"));
@@ -156,6 +169,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         mnSystem.add(separator);
 
+        mnExit.setFont(getFont());
         mnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/exit.png")));
         mnExit.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_EXIT"));
         mnExit.setText(Translator.getTranslation("MAINWINDOW.MN_EXIT"));
@@ -173,6 +187,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_TASK"));
         mnTask.setText(Translator.getTranslation("MAINWINDOW.MN_TASK"));
         mnTask.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_TASK_TOOLTIP"));
+        mnTask.setFont(getFont());
+        mnCopyTask.setFont(getFont());
         mnCopyTask.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_task.png")));
         mnCopyTask.setMnemonic(Translator.getMnemonic("MAINWINDOW.MOVE_TASK"));
         mnCopyTask.setText(Translator.getTranslation("MAINWINDOW.MOVE_TASK"));
@@ -185,6 +201,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         mnTask.add(mnCopyTask);
 
+        mnMoveTime.setFont(getFont());
         mnMoveTime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_time.png")));
         mnMoveTime.setMnemonic(Translator.getMnemonic("MAINWINDOW.MOVE_TIME"));
         mnMoveTime.setText(Translator.getTranslation("MAINWINDOW.MOVE_TIME"));
@@ -315,7 +332,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.0";
     /** Build number. */
-    protected static final String build = "#060314";
+    protected static final String build = "#060419";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */

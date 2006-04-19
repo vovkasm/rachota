@@ -25,6 +25,9 @@
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;MOVETIMEDIALOG.SELECT_TASK&quot;)" type="code"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="cmbSelectTask"/>
         </Property>
@@ -40,6 +43,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbSelectTask">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;MOVETIMEDIALOG.SELECT_TASK_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -54,6 +60,9 @@
       <Properties>
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;MOVETIMEDIALOG.SELECT_TIME&quot;)" type="code"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="spHours"/>
@@ -153,6 +162,9 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btOK">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;MOVETIMEDIALOG.BT_OK&quot;)" type="code"/>
             </Property>
@@ -169,6 +181,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btCancel">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;MOVETIMEDIALOG.BT_CANCEL&quot;)" type="code"/>
             </Property>

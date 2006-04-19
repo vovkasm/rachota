@@ -30,6 +30,9 @@
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;FILTERDIALOG.NAME&quot;)" type="code"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="cmbFilterName"/>
         </Property>
@@ -45,6 +48,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbFilterName">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.NAME_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -63,6 +69,9 @@
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;FILTERDIALOG.CONTENT_RULE&quot;)" type="code"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="cmbContentRule"/>
         </Property>
@@ -78,6 +87,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbContentRule">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.CONTENT_RULE_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -92,6 +104,9 @@
       <Properties>
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;FILTERDIALOG.CONTENT&quot;)" type="code"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
         </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="txtContent"/>
@@ -108,6 +123,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbContent">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.CONTENT_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -121,6 +139,9 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtContent">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.CONTENT_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -145,6 +166,9 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btOK">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;FILTERDIALOG.BT_OK&quot;)" type="code"/>
             </Property>
@@ -166,6 +190,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btCancel">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getMnemonic(&quot;FILTERDIALOG.BT_CANCEL&quot;)" type="code"/>
             </Property>

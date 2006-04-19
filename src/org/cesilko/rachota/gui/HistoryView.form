@@ -21,6 +21,9 @@
         <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getMnemonic(&quot;HISTORYVIEW.LBL_PERIOD&quot;)" type="code"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="cmbPeriod"/>
         </Property>
@@ -36,6 +39,9 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbPeriod">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.PERIOD_TOOLTIP&quot;)" type="code"/>
         </Property>
@@ -51,6 +57,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="btReport">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/org/cesilko/rachota/gui/images/report.png"/>
         </Property>
@@ -111,6 +120,9 @@
         <Component class="javax.swing.JTextField" name="txtDate">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.TXT_DATE_TOOLTIP&quot;)" type="code"/>
@@ -152,6 +164,11 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="tpViews">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection component="Form" name="getFont" type="method"/>
+        </Property>
+      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="-1" gridY="2" gridWidth="3" gridHeight="1" fill="1" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="5" insetsBottom="5" insetsRight="5" anchor="10" weightX="0.0" weightY="1.0"/>
@@ -161,6 +178,11 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
         <Container class="javax.swing.JPanel" name="pnTimes">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="&lt;User Code&gt;">
@@ -178,6 +200,9 @@
                 <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;HISTORYVIEW.LBL_CHART_TYPE&quot;)" type="code"/>
                 </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="rbFromTo"/>
                 </Property>
@@ -193,6 +218,9 @@
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbTotal">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.TYPE_TOTAL&quot;)" type="code"/>
@@ -212,6 +240,9 @@
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbFromTo">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.TYPE_FROM_TO&quot;)" type="code"/>
                 </Property>
@@ -230,6 +261,9 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="chbHighlightTasks">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;HISTORYVIEW.LBL_HIGHLIGHT_TASKS&quot;)" type="code"/>
                 </Property>
@@ -251,6 +285,9 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cmbFilterName">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.NAME_TOOLTIP&quot;)" type="code"/>
                 </Property>
@@ -267,6 +304,9 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cmbContentRule">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.CONTENT_RULE_TOOLTIP&quot;)" type="code"/>
                 </Property>
@@ -286,6 +326,9 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cmbContent">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.CONTENT_TOOLTIP&quot;)" type="code"/>
                 </Property>
@@ -305,6 +348,9 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtContent">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;FILTERDIALOG.CONTENT_TOOLTIP&quot;)" type="code"/>
                 </Property>
@@ -321,6 +367,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblTotalTime">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="txtTotalTime"/>
                 </Property>
@@ -337,6 +386,9 @@
             <Component class="javax.swing.JTextField" name="txtTotalTime">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.TXT_TOTAL_TIME_TOOLTIP&quot;)" type="code"/>
@@ -354,6 +406,11 @@
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnTasks">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="&lt;User Code&gt;">
@@ -370,6 +427,9 @@
               <Properties>
                 <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;HISTORYVIEW.LBL_FILTERS&quot;)" type="code"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
                 </Property>
                 <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="tbFilters"/>
@@ -403,6 +463,9 @@
               <SubComponents>
                 <Component class="javax.swing.JTable" name="tbFilters">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection component="Form" name="getFont" type="method"/>
+                    </Property>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="new FiltersTableModel()" type="code"/>
                     </Property>
@@ -424,6 +487,9 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btAddFilter">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection component="Form" name="getFont" type="method"/>
+                    </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/org/cesilko/rachota/gui/images/new_filter.png"/>
                     </Property>
@@ -448,6 +514,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btEditFilter">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection component="Form" name="getFont" type="method"/>
+                    </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/org/cesilko/rachota/gui/images/edit_filter.png"/>
                     </Property>
@@ -472,6 +541,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btRemoveFilter">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection component="Form" name="getFont" type="method"/>
+                    </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/org/cesilko/rachota/gui/images/remove_filter.png"/>
                     </Property>
@@ -500,6 +572,9 @@
               <Properties>
                 <Property name="displayedMnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;HISTORYVIEW.LBL_TASKS&quot;)" type="code"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
                 </Property>
                 <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="tbTasks"/>
@@ -539,6 +614,9 @@
             </Container>
             <Component class="javax.swing.JCheckBox" name="chbGroupTasks">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Translator.getMnemonic(&quot;HISTORYVIEW.CHB_GROUP_TASKS&quot;)" type="code"/>
                 </Property>
@@ -570,6 +648,9 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblFilteredTime">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection component="Form" name="getFont" type="method"/>
+                    </Property>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                       <ComponentRef name="txtFilteredTime"/>
                     </Property>
@@ -586,6 +667,9 @@
                 <Component class="javax.swing.JTextField" name="txtFilteredTime">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection component="Form" name="getFont" type="method"/>
+                    </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.TXT_FILTERED_TIME_TOOLTIP&quot;)" type="code"/>
