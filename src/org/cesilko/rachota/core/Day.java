@@ -9,8 +9,8 @@ package org.cesilko.rachota.core;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -236,15 +236,14 @@ public class Day implements PropertyChangeListener {
     }
     
     /** Write day to given writer.
-     * @param writer File writer where day will be written.
+     * @param stream Print stream where day will be written.
      * @throws java.io.IOException Input/Output exception thrown whenever any problem while writing day occurs.
      */
-    public void write(BufferedWriter writer) throws IOException {
+    public void write(PrintStream stream) throws IOException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int id = calendar.get(Calendar.DAY_OF_WEEK);
-        writer.write("    <day id=\"" + id + "\" start=\"" + Tools.getTime(startTime) + "\" finish=\"" + Tools.getTime(finishTime) + "\">");
-        writer.newLine();
+        stream.println("    <day id=\"" + id + "\" start=\"" + Tools.getTime(startTime) + "\" finish=\"" + Tools.getTime(finishTime) + "\">");
         Boolean archiveNotStarted = (Boolean) Settings.getDefault().getSetting("archiveNotStarted");
         boolean pastDay = !(Plan.getDefault().isFuture(this) | Plan.getDefault().isToday(this));
         Iterator iterator = tasks.iterator();
@@ -255,10 +254,9 @@ public class Day implements PropertyChangeListener {
                 writeTask = task.getState() != Task.STATE_NEW;
             if ((task instanceof RegularTask) && (task.getDuration() == 0))
                 writeTask = false;
-            if (writeTask) task.write(writer);
+            if (writeTask) task.write(stream);
         }
-        writer.write("    </day>");
-        writer.newLine();
+        stream.println("    </day>");
     }
     
     /** Returns textual representation of day's date e.g. 11/25 or 25.11.

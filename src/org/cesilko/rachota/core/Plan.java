@@ -6,11 +6,12 @@
 
 package org.cesilko.rachota.core;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -202,31 +203,25 @@ public class Plan {
         String location = (String) Settings.getDefault().getSetting("userDir");
         location = location + File.separator + "diary_" + year + "_" + week + ".xml";
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            writer.newLine();
-            writer.write("<!--");
-            writer.newLine();
-            writer.write("    Rachota 2.0 diary file - editing not recommended");
-            writer.newLine();
-            writer.write("    " + new Date());
-            writer.newLine();
-            writer.write("-->");
-            writer.newLine();
-            writer.write("<!DOCTYPE week SYSTEM \"diary.dtd\">");
-            writer.newLine();
-            writer.newLine();
-            writer.write("<week year=\"" + year + "\" id=\"" + week + "\">");
-            writer.newLine();
+            String encoding = (String) Settings.getDefault().getSetting("fontEncoding");
+            PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
+            stream.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
+            stream.println("<!--");
+            stream.println("    Rachota 2.0 diary file - editing not recommended");
+            stream.println("    " + new Date());
+            stream.println("-->");
+            stream.println("<!DOCTYPE week SYSTEM \"diary.dtd\">");
+            stream.println();
+            stream.println("<week year=\"" + year + "\" id=\"" + week + "\">");
             calendar.set(Calendar.WEEK_OF_YEAR, week);
             for (int i=0; i<7; i++) {
                 calendar.set(Calendar.DAY_OF_WEEK, i);
                 Day day = (Day) days.get(getDayID(calendar));
-                if (day != null) day.write(writer);
+                if (day != null) day.write(stream);
             }
-            writer.write("</week>");
-            writer.flush();
-            writer.close();
+            stream.println("</week>");
+            stream.flush();
+            stream.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
@@ -268,30 +263,24 @@ public class Plan {
         String location = (String) Settings.getDefault().getSetting("userDir");
         location = location + File.separator + "regular_tasks.xml";
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            writer.newLine();
-            writer.write("<!--");
-            writer.newLine();
-            writer.write("    Rachota 2.0 regular tasks - editing not recommended");
-            writer.newLine();
-            writer.write("    " + new Date());
-            writer.newLine();
-            writer.write("-->");
-            writer.newLine();
-            writer.write("<!DOCTYPE week SYSTEM \"regular_tasks.dtd\">");
-            writer.newLine();
-            writer.newLine();
-            writer.write("    <regular_tasks>");
-            writer.newLine();
+            String encoding = (String) Settings.getDefault().getSetting("fontEncoding");
+            PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
+            stream.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
+            stream.println("<!--");
+            stream.println("    Rachota 2.0 regular tasks - editing not recommended");
+            stream.println("    " + new Date());
+            stream.println("-->");
+            stream.println("<!DOCTYPE week SYSTEM \"regular_tasks.dtd\">");
+            stream.println();
+            stream.println("    <regular_tasks>");
             Iterator iterator = Plan.getDefault().getRegularTasks().iterator();
             while (iterator.hasNext()) {
                 RegularTask regularTask = (RegularTask) iterator.next();
-                regularTask.write(writer);
+                regularTask.write(stream);
             }
-            writer.write("    </regular_tasks>");
-            writer.flush();
-            writer.close();
+            stream.println("    </regular_tasks>");
+            stream.flush();
+            stream.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }

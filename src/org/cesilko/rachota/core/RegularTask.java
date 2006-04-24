@@ -6,8 +6,8 @@
 
 package org.cesilko.rachota.core;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,46 +17,26 @@ import java.util.Date;
  */
 public class RegularTask extends Task {
     
-    /**
-     * Type of repetition this regular task represents.
-     */
+    /** Type of repetition this regular task represents. */
     private int frequency;
-    
-    /**
-     * Regular task that repeats every day.
-     */
+    /** Regular task that repeats every day. */
     public static int FREQUENCY_DAILY = 0;
-    /**
-     * Regular task that repeats every Monday.
-     */
+    /** Regular task that repeats every Monday. */
     public static int FREQUENCY_MONDAY = 1;
-    /**
-     * Regular task that repeats every Tuesday.
-     */
+    /** Regular task that repeats every Tuesday. */
     public static int FREQUENCY_TUESDAY = 2;
-    /**
-     * Regular task that repeats every Wednesday.
-     */
+    /** Regular task that repeats every Wednesday. */
     public static int FREQUENCY_WEDNESDAY = 3;
-    /**
-     * Regular task that repeats every Thursday.
-     */
+    /** Regular task that repeats every Thursday. */
     public static int FREQUENCY_THURSDAY = 4;
-    /**
-     * Regular task that repeats every Friday.
-     */
+    /** Regular task that repeats every Friday. */
     public static int FREQUENCY_FRIDAY = 5;
-    /**
-     * Regular task that repeats every Saturday.
-     */
+    /** Regular task that repeats every Saturday. */
     public static int FREQUENCY_SATURDAY = 6;
-    /**
-     * Regular task that repeats every Sunday.
-     */
+    /** Regular task that repeats every Sunday. */
     public static int FREQUENCY_SUNDAY = 7;
     
-    /**
-     * Creates a new instance of regular task.
+    /** Creates a new instance of regular task.
      * @param description Description of task.
      * @param keyword Arbitrary text for grouping tasks etc.
      * @param notes Notes of task.
@@ -95,14 +75,12 @@ public class RegularTask extends Task {
         return Translator.getTranslation("TASK_FREQUENCY_" + frequency);
     }
     
-    /**
-     * Writes information about repetition of task.
-     * @param writer File writer where repetition info will be written.
+    /** Writes information about repetition of task.
+     * @param stream Print stream where repetition info will be written.
      * @throws java.io.IOException Input/output exception thrown when some error during writing repetition information occurs.
      */
-    public void writeRepetition(BufferedWriter writer) throws IOException {
-        writer.write("            <repetition frequency=\"" + frequency + "\"/>");
-        writer.newLine();
+    public void writeRepetition(PrintStream stream) throws IOException {
+        stream.println("            <repetition frequency=\"" + frequency + "\"/>");
     }
     
     /** Verifies if task is planned for given day.

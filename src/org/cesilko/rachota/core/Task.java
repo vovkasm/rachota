@@ -8,8 +8,8 @@ package org.cesilko.rachota.core;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Date;
 import org.cesilko.rachota.gui.DayTableModel;
 import org.cesilko.rachota.gui.Tools;
@@ -255,56 +255,48 @@ public class Task implements ClockListener {
     
     /**
      * Writes task to given writer.
-     * @param writer File writer where task will be written.
+     * @param stream Print stream where task will be written.
      * @throws java.io.IOException Input/output exception thrown when some error during writing basic task information occurs.
      */
-    public void write(BufferedWriter writer) throws IOException {
-        writer.write("        <task state=\"" + state + "\"");
-        writer.write(" duration=\"" + Tools.getTime(duration) + "\">");
-        writer.newLine();
-        writer.write("            <priority>" + priority + "</priority>");
-        writer.newLine();
+    public void write(PrintStream stream) throws IOException {
+        stream.print("        <task state=\"" + state + "\"");
+        stream.println(" duration=\"" + Tools.getTime(duration) + "\">");
+        stream.println("            <priority>" + priority + "</priority>");
         String data = Tools.replaceAll(description, "&", "&amp;");
         data = Tools.replaceAll(data, "<", "&lt;");
         data = Tools.replaceAll(data, ">", "&gt;");
         data = Tools.replaceAll(data, "\"", "&quot;");
-        writer.write("            <description>" + data + "</description>");
-        writer.newLine();
+        stream.println("            <description>" + data + "</description>");
         if ((keyword != null) && (!keyword.equals(""))) {
             data = Tools.replaceAll(keyword, "&", "&amp;");
             data = Tools.replaceAll(data, "<", "&lt;");
             data = Tools.replaceAll(data, ">", "&gt;");
             data = Tools.replaceAll(data, "\"", "&quot;");
-            writer.write("            <keyword>" + data + "</keyword>");
-            writer.newLine();
+            stream.println("            <keyword>" + data + "</keyword>");
         }
         if ((notes != null) && (!notes.equals(""))) {
             data = Tools.replaceAll(notes, "&", "&amp;");
             data = Tools.replaceAll(data, "<", "&lt;");
             data = Tools.replaceAll(data, ">", "&gt;");
             data = Tools.replaceAll(data, "\"", "&quot;");
-            writer.write("            <notes>" + data + "</notes>");
-            writer.newLine();
+            stream.println("            <notes>" + data + "</notes>");
         }
         if (notificationTime != null) {
-            writer.write("            <notification time=\"" + Tools.getTime(notificationTime) + "\" switch=\"" + automaticStart + "\"/>");
-            writer.newLine();
+            stream.println("            <notification time=\"" + Tools.getTime(notificationTime) + "\" switch=\"" + automaticStart + "\"/>");
         }
         if (privateTask) {
-            writer.write("            <private/>");
-            writer.newLine();
+            stream.println("            <private/>");
         }
-        writeRepetition(writer);
-        writer.write("        </task>");
-        writer.newLine();
+        writeRepetition(stream);
+        stream.println("        </task>");
     }
     
     /**
      * Writes information about repetition of task.
-     * @param writer File writer where repetition info will be written.
+     * @param stream Print stream where task will be written.
      * @throws java.io.IOException Input/output exception thrown when some error during writing repetition information occurs.
      */
-    public void writeRepetition(BufferedWriter writer) throws IOException {
+    public void writeRepetition(PrintStream stream) throws IOException {
         // Does nothing by default, only instances of RegularTask objects save the information.
     }
     
