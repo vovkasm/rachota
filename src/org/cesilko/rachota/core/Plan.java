@@ -203,7 +203,7 @@ public class Plan {
         String location = (String) Settings.getDefault().getSetting("userDir");
         location = location + File.separator + "diary_" + year + "_" + week + ".xml";
         try {
-            String encoding = (String) Settings.getDefault().getSetting("fontEncoding");
+            String encoding = (String) Settings.getDefault().getSetting("systemEncoding");
             PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
             stream.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
             stream.println("<!--");
@@ -263,7 +263,7 @@ public class Plan {
         String location = (String) Settings.getDefault().getSetting("userDir");
         location = location + File.separator + "regular_tasks.xml";
         try {
-            String encoding = (String) Settings.getDefault().getSetting("fontEncoding");
+            String encoding = (String) Settings.getDefault().getSetting("systemEncoding");
             PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
             stream.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
             stream.println("<!--");

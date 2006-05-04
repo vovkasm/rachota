@@ -91,11 +91,14 @@ public class Settings {
      * @return Value of given setting or null if it does not exist.
      */
     public Object getSetting(String setting) {
-        if (!setting.startsWith("font"))
+        if (!setting.startsWith("font") && !setting.startsWith("system"))
             return settingsMap.get(setting);
         if (settingsMap.containsKey(setting))
             return settingsMap.get(setting);
-        String bundleValue = Translator.getTranslation("FONT." + setting.substring(4).toUpperCase());
+        String bundleValue;
+        if (setting.startsWith("font")) {
+            bundleValue = Translator.getTranslation("FONT." + setting.substring(4).toUpperCase());
+        } else bundleValue = Translator.getTranslation("SYSTEM." + setting.substring(6).toUpperCase());
         setSetting(setting, bundleValue);
         return bundleValue;
     }
