@@ -729,7 +729,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      */
     private void updateInformation(boolean taskDurationChanged) {
         SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
-        sdf.applyPattern("EEEEEEEEEEE - d. MMMMMMMMMMMMM, yyyy");
+        String dayFormat = Translator.getTranslation("FORMAT.DATE");
+        sdf.applyPattern(dayFormat);
         txtDate.setText(sdf.format(day.getDate()));
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(day.getDate());
@@ -987,7 +988,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         updateInformation(false);
         if (startTask) btWorkActionPerformed(null);
     }
-
+    
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
      */

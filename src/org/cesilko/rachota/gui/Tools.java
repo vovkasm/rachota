@@ -8,6 +8,7 @@ package org.cesilko.rachota.gui;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.cesilko.rachota.core.Translator;
 
 /** Helper class providing support for time conversion between
  * long, Date and String formats.
@@ -38,7 +39,8 @@ public class Tools {
     public static String getTime(Date time) {
         if (time == null) return "00:00";
         SimpleDateFormat df = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
-        df.applyPattern("HH:mm");
+        String timeFormat = Translator.getTranslation("FORMAT.TIME");
+        df.applyPattern(timeFormat);
         return df.format(time);
     }
     
@@ -51,7 +53,8 @@ public class Tools {
         long time = 0;
         if (text.length() == 5) {
             SimpleDateFormat df = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
-            df.applyPattern("HH:mm");
+            String timeFormat = Translator.getTranslation("FORMAT.TIME");
+            df.applyPattern(timeFormat);
             try {
                 time = df.parse(text).getTime();
             } catch (ParseException ex) {

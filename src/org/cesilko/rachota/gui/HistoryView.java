@@ -42,60 +42,60 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     
     /** Creates new HistoryView panel charts and table. */
     public HistoryView() {
-	initComponents();
-	tbFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	tbTasks.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_DAY));
-	cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_WEEK));
-	cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_MONTH));
-	cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_YEAR));
-	historyChart = new HistoryChart(getDays(), null, HistoryChart.TYPE_TOTAL);
-	java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-	gridBagConstraints.gridy = 5;
-	gridBagConstraints.gridwidth = 5;
-	gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-	gridBagConstraints.weightx = 1.0;
-	gridBagConstraints.weighty = 1.0;
-	gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-	pnTimes.add(historyChart, gridBagConstraints);
-	cmbPeriod.setSelectedIndex(SCALE_WEEK);
-	checkButtons();
-	filterTasks();
-	tbFilters.getTableHeader().setForeground(java.awt.Color.BLUE);
-	tbFilters.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
+        initComponents();
+        tbFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbTasks.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_DAY));
+        cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_WEEK));
+        cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_MONTH));
+        cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_YEAR));
+        historyChart = new HistoryChart(getDays(), null, HistoryChart.TYPE_TOTAL);
+        java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimes.add(historyChart, gridBagConstraints);
+        cmbPeriod.setSelectedIndex(SCALE_WEEK);
+        checkButtons();
+        filterTasks();
+        tbFilters.getTableHeader().setForeground(java.awt.Color.BLUE);
+        tbFilters.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
         tbFilters.getTableHeader().setFont(getFont());
         tbFilters.setFont(getFont());
         tbFilters.setRowHeight(getFont().getSize() + 2);
-	tbTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
-	tbTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
+        tbTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
+        tbTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
         tbTasks.getTableHeader().setFont(getFont());
         tbTasks.setFont(getFont());
         tbTasks.setRowHeight(getFont().getSize() + 2);
-	cmbFilterName.addItem(new DescriptionFilter().toString());
-	cmbFilterName.addItem(new KeywordFilter().toString());
-	cmbFilterName.addItem(new DurationFilter().toString());
-	cmbFilterName.addItem(new PriorityFilter().toString());
-	cmbFilterName.addItem(new StateFilter().toString());
-	cmbFilterName.addItem(new PrivateFilter().toString());
-	setComponents();
-	tbTasks.getColumn(Translator.getTranslation("TASKS.DESCRIPTION")).setPreferredWidth(280);
-	tbTasks.getColumn(Translator.getTranslation("TASKS.DURATION_DAYS")).setPreferredWidth(50);
+        cmbFilterName.addItem(new DescriptionFilter().toString());
+        cmbFilterName.addItem(new KeywordFilter().toString());
+        cmbFilterName.addItem(new DurationFilter().toString());
+        cmbFilterName.addItem(new PriorityFilter().toString());
+        cmbFilterName.addItem(new StateFilter().toString());
+        cmbFilterName.addItem(new PrivateFilter().toString());
+        setComponents();
+        tbTasks.getColumn(Translator.getTranslation("TASKS.DESCRIPTION")).setPreferredWidth(280);
+        tbTasks.getColumn(Translator.getTranslation("TASKS.DURATION_DAYS")).setPreferredWidth(50);
         tbTasks.setRowSelectionAllowed(false);
-	tbTasks.getTableHeader().addMouseListener(new MouseAdapter() {
-	    Point pressedPoint;
-	    public void mousePressed(MouseEvent e) {
-		pressedPoint = e.getPoint();
-	    }
-	    public void mouseReleased(MouseEvent e) {
-		if (!e.getPoint().equals(pressedPoint)) return;
-		int column = tbTasks.getTableHeader().columnAtPoint(e.getPoint());
-		FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
-		filteredTasksTableModel.sortTable(column, true);
-		int columns = tbTasks.getColumnCount();
-		for (int i=0; i<columns; i++)
-		    tbTasks.getColumnModel().getColumn(i).setHeaderValue(filteredTasksTableModel.getColumnName(i));
-	    }
-	});
+        tbTasks.getTableHeader().addMouseListener(new MouseAdapter() {
+            Point pressedPoint;
+            public void mousePressed(MouseEvent e) {
+                pressedPoint = e.getPoint();
+            }
+            public void mouseReleased(MouseEvent e) {
+                if (!e.getPoint().equals(pressedPoint)) return;
+                int column = tbTasks.getTableHeader().columnAtPoint(e.getPoint());
+                FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+                filteredTasksTableModel.sortTable(column, true);
+                int columns = tbTasks.getColumnCount();
+                for (int i=0; i<columns; i++)
+                    tbTasks.getColumnModel().getColumn(i).setHeaderValue(filteredTasksTableModel.getColumnName(i));
+            }
+        });
     }
     
     /** Returns font that should be used for all widgets in this component
@@ -572,197 +572,202 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      * @param evt Event that invoked the action.
      */
     private void btReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReportActionPerformed
-	createReport();
+        createReport();
     }//GEN-LAST:event_btReportActionPerformed
     
     /** Method called when highlight tasks checkbox is un/checked.
      * @param evt Event that invoked the action.
      */
     private void chbHighlightTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbHighlightTasksActionPerformed
-	setComponents();
-	historyChart.setHighlightingFilter(getFilter());
+        setComponents();
+        historyChart.setHighlightingFilter(getFilter());
     }//GEN-LAST:event_chbHighlightTasksActionPerformed
     
     /** Method called when from/to chart type is required.
      * @param evt Event that invoked the action.
      */
     private void rbFromToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbFromToActionPerformed
-	rbTotal.setSelected(false);
-	rbFromTo.setSelected(true);
-	chbHighlightTasks.setEnabled(false);
-	historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
-	setComponents();
+        rbTotal.setSelected(false);
+        rbFromTo.setSelected(true);
+        chbHighlightTasks.setEnabled(false);
+        historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
+        setComponents();
     }//GEN-LAST:event_rbFromToActionPerformed
     
     /** Method called when total times chart type is required.
      * @param evt Event that invoked the action.
      */
     private void rbTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTotalActionPerformed
-	rbTotal.setSelected(true);
-	rbFromTo.setSelected(false);
-	chbHighlightTasks.setEnabled(true);
-	historyChart.setChartType(HistoryChart.TYPE_TOTAL);
-	setComponents();
-	historyChart.setHighlightingFilter(getFilter());
+        rbTotal.setSelected(true);
+        rbFromTo.setSelected(false);
+        chbHighlightTasks.setEnabled(true);
+        historyChart.setChartType(HistoryChart.TYPE_TOTAL);
+        setComponents();
+        historyChart.setHighlightingFilter(getFilter());
     }//GEN-LAST:event_rbTotalActionPerformed
     
     /** Method called when any key is typed in content textfield.
      * @param evt Event that invoked the action.
      */
     private void txtContentKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContentKeyTyped
-	if (evt.getKeyChar() == evt.VK_ENTER) historyChart.setHighlightingFilter(getFilter());
+        if (evt.getKeyChar() == evt.VK_ENTER) historyChart.setHighlightingFilter(getFilter());
     }//GEN-LAST:event_txtContentKeyTyped
     
     /** Method called when selection of content item has changed.
      * @param evt Event that invoked the action.
      */
     private void cmbContentItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbContentItemStateChanged
-	historyChart.setHighlightingFilter(getFilter());
+        historyChart.setHighlightingFilter(getFilter());
     }//GEN-LAST:event_cmbContentItemStateChanged
     
     /** Method called when selection of content rule item has changed.
      * @param evt Event that invoked the action.
      */
     private void cmbContentRuleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbContentRuleItemStateChanged
-	historyChart.setHighlightingFilter(getFilter());
+        historyChart.setHighlightingFilter(getFilter());
     }//GEN-LAST:event_cmbContentRuleItemStateChanged
     
     /** Method called when selection of filter item has changed.
      * @param evt Event that invoked the action.
      */
     private void cmbFilterNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbFilterNameItemStateChanged
-	setComponents();
-	historyChart.setHighlightingFilter(getFilter());
+        setComponents();
+        historyChart.setHighlightingFilter(getFilter());
     }//GEN-LAST:event_cmbFilterNameItemStateChanged
     
     /** Method called when checkbox "Group tasks with same name" is un/checked.
      * @param evt Event that invoked this action.
      */
     private void chbGroupTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbGroupTasksActionPerformed
-	FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
-	filteredTasksTableModel.setGroupSameTasks(chbGroupTasks.isSelected());
+        FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+        filteredTasksTableModel.setGroupSameTasks(chbGroupTasks.isSelected());
     }//GEN-LAST:event_chbGroupTasksActionPerformed
     
     /** Method called when user clicked into tables of filters.
      * @param evt Event that invoked this action.
      */
     private void tbFiltersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbFiltersMouseClicked
-	checkButtons();
+        checkButtons();
     }//GEN-LAST:event_tbFiltersMouseClicked
     
     /** Method called when Edit Filter button was pressed.
      * @param evt Event that invoked this action.
      */
     private void btEditFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditFilterActionPerformed
-	int row = tbFilters.getSelectedRow();
-	FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
-	AbstractTaskFilter taskFilter = tableModel.getFilter(row);
-	new FilterDialog(tableModel, taskFilter).setVisible(true);
-	checkButtons();
-	filterTasks();
+        int row = tbFilters.getSelectedRow();
+        FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
+        AbstractTaskFilter taskFilter = tableModel.getFilter(row);
+        new FilterDialog(tableModel, taskFilter).setVisible(true);
+        checkButtons();
+        filterTasks();
     }//GEN-LAST:event_btEditFilterActionPerformed
     
     /** Method called when Remove Filter button was pressed.
      * @param evt Event that invoked this action.
      */
     private void btRemoveFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveFilterActionPerformed
-	int row = tbFilters.getSelectedRow();
-	FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
-	AbstractTaskFilter taskFilter = tableModel.getFilter(row);
-	tableModel.removeFilter(taskFilter);
-	checkButtons();
-	filterTasks();
+        int row = tbFilters.getSelectedRow();
+        FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
+        AbstractTaskFilter taskFilter = tableModel.getFilter(row);
+        tableModel.removeFilter(taskFilter);
+        checkButtons();
+        filterTasks();
     }//GEN-LAST:event_btRemoveFilterActionPerformed
     
     /** Method called when Add Filter button was pressed.
      * @param evt Event that invoked this action.
      */
     private void btAddFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddFilterActionPerformed
-	FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
-	new FilterDialog(tableModel).setVisible(true);
-	checkButtons();
-	filterTasks();
+        FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
+        new FilterDialog(tableModel).setVisible(true);
+        checkButtons();
+        filterTasks();
     }//GEN-LAST:event_btAddFilterActionPerformed
     
     /** Method called when date textfield was clicked to select actual day/week/month/year.
      * @param evt Event that invoked the action.
      */
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
-	period = new Date();
-	cmbPeriodItemStateChanged(null);
+        period = new Date();
+        cmbPeriodItemStateChanged(null);
     }//GEN-LAST:event_txtDateMouseClicked
     
     /** Method called when period scale should be changed.
      * @param evt Event that invoked the action.
      */
     private void cmbPeriodItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPeriodItemStateChanged
-	int scale = cmbPeriod.getSelectedIndex();
-	SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
-	switch (scale) {
-	    case (SCALE_YEAR):
-		sdf.applyPattern("| yyyy");
-		txtDate.setText(Tools.replaceAll(sdf.format(period), "|", (String) cmbPeriod.getSelectedItem()));
-		break;
-	    case (SCALE_MONTH):
-		sdf.applyPattern("MMMMMMMMMMMMM, yyyy");
-		txtDate.setText(sdf.format(period));
-		break;
-	    case (SCALE_WEEK):
-		sdf.applyPattern("w. |, yyyy");
-		txtDate.setText(Tools.replaceAll(sdf.format(period), "|", (String) cmbPeriod.getSelectedItem()));
-		break;
-	    default:
-		sdf.applyPattern("d. MMMMMMMMMMMMM, yyyy");
-		txtDate.setText(sdf.format(period));
-		break;
-	}
-	if (historyChart != null) historyChart.setDays(getDays());
-	filterTasks();
-	updateTotalTime();
+        int scale = cmbPeriod.getSelectedIndex();
+        SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+        String format;
+        switch (scale) {
+            case (SCALE_YEAR):
+                format = Translator.getTranslation("FORMAT.YEAR");
+                sdf.applyPattern(format);
+                txtDate.setText(Tools.replaceAll(sdf.format(period), "|", (String) cmbPeriod.getSelectedItem()));
+                break;
+            case (SCALE_MONTH):
+                format = Translator.getTranslation("FORMAT.MONTH");
+                sdf.applyPattern(format);
+                txtDate.setText(sdf.format(period));
+                break;
+            case (SCALE_WEEK):
+                format = Translator.getTranslation("FORMAT.WEEK");
+                sdf.applyPattern(format);
+                txtDate.setText(Tools.replaceAll(sdf.format(period), "|", (String) cmbPeriod.getSelectedItem()));
+                break;
+            default:
+                format = Translator.getTranslation("FORMAT.DAY");
+                sdf.applyPattern(format);
+                txtDate.setText(sdf.format(period));
+                break;
+        }
+        if (historyChart != null) historyChart.setDays(getDays());
+        filterTasks();
+        updateTotalTime();
     }//GEN-LAST:event_cmbPeriodItemStateChanged
     
     /** Method called when forward button was pressed.
      * @param evt Event that invoked the action.
      */
     private void btForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btForwardActionPerformed
-	period = shiftPeriod(1);
-	cmbPeriodItemStateChanged(null);
-	updateTotalTime();
+        period = shiftPeriod(1);
+        cmbPeriodItemStateChanged(null);
+        updateTotalTime();
     }//GEN-LAST:event_btForwardActionPerformed
     
     /** Method called when backward button was pressed.
      * @param evt Event that invoked the action.
      */
     private void btBackwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBackwardActionPerformed
-	period = shiftPeriod(-1);
-	cmbPeriodItemStateChanged(null);
-	updateTotalTime();
+        period = shiftPeriod(-1);
+        cmbPeriodItemStateChanged(null);
+        updateTotalTime();
     }//GEN-LAST:event_btBackwardActionPerformed
     
     /** Method called when plus spinner was pressed.
      * @param evt Event that invoked the action.
      */
     private void spPlusStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spPlusStateChanged
-	Integer plus = (Integer) spPlus.getValue();
-	int value = plus.intValue();
-	if (value < 0) spPlus.setValue(previousPlus);
-	else previousPlus = plus;
-	historyChart.setDays(getDays());
-	filterTasks();
-	updateTotalTime();
+        Integer plus = (Integer) spPlus.getValue();
+        int value = plus.intValue();
+        if (value < 0) spPlus.setValue(previousPlus);
+        else previousPlus = plus;
+        historyChart.setDays(getDays());
+        filterTasks();
+        updateTotalTime();
     }//GEN-LAST:event_spPlusStateChanged
     
     /** Method called when minus spinner was pressed.
      * @param evt Event that invoked the action.
      */
     private void spMinusStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spMinusStateChanged
-	Integer minus = (Integer) spMinus.getValue();
-	int value = minus.intValue();
-	if (value > 0) spMinus.setValue(previousMinus);
-	else previousMinus = minus;
-	historyChart.setDays(getDays());
-	filterTasks();
-	updateTotalTime();
+        Integer minus = (Integer) spMinus.getValue();
+        int value = minus.intValue();
+        if (value > 0) spMinus.setValue(previousMinus);
+        else previousMinus = minus;
+        historyChart.setDays(getDays());
+        filterTasks();
+        updateTotalTime();
     }//GEN-LAST:event_spMinusStateChanged
     
     
@@ -829,24 +834,24 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      * @return Date determined as period + step * scale.
      */
     private Date shiftPeriod(int step) {
-	Calendar calendar = Calendar.getInstance();
-	calendar.setTime(period);
-	int scale = cmbPeriod.getSelectedIndex();
-	switch (scale) {
-	    case (SCALE_YEAR):
-		calendar.add(Calendar.YEAR, step);
-		break;
-	    case (SCALE_MONTH):
-		calendar.add(Calendar.MONTH, step);
-		break;
-	    case (SCALE_WEEK):
-		calendar.add(Calendar.WEEK_OF_YEAR, step);
-		break;
-	    default:
-		calendar.add(Calendar.DAY_OF_YEAR, step);
-		break;
-	}
-	return calendar.getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(period);
+        int scale = cmbPeriod.getSelectedIndex();
+        switch (scale) {
+            case (SCALE_YEAR):
+                calendar.add(Calendar.YEAR, step);
+                break;
+            case (SCALE_MONTH):
+                calendar.add(Calendar.MONTH, step);
+                break;
+            case (SCALE_WEEK):
+                calendar.add(Calendar.WEEK_OF_YEAR, step);
+                break;
+            default:
+                calendar.add(Calendar.DAY_OF_YEAR, step);
+                break;
+        }
+        return calendar.getTime();
     }
     
     /** Identification of the first date within selected preiod. */
@@ -861,232 +866,232 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      * @return First or last date of period interval.
      */
     private Date getDate(boolean date) {
-	Calendar calendar = Calendar.getInstance();
-	int offset = date == FIRST_DATE ? previousMinus.intValue() : previousPlus.intValue();
-	calendar.setTime(shiftPeriod(offset));
-	int scale = cmbPeriod.getSelectedIndex();
-	offset = 1;
-	switch (scale) {
-	    case (SCALE_YEAR):
-		if (date == LAST_DATE) offset = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
-		calendar.set(Calendar.DAY_OF_YEAR, offset);
-		break;
-	    case (SCALE_MONTH):
-		if (date == LAST_DATE) offset = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-		calendar.set(Calendar.DAY_OF_MONTH, offset);
-		break;
-	    case (SCALE_WEEK):
-		offset = calendar.getFirstDayOfWeek();
-		if (date == LAST_DATE) offset = offset + 6;
-		calendar.set(Calendar.DAY_OF_WEEK, offset);
-	}
-	return calendar.getTime();
+        Calendar calendar = Calendar.getInstance();
+        int offset = date == FIRST_DATE ? previousMinus.intValue() : previousPlus.intValue();
+        calendar.setTime(shiftPeriod(offset));
+        int scale = cmbPeriod.getSelectedIndex();
+        offset = 1;
+        switch (scale) {
+            case (SCALE_YEAR):
+                if (date == LAST_DATE) offset = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
+                calendar.set(Calendar.DAY_OF_YEAR, offset);
+                break;
+            case (SCALE_MONTH):
+                if (date == LAST_DATE) offset = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                calendar.set(Calendar.DAY_OF_MONTH, offset);
+                break;
+            case (SCALE_WEEK):
+                offset = calendar.getFirstDayOfWeek();
+                if (date == LAST_DATE) offset = offset + 6;
+                calendar.set(Calendar.DAY_OF_WEEK, offset);
+        }
+        return calendar.getTime();
     }
     
     /** Returns all days in selected period interval whose tasks will be processed.
      * @return All days in selected period interval whose tasks will be processed.
      */
     private Vector getDays() {
-	Vector days = new Vector();
-	Calendar calendar = Calendar.getInstance();
-	Plan plan = Plan.getDefault();
-	
-	Date firstDate = getDate(FIRST_DATE);
-	Date lastDate = getDate(LAST_DATE);
-	
-	calendar.setTime(lastDate);
-	String lastDayID = plan.getDayID(calendar);
-	
-	Day day = plan.getDay(firstDate);
-	days.add(day);
-	while (true) {
-	    calendar.setTime(day.getDate());
-	    if (plan.getDayID(calendar).equals(lastDayID)) break;
-	    day = plan.getDayAfter(day);
-	    days.add(day);
-	}
-	return days;
+        Vector days = new Vector();
+        Calendar calendar = Calendar.getInstance();
+        Plan plan = Plan.getDefault();
+        
+        Date firstDate = getDate(FIRST_DATE);
+        Date lastDate = getDate(LAST_DATE);
+        
+        calendar.setTime(lastDate);
+        String lastDayID = plan.getDayID(calendar);
+        
+        Day day = plan.getDay(firstDate);
+        days.add(day);
+        while (true) {
+            calendar.setTime(day.getDate());
+            if (plan.getDayID(calendar).equals(lastDayID)) break;
+            day = plan.getDayAfter(day);
+            days.add(day);
+        }
+        return days;
     }
     
     /** Checks whether edit and remove filter buttons should be enabled.
      */
     private void checkButtons() {
-	int row = tbFilters.getSelectedRow();
-	btRemoveFilter.setEnabled(row != -1);
-	btEditFilter.setEnabled(row != -1);
+        int row = tbFilters.getSelectedRow();
+        btRemoveFilter.setEnabled(row != -1);
+        btEditFilter.setEnabled(row != -1);
     }
     
     /** Takes all tasks from days in the selected period and filters them
      * using all defined filters.
      */
     private void filterTasks() {
-	Vector filteredTasks = new Vector();
-	Iterator iterator = getDays().iterator();
-	while (iterator.hasNext()) {
-	    Day day = (Day) iterator.next();
-	    filteredTasks.addAll(day.getTasks());
-	}
-	FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
-	iterator = filtersTableModel.getFilters().iterator();
-	while (iterator.hasNext()) {
-	    AbstractTaskFilter abstractTaskFilter = (AbstractTaskFilter) iterator.next();
-	    filteredTasks = abstractTaskFilter.filterTasks(filteredTasks);
-	}
-	FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
-	filteredTasksTableModel.setTasks(filteredTasks);
-	txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+        Vector filteredTasks = new Vector();
+        Iterator iterator = getDays().iterator();
+        while (iterator.hasNext()) {
+            Day day = (Day) iterator.next();
+            filteredTasks.addAll(day.getTasks());
+        }
+        FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
+        iterator = filtersTableModel.getFilters().iterator();
+        while (iterator.hasNext()) {
+            AbstractTaskFilter abstractTaskFilter = (AbstractTaskFilter) iterator.next();
+            filteredTasks = abstractTaskFilter.filterTasks(filteredTasks);
+        }
+        FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+        filteredTasksTableModel.setTasks(filteredTasks);
+        txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
     }
     
     /** Sets content rules and values according to currently selected task filter.
      */
     private void setComponents() {
-	if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
-	    cmbFilterName.setEnabled(false);
-	    cmbContentRule.setEnabled(false);
-	    txtContent.setEnabled(false);
-	    cmbContent.setEnabled(false);
-	    return;
-	}
-	cmbFilterName.setEnabled(true);
-	cmbContentRule.setEnabled(true);
-	AbstractTaskFilter taskFilter = getFilter();
-	Vector contentRules = taskFilter.getContentRules();
-	int length = contentRules.size();
-	cmbContentRule.removeAllItems();
-	for (int i=0; i<length; i++)
-	    cmbContentRule.addItem(contentRules.get(i));
-	cmbContentRule.setSelectedIndex(0);
-	
-	Vector contentValues = taskFilter.getContentValues();
-	cmbContent.removeAllItems();
-	if (contentValues != null) {
-	    length = contentValues.size();
-	    for (int i=0; i<length; i++)
-		cmbContent.addItem(contentValues.get(i));
-	    cmbContent.setSelectedIndex(0);
-	} else txtContent.setText("");
-	if (taskFilter instanceof DurationFilter) txtContent.setText(Tools.getTime(0));
-	cmbContent.setEnabled(contentValues != null);
-	txtContent.setEnabled(contentValues == null);
+        if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
+            cmbFilterName.setEnabled(false);
+            cmbContentRule.setEnabled(false);
+            txtContent.setEnabled(false);
+            cmbContent.setEnabled(false);
+            return;
+        }
+        cmbFilterName.setEnabled(true);
+        cmbContentRule.setEnabled(true);
+        AbstractTaskFilter taskFilter = getFilter();
+        Vector contentRules = taskFilter.getContentRules();
+        int length = contentRules.size();
+        cmbContentRule.removeAllItems();
+        for (int i=0; i<length; i++)
+            cmbContentRule.addItem(contentRules.get(i));
+        cmbContentRule.setSelectedIndex(0);
+        
+        Vector contentValues = taskFilter.getContentValues();
+        cmbContent.removeAllItems();
+        if (contentValues != null) {
+            length = contentValues.size();
+            for (int i=0; i<length; i++)
+                cmbContent.addItem(contentValues.get(i));
+            cmbContent.setSelectedIndex(0);
+        } else txtContent.setText("");
+        if (taskFilter instanceof DurationFilter) txtContent.setText(Tools.getTime(0));
+        cmbContent.setEnabled(contentValues != null);
+        txtContent.setEnabled(contentValues == null);
     }
     
     /** Returns task filter object based on currently selected options.
      * @return Task filter object based on currently selected options.
      */
     private AbstractTaskFilter getFilter() {
-	if (!chbHighlightTasks.isSelected()) return null;
-	String filterName = (String) cmbFilterName.getSelectedItem();
-	AbstractTaskFilter taskFilter = null;
-	if (new DescriptionFilter().toString().equals(filterName)) {
-	    taskFilter = new DescriptionFilter();
-	    taskFilter.setContent(txtContent.getText());
-	}
-	if (new KeywordFilter().toString().equals(filterName)) {
-	    taskFilter = new KeywordFilter();
-	    taskFilter.setContent(txtContent.getText());
-	}
-	if (new DurationFilter().toString().equals(filterName)) {
-	    taskFilter = new DurationFilter();
-	    taskFilter.setContent(Tools.getTime(0));
-	    try {
+        if (!chbHighlightTasks.isSelected()) return null;
+        String filterName = (String) cmbFilterName.getSelectedItem();
+        AbstractTaskFilter taskFilter = null;
+        if (new DescriptionFilter().toString().equals(filterName)) {
+            taskFilter = new DescriptionFilter();
+            taskFilter.setContent(txtContent.getText());
+        }
+        if (new KeywordFilter().toString().equals(filterName)) {
+            taskFilter = new KeywordFilter();
+            taskFilter.setContent(txtContent.getText());
+        }
+        if (new DurationFilter().toString().equals(filterName)) {
+            taskFilter = new DurationFilter();
+            taskFilter.setContent(Tools.getTime(0));
+            try {
                 String text = txtContent.getText();
                 if (text.equals("")) {
                     text = Tools.getTime(0);
                     txtContent.setText(Tools.getTime(0));
                 }
-		if (text.length() != 8) throw new NumberFormatException("Error: invalid task duration specified: " + text);
+                if (text.length() != 8) throw new NumberFormatException("Error: invalid task duration specified: " + text);
                 else taskFilter.setContent(Tools.getTime(Tools.getTime(text)));
-	    } catch (NumberFormatException e) {
-		txtContent.setText(Tools.getTime(0));
-		e.printStackTrace();
-		JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.INVALID_DURATION"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
-	    }
-	}
-	if (new PriorityFilter().toString().equals(filterName)) {
-	    taskFilter = new PriorityFilter();
-	    taskFilter.setContent("" + cmbContent.getSelectedIndex());
-	}
-	if (new StateFilter().toString().equals(filterName)) {
-	    taskFilter = new StateFilter();
-	    taskFilter.setContent("" + cmbContent.getSelectedIndex());
-	}
-	if (new PrivateFilter().toString().equals(filterName)) {
-	    taskFilter = new PrivateFilter();
-	    taskFilter.setContent(Boolean.toString(cmbContent.getSelectedIndex() == 0));
-	}
-	taskFilter.setContentRule(cmbContentRule.getSelectedIndex());
-	return taskFilter;
+            } catch (NumberFormatException e) {
+                txtContent.setText(Tools.getTime(0));
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.INVALID_DURATION"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        if (new PriorityFilter().toString().equals(filterName)) {
+            taskFilter = new PriorityFilter();
+            taskFilter.setContent("" + cmbContent.getSelectedIndex());
+        }
+        if (new StateFilter().toString().equals(filterName)) {
+            taskFilter = new StateFilter();
+            taskFilter.setContent("" + cmbContent.getSelectedIndex());
+        }
+        if (new PrivateFilter().toString().equals(filterName)) {
+            taskFilter = new PrivateFilter();
+            taskFilter.setContent(Boolean.toString(cmbContent.getSelectedIndex() == 0));
+        }
+        taskFilter.setContentRule(cmbContentRule.getSelectedIndex());
+        return taskFilter;
     }
     
     /** Generates HTML file with work statistics for selected period.
      */
     private void createReport() {
-	String location = (String) Settings.getDefault().getSetting("userDir");
-	JFileChooser fileChooser = new JFileChooser(location);
-	fileChooser.setFileFilter(new FileFilter() {
-	    public boolean accept(File f) {
-		return (f.isDirectory() || f.isFile() && f.getName().endsWith(".html"));
-	    }
-	    public String getDescription() {
-		return "All HTML Files";
-	    }
-	});
-	fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
-	fileChooser.setApproveButtonMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_SELECT"));
-	fileChooser.setApproveButtonToolTipText(Translator.getTranslation("HISTORYVIEW.BT_SELECT_TOOLTIP"));
-	int decision = fileChooser.showOpenDialog(this);
-	if (decision != JFileChooser.APPROVE_OPTION) return;
-	File file = fileChooser.getSelectedFile();
-	String fileName = file.getAbsolutePath();
-	if (!fileName.endsWith(".html")) file = new File(fileName + ".html");
-	fileName = file.getAbsolutePath();
-	fileName = fileName.substring(0, fileName.indexOf("."));
-	if (file.exists()) {
+        String location = (String) Settings.getDefault().getSetting("userDir");
+        JFileChooser fileChooser = new JFileChooser(location);
+        fileChooser.setFileFilter(new FileFilter() {
+            public boolean accept(File f) {
+                return (f.isDirectory() || f.isFile() && f.getName().endsWith(".html"));
+            }
+            public String getDescription() {
+                return "All HTML Files";
+            }
+        });
+        fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
+        fileChooser.setApproveButtonMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_SELECT"));
+        fileChooser.setApproveButtonToolTipText(Translator.getTranslation("HISTORYVIEW.BT_SELECT_TOOLTIP"));
+        int decision = fileChooser.showOpenDialog(this);
+        if (decision != JFileChooser.APPROVE_OPTION) return;
+        File file = fileChooser.getSelectedFile();
+        String fileName = file.getAbsolutePath();
+        if (!fileName.endsWith(".html")) file = new File(fileName + ".html");
+        fileName = file.getAbsolutePath();
+        fileName = fileName.substring(0, fileName.indexOf("."));
+        if (file.exists()) {
             String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-	    decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
-	    if (decision == JOptionPane.NO_OPTION) return;
-	}
-	String description = JOptionPane.showInputDialog(this, Translator.getTranslation("QUESTION.REPORT_DESCRIPTION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
-	try {
-	    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-	    writer.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-	    writer.newLine();
-	    writer.write("<!--");
-	    writer.newLine();
-	    writer.write("    Rachota 2.0 report file");
-	    writer.newLine();
-	    writer.write("    Generated: " + new Date());
-	    writer.newLine();
-	    writer.write("-->");
-	    writer.newLine();
-	    writer.write("<html lang=\"" + Locale.getDefault().getLanguage() + "\">");
-	    writer.newLine();
-	    writer.write("  <head>");
-	    writer.newLine();
-	    writer.write("    <title>" + Translator.getTranslation("REPORT.TITLE") + "</title>");
-	    writer.newLine();
-	    writer.write("  </head>");
-	    writer.newLine();
-	    writer.write("  <body>");
-	    writer.newLine();
-	    writer.write("    <h1>" + Translator.getTranslation("REPORT.TITLE") + "</h1>");
-	    writer.newLine();
-	    writer.write("    <table>");
-	    writer.newLine();
-	    writer.write("      <tr><td><u>" + Translator.getTranslation("QUESTION.REPORT_DESCRIPTION") + "</u></td><td width=\"20\"/><td>" + description + "</td></tr>");
-	    writer.newLine();
-	    Vector days = getDays();
-	    DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-	    Day firstDay = (Day) days.get(0);
-	    Day lastDay = (Day) days.get(days.size() - 1);
-	    writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.PERIOD") + "</u></td><td width=\"20\"/><td>" + df.format(firstDay.getDate()) + " - " + df.format(lastDay.getDate()) + "</td></tr>");
-	    writer.newLine();
-	    writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u></td><td width=\"20\"/><td>" + days.size() + "</td></tr>");
-	    writer.newLine();
-	    writer.write("    </table><br/>");
-	    writer.newLine();
-	    writer.write("    <img src=\"" + file.getName().substring(0, file.getName().indexOf(".")) + "_chart.png\" border=\"1\"/><br/><br/>");
-	    writer.newLine();
+            decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
+            if (decision == JOptionPane.NO_OPTION) return;
+        }
+        String description = JOptionPane.showInputDialog(this, Translator.getTranslation("QUESTION.REPORT_DESCRIPTION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            writer.newLine();
+            writer.write("<!--");
+            writer.newLine();
+            writer.write("    Rachota 2.0 report file");
+            writer.newLine();
+            writer.write("    Generated: " + new Date());
+            writer.newLine();
+            writer.write("-->");
+            writer.newLine();
+            writer.write("<html lang=\"" + Locale.getDefault().getLanguage() + "\">");
+            writer.newLine();
+            writer.write("  <head>");
+            writer.newLine();
+            writer.write("    <title>" + Translator.getTranslation("REPORT.TITLE") + "</title>");
+            writer.newLine();
+            writer.write("  </head>");
+            writer.newLine();
+            writer.write("  <body>");
+            writer.newLine();
+            writer.write("    <h1>" + Translator.getTranslation("REPORT.TITLE") + "</h1>");
+            writer.newLine();
+            writer.write("    <table>");
+            writer.newLine();
+            writer.write("      <tr><td><u>" + Translator.getTranslation("QUESTION.REPORT_DESCRIPTION") + "</u></td><td width=\"20\"/><td>" + description + "</td></tr>");
+            writer.newLine();
+            Vector days = getDays();
+            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            Day firstDay = (Day) days.get(0);
+            Day lastDay = (Day) days.get(days.size() - 1);
+            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.PERIOD") + "</u></td><td width=\"20\"/><td>" + df.format(firstDay.getDate()) + " - " + df.format(lastDay.getDate()) + "</td></tr>");
+            writer.newLine();
+            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u></td><td width=\"20\"/><td>" + days.size() + "</td></tr>");
+            writer.newLine();
+            writer.write("    </table><br/>");
+            writer.newLine();
+            writer.write("    <img src=\"" + file.getName().substring(0, file.getName().indexOf(".")) + "_chart.png\" border=\"1\"/><br/><br/>");
+            writer.newLine();
             AbstractTaskFilter filter = getFilter();
             if (filter != null) {
                 writer.write("    <u>" + Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS") + "</u>");
@@ -1094,96 +1099,96 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 writer.write("    <ul><li>" + filter.toString() + " " + filter.getContentRules().get(filter.getContentRule()) + " <b>" + filter.getContent() + "</b></li></ul>");
                 writer.newLine();
             }
-	    writer.write("    <u>" + Translator.getTranslation("REPORT.APPLIED_FILTERS") + "</u>");
-	    writer.newLine();
-	    writer.write("    <ul>");
-	    writer.newLine();
-	    FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
-	    int count = filtersTableModel.getRowCount();
-	    for (int i=0; i<count; i++) {
-		writer.write("      <li>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_NAME) + " ");
-		writer.write(filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT_RULE) + " ");
-		writer.write("<b>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT) + "</b></li>");
-		writer.newLine();
-	    }
-	    writer.write("    </ul>");
-	    writer.newLine();
-	    writer.write("    <u>" + Translator.getTranslation("REPORT.TASKS") + "</u><br/><br/>");
-	    writer.newLine();
-	    writer.write("    <table border=\"1\">");
-	    writer.newLine();
-	    writer.write("      <tr bgcolor=\"CCCCCC\">");
-	    writer.newLine();
-	    writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DESCRIPTION") + "</b></td>");
-	    writer.newLine();
-	    writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_TIME") + "</b></td>");
-	    writer.newLine();
-	    writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_DAYS") + "</b></td>");
-	    writer.newLine();
-	    writer.write("      </tr>");
-	    writer.newLine();
-	    FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
-	    count = filteredTasksTableModel.getRowCount();
-	    for (int i=0; i<count; i++) {
-		writer.write("      <tr>");
-		writer.newLine();
-		writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DESCRIPTION) + "</td>");
-		writer.newLine();
-		writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_TIME) + "</td>");
-		writer.newLine();
-		writer.write("        <td align=\"right\">" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_DAYS) + "</td>");
-		writer.newLine();
-		writer.write("      </tr>");
-		writer.newLine();
-	    }
-	    writer.write("    </table><br/>");
-	    writer.newLine();
-	    writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_FILTERED_TIME") + "</u> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "<br/>");
-	    writer.newLine();
-	    writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(updateTotalTime()) + "</b><br/><br/>");
-	    writer.newLine();
-	    writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + MainWindow.title + "</a> " + "(build " + MainWindow.build + ")<br/>");
-	    writer.newLine();
-	    writer.write("    " + new Date());
-	    writer.newLine();
-	    writer.write("  </body>");
-	    writer.newLine();
-	    writer.write("</html>");
-	    writer.newLine();
-	    writer.close();
-	    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileName + "_chart.png"));
-	    PNGImageWriter imageWriter = new PNGImageWriter();
-	    BufferedImage image = new BufferedImage(historyChart.getBounds().width, historyChart.getBounds().height, BufferedImage.TYPE_INT_RGB);
-	    historyChart.paint(image.getGraphics());
-	    imageWriter.write(image, out);
-	} catch (IOException e) {
-	    JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-	}
-	JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
+            writer.write("    <u>" + Translator.getTranslation("REPORT.APPLIED_FILTERS") + "</u>");
+            writer.newLine();
+            writer.write("    <ul>");
+            writer.newLine();
+            FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
+            int count = filtersTableModel.getRowCount();
+            for (int i=0; i<count; i++) {
+                writer.write("      <li>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_NAME) + " ");
+                writer.write(filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT_RULE) + " ");
+                writer.write("<b>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT) + "</b></li>");
+                writer.newLine();
+            }
+            writer.write("    </ul>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TASKS") + "</u><br/><br/>");
+            writer.newLine();
+            writer.write("    <table border=\"1\">");
+            writer.newLine();
+            writer.write("      <tr bgcolor=\"CCCCCC\">");
+            writer.newLine();
+            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DESCRIPTION") + "</b></td>");
+            writer.newLine();
+            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_TIME") + "</b></td>");
+            writer.newLine();
+            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_DAYS") + "</b></td>");
+            writer.newLine();
+            writer.write("      </tr>");
+            writer.newLine();
+            FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+            count = filteredTasksTableModel.getRowCount();
+            for (int i=0; i<count; i++) {
+                writer.write("      <tr>");
+                writer.newLine();
+                writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DESCRIPTION) + "</td>");
+                writer.newLine();
+                writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_TIME) + "</td>");
+                writer.newLine();
+                writer.write("        <td align=\"right\">" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_DAYS) + "</td>");
+                writer.newLine();
+                writer.write("      </tr>");
+                writer.newLine();
+            }
+            writer.write("    </table><br/>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_FILTERED_TIME") + "</u> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "<br/>");
+            writer.newLine();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(updateTotalTime()) + "</b><br/><br/>");
+            writer.newLine();
+            writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + MainWindow.title + "</a> " + "(build " + MainWindow.build + ")<br/>");
+            writer.newLine();
+            writer.write("    " + new Date());
+            writer.newLine();
+            writer.write("  </body>");
+            writer.newLine();
+            writer.write("</html>");
+            writer.newLine();
+            writer.close();
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileName + "_chart.png"));
+            PNGImageWriter imageWriter = new PNGImageWriter();
+            BufferedImage image = new BufferedImage(historyChart.getBounds().width, historyChart.getBounds().height, BufferedImage.TYPE_INT_RGB);
+            historyChart.paint(image.getGraphics());
+            imageWriter.write(image, out);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+        }
+        JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
     }
     
     /** Updates information about total time and returns the time.
      * @return Total time spent on all tasks in selected period.
      */
     private long updateTotalTime() {
-	long totalTime = 0;
-	Iterator iterator = getDays().iterator();
-	while (iterator.hasNext()) {
-	    Day day = (Day) iterator.next();
-	    totalTime = totalTime + day.getTotalTime();
-	}
-	txtTotalTime.setText(Tools.getTime(totalTime));
-	return totalTime;
+        long totalTime = 0;
+        Iterator iterator = getDays().iterator();
+        while (iterator.hasNext()) {
+            Day day = (Day) iterator.next();
+            totalTime = totalTime + day.getTotalTime();
+        }
+        txtTotalTime.setText(Tools.getTime(totalTime));
+        return totalTime;
     }
     
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
      */
     public void propertyChange(PropertyChangeEvent evt) {
-	FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+        FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
         filteredTasksTableModel.fireTableDataChanged();
-	txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
-	historyChart.setDays(getDays());
-	updateTotalTime();
+        txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+        historyChart.setDays(getDays());
+        updateTotalTime();
     }
 }
