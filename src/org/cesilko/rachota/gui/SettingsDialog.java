@@ -353,7 +353,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         RegularTask regularTask = (RegularTask) regularTasks.get(row);
         String description = regularTask.getDescription();String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
         int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.REMOVE_REGULAR_TASK", new String[] {description}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-        if (decision == JOptionPane.NO_OPTION) return;
+        if (decision != JOptionPane.YES_OPTION) return;
         regularTasks.remove(regularTask);
         RegularTasksTableModel regularTasksTableModel = (RegularTasksTableModel) tbRegularTasks.getModel();
         regularTasksTableModel.fireTableDataChanged();
