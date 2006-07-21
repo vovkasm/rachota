@@ -1049,7 +1049,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         if (file.exists()) {
             String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
             decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
-            if (decision == JOptionPane.NO_OPTION) return;
+            if (decision != JOptionPane.YES_OPTION) return;
         }
         String description = JOptionPane.showInputDialog(this, Translator.getTranslation("QUESTION.REPORT_DESCRIPTION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
         try {
