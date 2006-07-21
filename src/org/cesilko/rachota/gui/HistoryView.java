@@ -1070,6 +1070,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             writer.newLine();
             writer.write("    <title>" + Translator.getTranslation("REPORT.TITLE") + "</title>");
             writer.newLine();
+            writer.write("    <meta http-equiv=\"Content-Type\" content=\"text/html;charset=" + (String) Settings.getDefault().getSetting("systemEncoding") + "\">");
+            writer.newLine();
             writer.write("  </head>");
             writer.newLine();
             writer.write("  <body>");
