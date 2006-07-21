@@ -561,7 +561,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         if (checkPriorities.booleanValue() & day.existsMorePriorityTask(selectedTask.getPriority())) {
             String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
             int ignorePriority = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.IGNORE_PRIORITY"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-            if (ignorePriority == JOptionPane.NO_OPTION) return;
+            if (ignorePriority != JOptionPane.YES_OPTION) return;
         }
         setTask(selectedTask, false);
         checkButtons();
@@ -669,8 +669,18 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             delay = now.getTime() - clickedWhen.getTime();
             boolean samePoint = clickedWhere.equals(evt.getPoint());
             if (samePoint & (delay < 250)) {
-                btSelectActionPerformed(null);
-                if (task != null) btWorkActionPerformed(null);
+                int row = tbPlan.getSelectedRow();
+                DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+                Task selectedTask = dayTableModel.getTask(row);
+                Boolean checkPriorities = (Boolean) Settings.getDefault().getSetting("checkPriority");
+                if (checkPriorities.booleanValue() & day.existsMorePriorityTask(selectedTask.getPriority())) {
+                    String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+                    int ignorePriority = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.IGNORE_PRIORITY"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+                    if (ignorePriority != JOptionPane.YES_OPTION) return;
+                }
+                setTask(selectedTask, false);
+                checkButtons();
+                btWorkActionPerformed(null);
             } else {
                 clickedWhere = evt.getPoint();
                 clickedWhen = now;
@@ -915,7 +925,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         String time = Tools.getTime(duration);
         String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
         int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.ADD_RUNNING_TASK", new String[] {time, description}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-        if (decision == JOptionPane.NO_OPTION) {
+        if (decision != JOptionPane.YES_OPTION) {
             Settings.getDefault().setSetting("runningTask", null);
             Settings.saveSettings();
             return;
