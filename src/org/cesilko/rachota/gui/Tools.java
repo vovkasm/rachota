@@ -5,6 +5,7 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.awt.Toolkit;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +16,11 @@ import org.cesilko.rachota.core.Translator;
  * @author Jiri Kovalsky
  */
 public class Tools {
+    
+    /** Warning type of beep. */
+    public static final int BEEP_WARNING = 0;
+    /** Notification type of beep. */
+    public static final int BEEP_NOTIFICATION = 1;
     
     /** Transforms time in milliseconds to text string.
      * @param time Time in milliseconds.
@@ -86,5 +92,22 @@ public class Tools {
             index = text.indexOf(oldText, index + 1);
         }
         return text;
+    }
+    
+    /** Produce couple of warning beeps at user when necessary.
+     * @param type Type of beep i.e. BEEP_NOTIFICATION or BEEP_WARNING.
+     */
+    public static void beep(int type) {
+        int[] notify = {100, 100, 100, 200, 200, 100, 100, 100, 100};
+        int[] delays = {200, 200, 200, 100, 100, 200, 200, 200};
+        switch (type) {
+            case BEEP_NOTIFICATION:
+                delays = notify;
+                break;
+        }
+        for (int i = 0; i < delays.length; i++) {
+            Toolkit.getDefaultToolkit().beep();
+            try { Thread.currentThread().sleep(delays[i]); } catch (InterruptedException ex) {}
+        }
     }
 }

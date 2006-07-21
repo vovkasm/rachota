@@ -959,6 +959,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                     new Thread() {
                         public void run() {
                             setTask(task, true);
+                            Tools.beep(Tools.BEEP_NOTIFICATION);
                             JOptionPane.showMessageDialog(null, Translator.getTranslation("INFORMATION.AUTOMATIC_START", new String[] {description}), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
                         }
                     }.start();
@@ -966,6 +967,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                 }
                 new Thread() {
                     public void run() {
+                        Tools.beep(Tools.BEEP_WARNING);
                         String message = Translator.getTranslation("QUESTION.SWITCH_TASK", new String[] {description});
                         String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
                         int decision = JOptionPane.showOptionDialog(null, message, Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
