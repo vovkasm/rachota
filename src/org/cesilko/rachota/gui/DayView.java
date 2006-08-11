@@ -501,16 +501,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      * @param evt Event that invoked the action.
      */
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
-        if (day.isModified()) Plan.getDefault().addDay(day);
-        day.removePropertyChangeListener(this);
-        day = Plan.getDefault().getDay(new Date());
-        Plan.getDefault().addRegularTasks(day);
-        day.addPropertyChangeListener(this);
-        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
-        dayTableModel.setDay(day);
-        updateInformation(false);
-        // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
-        checkButtons();
+        setDay(Plan.getDefault().getDay(new Date()));
     }//GEN-LAST:event_txtDateMouseClicked
     
     /** Method called when remove button is pressed.
@@ -579,32 +570,14 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      * @param evt Event that invoked the action.
      */
     private void btNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNextActionPerformed
-        if (day.isModified()) Plan.getDefault().addDay(day);
-        day.removePropertyChangeListener(this);
-        day = Plan.getDefault().getDayAfter(day);
-        Plan.getDefault().addRegularTasks(day);
-        day.addPropertyChangeListener(this);
-        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
-        dayTableModel.setDay(day);
-        updateInformation(false);
-        // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
-        checkButtons();
+        setDay(Plan.getDefault().getDayAfter(day));
     }//GEN-LAST:event_btNextActionPerformed
     
     /** Method called when previous button is pressed.
      * @param evt Event that invoked the action.
      */
     private void btPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPreviousActionPerformed
-        if (day.isModified()) Plan.getDefault().addDay(day);
-        day.removePropertyChangeListener(this);
-        day = Plan.getDefault().getDayBefore(day);
-        Plan.getDefault().addRegularTasks(day);
-        day.addPropertyChangeListener(this);
-        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
-        dayTableModel.setDay(day);
-        updateInformation(false);
-        // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
-        checkButtons();
+        setDay(Plan.getDefault().getDayBefore(day));
     }//GEN-LAST:event_btPreviousActionPerformed
     
     /** Method called when any key is released while table of planned tasks has focus.
@@ -1001,6 +974,22 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         if (startTask) btWorkActionPerformed(null);
     }
     
+    /** Sets day view to given day.
+     * @param newDay New day to be displayed by day view.
+     */
+    private void setDay(Day newDay) {
+        if (day.isModified()) Plan.getDefault().addDay(day);
+        day.removePropertyChangeListener(this);
+        day = newDay;
+        Plan.getDefault().addRegularTasks(day);
+        day.addPropertyChangeListener(this);
+        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+        dayTableModel.setDay(day);
+        updateInformation(false);
+        // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
+        checkButtons();
+    }
+    
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
      */
@@ -1010,6 +999,11 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             TaskDialog taskDialog = (TaskDialog) evt.getSource();
             taskDialog.removePropertyChangeListener(this);
             checkButtons();
+        }
+        if (evt.getPropertyName().equals("day")) {
+            Day day = (Day) evt.getNewValue();
+            setDay(day);
+            firePropertyChange("day", null, day);
         }
         if (evt.getPropertyName().equals("settings")) Plan.getDefault().addRegularTasks(day);
         if (evt.getPropertyName().equals("duration")) taskDurationChanged = true;

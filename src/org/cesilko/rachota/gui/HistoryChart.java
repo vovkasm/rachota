@@ -8,8 +8,8 @@ package org.cesilko.rachota.gui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
@@ -321,6 +321,17 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
             graphics.drawString(Translator.getTranslation("HISTORYCHART.GIVEN_HOURS"), INSET_LEFT + 5, y - 5);
         }
         graphics.setFont(originalFont);
+    }
+    
+    /** Returns day represented by column at specified point.
+     * @param point Point to be checked for existency of day column.
+     * @return Day painted at given point or null if there is no day column at specified X position.
+     */
+    public Day getDayAt(Point point) {
+        double x = point.getX();
+        int index = (int) ((x - INSET_LEFT) / xStep);
+        if ((x - INSET_LEFT < 0) | (index >= days.size())) return null;
+        return (Day) days.get(index);
     }
     
     /** Method called when some property of task was changed.

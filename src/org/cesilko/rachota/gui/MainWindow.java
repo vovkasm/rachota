@@ -73,6 +73,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         dayView.addPropertyChangeListener(this);
         HistoryView historyView = new HistoryView();
         dayView.addPropertyChangeListener(historyView);
+        historyView.addPropertyChangeListener(dayView);
         tpViews.add(historyView, TAB_HISTORY_VIEW);
         pack();
         setTitle(title + " " + dayView.getTitleSuffix());
@@ -344,5 +345,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     public void propertyChange(PropertyChangeEvent evt) {
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         setTitle(title + " " + dayView.getTitleSuffix());
+        if (evt.getPropertyName().equals("day"))
+            tpViews.setSelectedIndex(0);
     }
 }

@@ -58,6 +58,22 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(historyChart, gridBagConstraints);
+        historyChart.setToolTipText(Translator.getTranslation("HISTORYVIEW.CHART_TOOLTIP"));
+        historyChart.addMouseListener(new MouseAdapter() {
+            Date clickedWhen = new Date();
+            Point clickedWhere = new Point();
+            public void mouseClicked(MouseEvent e) {
+                Date now = new Date();
+                long delay = now.getTime() - clickedWhen.getTime();
+                boolean samePoint = clickedWhere.equals(e.getPoint());
+                if (samePoint & (delay < 250)) {
+                    Day day = historyChart.getDayAt(e.getPoint());
+                    if (day != null) firePropertyChange("day", null, day);
+                }
+                clickedWhere = e.getPoint();
+                clickedWhen = now;
+            }
+        });
         cmbPeriod.setSelectedIndex(SCALE_WEEK);
         checkButtons();
         filterTasks();
