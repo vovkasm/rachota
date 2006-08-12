@@ -25,14 +25,18 @@ public class TaskDialog extends javax.swing.JDialog {
     private Task task;
     /** Day which new task should be added to. */
     private Day day;
+    /** Flag determining if task can be edited or not. */
+    private boolean readOnly;
     
     /** Creates new dialog for editing of given task.
      * @param task Task which is going to be edited.
      * @param day Day which the task belongs to.
+     * @param readOnly Flag determining if task can be edited or not.
      */
-    public TaskDialog(Task task, Day day) {
+    public TaskDialog(Task task, Day day, boolean readOnly) {
         this.task = task;
         this.day = day;
+        this.readOnly = readOnly;
         initComponents();
         txtDescription.setText(task.getDescription());
         txtCategory.setText(task.getKeyword());
@@ -61,6 +65,17 @@ public class TaskDialog extends javax.swing.JDialog {
             cmbRepetition.setSelectedIndex(regularTask.getFrequency());
         }
         chbPrivate.setSelected(task.privateTask());
+        if (readOnly) {
+            txtDescription.setEditable(false);
+            txtCategory.setEditable(false);
+            taNotes.setEditable(false);
+            chbPrivate.setEnabled(false);
+            chbNotification.setEnabled(false);
+            chbAutoStart.setEnabled(false);
+            cmbPriority.setEnabled(false);
+            spHours.setEnabled(false);
+            spMinutes.setEnabled(false);
+        }
     }
     
     /** Creates new dialog for creating new task for given day.
@@ -78,7 +93,7 @@ public class TaskDialog extends javax.swing.JDialog {
      * @param regularTask Regular task that should be edited.
      */
     public TaskDialog(RegularTask regularTask) {
-        this(regularTask, null);
+        this(regularTask, null, false);
         chbRegular.setSelected(true);
         chbRegular.setEnabled(false);
         cmbRepetition.setEnabled(true);
@@ -365,6 +380,7 @@ public class TaskDialog extends javax.swing.JDialog {
      * @param evt Event that invoked this method call.
      */
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
+        if (readOnly) closeDialog(null);
         String description = txtDescription.getText();
         if (day != null) {
             boolean error = false;

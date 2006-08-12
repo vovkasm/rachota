@@ -529,7 +529,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         int row = tbPlan.getSelectedRow();
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         Task selectedTask = dayTableModel.getTask(row);
-        TaskDialog dialog = new TaskDialog(selectedTask, day);
+        boolean readOnly = btEdit.getText().equals(Translator.getTranslation("DAYVIEW.BT_VIEW"));
+        TaskDialog dialog = new TaskDialog(selectedTask, day, readOnly);
         dialog.addPropertyChangeListener(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_btEditActionPerformed
@@ -780,7 +781,13 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         selectButtonEnabled = btSelect.isEnabled();
         btAdd.setEnabled(futureDay);
         btRemove.setEnabled(futureDay & taskSelected);
-        btEdit.setEnabled(futureDay & taskSelected & !taskFinished);
+        btEdit.setEnabled(taskSelected);
+        btEdit.setText(Translator.getTranslation("DAYVIEW.BT_VIEW"));
+        btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_VIEW_TOOLTIP"));
+        if (futureDay & taskSelected & !taskFinished) {
+            btEdit.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
+            btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_EDIT_TOOLTIP"));
+        }
         taskSelected = task != null;
         boolean taskRunning = taskSelected && task.isRunning();
         taskFinished = taskSelected && task.getState() == Task.STATE_DONE;
