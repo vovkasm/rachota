@@ -143,11 +143,15 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         java.awt.GridBagConstraints gridBagConstraints;
 
         btPrevious = new javax.swing.JButton();
+        btPreviousWeek = new javax.swing.JButton();
+        btPreviousMonth = new javax.swing.JButton();
         lblDate = new javax.swing.JLabel();
         txtDate = new javax.swing.JTextField();
         lblWeek = new javax.swing.JLabel();
         txtWeek = new javax.swing.JTextField();
         btNext = new javax.swing.JButton();
+        btNextMonth = new javax.swing.JButton();
+        btNextWeek = new javax.swing.JButton();
         pnDayView = new javax.swing.JPanel();
         lblStart = new javax.swing.JLabel();
         txtStart = new javax.swing.JTextField();
@@ -186,10 +190,40 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 5, 5);
         add(btPrevious, gridBagConstraints);
+
+        btPreviousWeek.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/previous_week.png")));
+        btPreviousWeek.setToolTipText(Translator.getTranslation("DAYVIEW.BT_PREVIOUS_WEEK_TOOLTIP"));
+        btPreviousWeek.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btPreviousWeek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btPreviousWeekActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
+        add(btPreviousWeek, gridBagConstraints);
+
+        btPreviousMonth.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/previous_month.png")));
+        btPreviousMonth.setToolTipText(Translator.getTranslation("DAYVIEW.BT_PREVIOUS_MONTH_TOOLTIP"));
+        btPreviousMonth.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btPreviousMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btPreviousMonthActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        add(btPreviousMonth, gridBagConstraints);
 
         lblDate.setFont(getFont());
         lblDate.setText(Translator.getTranslation("DAYVIEW.LBL_DATE"));
@@ -218,7 +252,6 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         lblWeek.setFont(getFont());
         lblWeek.setText(Translator.getTranslation("DAYVIEW.LBL_WEEK"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(lblWeek, gridBagConstraints);
@@ -248,10 +281,42 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 10);
         add(btNext, gridBagConstraints);
+
+        btNextMonth.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/next_month.png")));
+        btNextMonth.setToolTipText(Translator.getTranslation("DAYVIEW.BT_NEXT_MONTH_TOOLTIP"));
+        btNextMonth.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btNextMonth.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btNextMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNextMonthActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        add(btNextMonth, gridBagConstraints);
+
+        btNextWeek.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/next_week.png")));
+        btNextWeek.setToolTipText(Translator.getTranslation("DAYVIEW.BT_NEXT_WEEK_TOOLTIP"));
+        btNextWeek.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btNextWeek.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btNextWeek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNextWeekActionPerformed(evt);
+            }
+        });
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
+        add(btNextWeek, gridBagConstraints);
 
         pnDayView.setLayout(new java.awt.GridBagLayout());
 
@@ -301,7 +366,6 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         pnDayView.add(lblProgress, gridBagConstraints);
 
         pbProgress.setFont(getFont().deriveFont(java.awt.Font.BOLD));
-        pbProgress.setMinimumSize(new java.awt.Dimension(10, 19));
         pbProgress.setPreferredSize(new java.awt.Dimension(148, 19));
         pbProgress.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -413,7 +477,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -432,7 +496,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         add(chbShowFinished, gridBagConstraints);
@@ -491,11 +555,39 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 6;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 10, 5);
         add(pnButtons, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btNextWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNextWeekActionPerformed
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day.getDate());
+        calendar.add(Calendar.DAY_OF_YEAR, 7);
+        setDay(Plan.getDefault().getDay(calendar.getTime()));
+    }//GEN-LAST:event_btNextWeekActionPerformed
+
+    private void btNextMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNextMonthActionPerformed
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day.getDate());
+        calendar.add(Calendar.MONTH, 1);
+        setDay(Plan.getDefault().getDay(calendar.getTime()));
+    }//GEN-LAST:event_btNextMonthActionPerformed
+
+    private void btPreviousMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPreviousMonthActionPerformed
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day.getDate());
+        calendar.add(Calendar.MONTH, -1);
+        setDay(Plan.getDefault().getDay(calendar.getTime()));
+    }//GEN-LAST:event_btPreviousMonthActionPerformed
+
+    private void btPreviousWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPreviousWeekActionPerformed
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day.getDate());
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        setDay(Plan.getDefault().getDay(calendar.getTime()));
+    }//GEN-LAST:event_btPreviousWeekActionPerformed
     
     /** Method called when date textfield is clicked.
      * @param evt Event that invoked the action.
@@ -667,7 +759,11 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     private javax.swing.JButton btDone;
     private javax.swing.JButton btEdit;
     private javax.swing.JButton btNext;
+    private javax.swing.JButton btNextMonth;
+    private javax.swing.JButton btNextWeek;
     private javax.swing.JButton btPrevious;
+    private javax.swing.JButton btPreviousMonth;
+    private javax.swing.JButton btPreviousWeek;
     private javax.swing.JButton btRelax;
     private javax.swing.JButton btRemove;
     private javax.swing.JButton btSelect;
