@@ -119,6 +119,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask = new javax.swing.JMenu();
         mnCopyTask = new javax.swing.JMenuItem();
         mnMoveTime = new javax.swing.JMenuItem();
+        mnTools = new javax.swing.JMenu();
+        mnSwitchDate = new javax.swing.JMenuItem();
 
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -217,10 +219,33 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         mbMenu.add(mnTask);
 
+        mnTools.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_TOOLS"));
+        mnTools.setText(Translator.getTranslation("MAINWINDOW.MN_TOOLS"));
+        mnTools.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_TOOLS_TOOLTIP"));
+        mnTools.setFont(getFont());
+        mnSwitchDate.setFont(getFont());
+        mnSwitchDate.setMnemonic(Translator.getMnemonic("MAINWINDOW.SWITCH_DATE"));
+        mnSwitchDate.setText(Translator.getTranslation("MAINWINDOW.SWITCH_DATE"));
+        mnSwitchDate.setToolTipText(Translator.getTranslation("MAINWINDOW.SWITCH_DATE_TOOLTIP"));
+        mnSwitchDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnSwitchDateActionPerformed(evt);
+            }
+        });
+
+        mnTools.add(mnSwitchDate);
+
+        mbMenu.add(mnTools);
+
         setJMenuBar(mbMenu);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void mnSwitchDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSwitchDateActionPerformed
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        dayView.switchDate();
+    }//GEN-LAST:event_mnSwitchDateActionPerformed
     
     /** Method called when move time action is required.
      * @param evt Event that invoked the action.
@@ -324,8 +349,10 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     private javax.swing.JMenuItem mnExit;
     private javax.swing.JMenuItem mnMoveTime;
     private javax.swing.JMenuItem mnSettings;
+    private javax.swing.JMenuItem mnSwitchDate;
     private javax.swing.JMenu mnSystem;
     private javax.swing.JMenu mnTask;
+    private javax.swing.JMenu mnTools;
     private javax.swing.JSeparator separator;
     private javax.swing.JTabbedPane tpViews;
     // End of variables declaration//GEN-END:variables
@@ -333,7 +360,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#060813";
+    protected static final String build = "#060821";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */

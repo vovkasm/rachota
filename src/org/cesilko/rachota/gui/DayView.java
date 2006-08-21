@@ -892,6 +892,14 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         btDone.setEnabled(taskSelected & !taskFinished);
     }
     
+    /** Method called when switch date action is required.
+     */
+    public void switchDate() {
+        DateDialog dateDialog = new DateDialog(day.getDate());
+        dateDialog.addPropertyChangeListener(this);
+        dateDialog.setVisible(true);
+    }
+    
     /** Method called when move time action is required.
      */
     public void moveTime() {
@@ -1107,6 +1115,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             Day day = (Day) evt.getNewValue();
             setDay(day);
             firePropertyChange("day", null, day);
+        }
+        if (evt.getPropertyName().equals("date_selected")) {
+            Date date = (Date) evt.getNewValue();
+            setDay(Plan.getDefault().getDay(date));
         }
         if (evt.getPropertyName().equals("settings")) Plan.getDefault().addRegularTasks(day);
         if (evt.getPropertyName().equals("duration")) taskDurationChanged = true;
