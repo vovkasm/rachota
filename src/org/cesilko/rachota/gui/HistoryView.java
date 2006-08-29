@@ -93,7 +93,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         cmbFilterName.addItem(new PriorityFilter().toString());
         cmbFilterName.addItem(new StateFilter().toString());
         cmbFilterName.addItem(new PrivateFilter().toString());
-        setComponents();
+        loadSetup();
         tbTasks.getColumn(Translator.getTranslation("TASKS.DESCRIPTION")).setPreferredWidth(280);
         tbTasks.getColumn(Translator.getTranslation("TASKS.DURATION_DAYS")).setPreferredWidth(50);
         tbTasks.setRowSelectionAllowed(false);
@@ -958,6 +958,67 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
     }
     
+    /** Sets content rules and values according to saved user customizations. */
+    private void loadSetup() {
+        Settings settings = Settings.getDefault();
+        if (settings.getSetting("history.period") == null) return;
+        cmbPeriod.setSelectedIndex(Integer.parseInt((String) settings.getSetting("history.period")));
+        chbGroupTasks.setSelected(settings.getSetting("history.group").toString().equals("true"));
+        int filtersCount = Integer.parseInt((String) settings.getSetting("history.filters"));
+        for (int i = 0; i < filtersCount; i++) {
+            String filterData = (String) settings.getSetting("history.filter." + i);
+            String filterName = filterData.substring(1, filterData.indexOf(","));
+            String filterContentRule = filterData.substring(filterData.indexOf(",")+1, filterData.lastIndexOf(","));
+            String filterContent = filterData.substring(filterData.lastIndexOf(",")+1, filterData.length()-1);
+            try {
+                AbstractTaskFilter filter = (AbstractTaskFilter) Class.forName(filterName).newInstance();
+                filter.setContentRule(Integer.parseInt(filterContentRule));
+                filter.setContent(filterContent);
+                FiltersTableModel filtersModel = (FiltersTableModel) tbFilters.getModel();
+                filtersModel.addFilter(filter);
+            } catch (Exception exception) {
+                System.out.println("Error: Cannot load this filter: " + filterData);
+                exception.printStackTrace();
+            } 
+        }
+        boolean totalTime = settings.getSetting("history.chart").equals("time");
+        rbTotal.setSelected(totalTime);
+        rbFromTo.setSelected(!totalTime);
+        chbHighlightTasks.setEnabled(totalTime);
+        if (totalTime) chbHighlightTasks.setSelected(settings.getSetting("history.highlight").toString().equals("true"));
+
+        if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
+            cmbFilterName.setEnabled(false);
+            cmbContentRule.setEnabled(false);
+            txtContent.setEnabled(false);
+            cmbContent.setEnabled(false);
+            return;
+        }
+
+        cmbFilterName.setEnabled(true);
+        cmbContentRule.setEnabled(true);
+        cmbFilterName.setSelectedIndex(Integer.parseInt((String) settings.getSetting("history.filter")));
+        AbstractTaskFilter taskFilter = getFilter();
+        Vector contentRules = taskFilter.getContentRules();
+        int length = contentRules.size();
+        cmbContentRule.removeAllItems();
+        for (int i=0; i<length; i++)
+            cmbContentRule.addItem(contentRules.get(i));
+        cmbContentRule.setSelectedIndex(Integer.parseInt((String) settings.getSetting("history.rule")));
+        
+        String content = (String) settings.getSetting("history.content");
+        Vector contentValues = taskFilter.getContentValues();
+        cmbContent.removeAllItems();
+        if (contentValues != null) {
+            length = contentValues.size();
+            for (int i=0; i<length; i++)
+                cmbContent.addItem(contentValues.get(i));
+            cmbContent.setSelectedIndex(Integer.parseInt(content));
+        } else txtContent.setText(content);
+        cmbContent.setEnabled(contentValues != null);
+        txtContent.setEnabled(contentValues == null);
+    }
+    
     /** Sets content rules and values according to currently selected task filter.
      */
     private void setComponents() {
@@ -968,6 +1029,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             cmbContent.setEnabled(false);
             return;
         }
+
         cmbFilterName.setEnabled(true);
         cmbContentRule.setEnabled(true);
         AbstractTaskFilter taskFilter = getFilter();
@@ -977,7 +1039,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         for (int i=0; i<length; i++)
             cmbContentRule.addItem(contentRules.get(i));
         cmbContentRule.setSelectedIndex(0);
-        
+
         Vector contentValues = taskFilter.getContentValues();
         cmbContent.removeAllItems();
         if (contentValues != null) {
@@ -1197,6 +1259,33 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         }
         txtTotalTime.setText(Tools.getTime(totalTime));
         return totalTime;
+    }
+    
+    /** Saves setup customized by user e.g. time scale, highlighted tasks etc. */
+    public void saveSetup() {
+        Settings settings = Settings.getDefault();
+        settings.setSetting("history.period", new Integer(cmbPeriod.getSelectedIndex()));
+        if (rbFromTo.isSelected()) settings.setSetting("history.chart", "from/to");
+        else settings.setSetting("history.chart", "time");
+        settings.setSetting("history.highlight", new Boolean(chbHighlightTasks.isSelected()));
+        settings.setSetting("history.filter", new Integer(cmbFilterName.getSelectedIndex()));
+        settings.setSetting("history.rule", new Integer(cmbContentRule.getSelectedIndex()));
+        if (cmbContent.isEnabled()) settings.setSetting("history.content", new Integer(cmbContent.getSelectedIndex()));
+        else settings.setSetting("history.content", txtContent.getText());
+        settings.setSetting("history.group", new Boolean(chbGroupTasks.isSelected()));
+        FiltersTableModel filtersModel = (FiltersTableModel) tbFilters.getModel();
+        settings.setSetting("history.filters", new Integer(filtersModel.getRowCount()));
+        Vector filters = filtersModel.getFilters();
+        int count = filters.size();
+        for (int i = 0; i < count; i++) {
+            AbstractTaskFilter filter = (AbstractTaskFilter) filters.get(i);
+            Vector contentValues = filter.getContentValues();
+            String content = filter.getContent();
+            settings.setSetting("history.filter." + i,
+                    "[" + filter.getClass().getName() +
+                    "," + filter.getContentRule() +
+                    "," + (contentValues == null ? content : "" + contentValues.indexOf(content)) + "]");
+        }
     }
     
     /** Method called when some property of task was changed.
