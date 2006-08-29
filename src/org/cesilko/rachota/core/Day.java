@@ -12,6 +12,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -263,9 +264,10 @@ public class Day implements PropertyChangeListener {
      * @return Tex representation of days' date.
      */
     public String toString() {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-        String text = df.format(date);
-        return text.substring(0, text.length() - 3);
+        SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+        String dayFormat = Translator.getTranslation("FORMAT.DAY_SHORT");
+        sdf.applyPattern(dayFormat);
+        return sdf.format(date);
     }
 
     /** Method called when some property of task was changed.
