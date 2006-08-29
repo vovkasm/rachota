@@ -366,7 +366,6 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         pnDayView.add(lblProgress, gridBagConstraints);
 
         pbProgress.setFont(getFont().deriveFont(java.awt.Font.BOLD));
-        pbProgress.setPreferredSize(new java.awt.Dimension(148, 19));
         pbProgress.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
@@ -450,6 +449,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDayView.add(lblPlan, gridBagConstraints);
 
+        spPlan.setToolTipText(Translator.getTranslation("DAYVIEW.TABLE_HINT"));
         spPlan.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         spPlan.setFont(getFont());
         spPlan.setPreferredSize(new java.awt.Dimension(400, 200));
@@ -496,7 +496,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         add(chbShowFinished, gridBagConstraints);
@@ -823,13 +823,12 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             double totalTime = (double) day.getTotalTime()/(60 * 60 * 1000);
             int progress = (int) (totalTime * 100 / dayWorkHours);
             pbProgress.setValue(progress);
-            pbProgress.setStringPainted(true);
             pbProgress.setString(Tools.getTime(day.getTotalTime()));
         } else {
             txtStart.setText("");
             txtEnd.setText("");
             pbProgress.setValue(0);
-            pbProgress.setStringPainted(false);
+            pbProgress.setString(Tools.getTime(0));
         }
         int row = tbPlan.getSelectedRow();
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
