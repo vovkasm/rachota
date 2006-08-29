@@ -319,7 +319,7 @@ public class TaskDialog extends javax.swing.JDialog {
         getContentPane().add(chbRegular, gridBagConstraints);
 
         cmbRepetition.setFont(getFont());
-        for (int i=RegularTask.FREQUENCY_DAILY; i<=RegularTask.FREQUENCY_SUNDAY; i++)
+        for (int i=RegularTask.FREQUENCY_DAILY; i<=RegularTask.FREQUENCY_WEEKEND; i++)
         cmbRepetition.addItem(RegularTask.getFrequency(i));
         cmbRepetition.setSelectedIndex(RegularTask.FREQUENCY_DAILY);
         cmbRepetition.setToolTipText(Translator.getTranslation("TASKDIALOG.CMB_REPETITION_TOOLTIP"));

@@ -35,6 +35,10 @@ public class RegularTask extends Task {
     public static int FREQUENCY_SATURDAY = 6;
     /** Regular task that repeats every Sunday. */
     public static int FREQUENCY_SUNDAY = 7;
+    /** Regular task that repeats every working day. */
+    public static int FREQUENCY_WORKDAY = 8;
+    /** Regular task that repeats every weekend day. */
+    public static int FREQUENCY_WEEKEND = 9;
     
     /** Creates a new instance of regular task.
      * @param description Description of task.
@@ -93,7 +97,10 @@ public class RegularTask extends Task {
         calendar.setTime(day.getDate());
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if (dayOfWeek == 0) dayOfWeek = 7;
-        return frequency == dayOfWeek;
+        if (frequency <= FREQUENCY_SUNDAY) return frequency == dayOfWeek;
+        boolean weekend = dayOfWeek == FREQUENCY_SUNDAY | dayOfWeek == FREQUENCY_SATURDAY;
+        if (frequency == FREQUENCY_WEEKEND) return weekend;
+        return !weekend;
     }
     
     /** Returns clone of itself with time set to 0 and state set to STATE_NEW.

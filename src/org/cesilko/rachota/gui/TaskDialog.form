@@ -300,7 +300,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection component="Form" name="getFont" type="method"/>
         </Property>
-        <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" preCode="for (int i=RegularTask.FREQUENCY_DAILY; i&lt;=RegularTask.FREQUENCY_SUNDAY; i++)&#xa;    cmbRepetition.addItem(RegularTask.getFrequency(i));">
+        <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" preCode="for (int i=RegularTask.FREQUENCY_DAILY; i&lt;=RegularTask.FREQUENCY_WEEKEND; i++)&#xa;    cmbRepetition.addItem(RegularTask.getFrequency(i));">
           <Connection code="RegularTask.FREQUENCY_DAILY" type="code"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
