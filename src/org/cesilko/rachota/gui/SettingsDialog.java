@@ -7,6 +7,9 @@
 package org.cesilko.rachota.gui;
 
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -40,13 +43,28 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbCheckPriority.setSelected(((Boolean) Settings.getDefault().getSetting("checkPriority")).booleanValue());
         chbCountPrivate.setSelected(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tbRegularTasks.getColumn(Translator.getTranslation("TASK_DESCRIPTION")).setPreferredWidth(250);
-        tbRegularTasks.getColumn(Translator.getTranslation("TASK_REGULAR")).setPreferredWidth(100);
+        tbRegularTasks.getColumnModel().getColumn(1).setPreferredWidth(250);
+        tbRegularTasks.getColumnModel().getColumn(2).setPreferredWidth(100);
         tbRegularTasks.getTableHeader().setForeground(java.awt.Color.BLUE);
         tbRegularTasks.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
         tbRegularTasks.getTableHeader().setFont(getFont());
         tbRegularTasks.setFont(getFont());
         tbRegularTasks.setRowHeight(getFont().getSize() + 2);
+        tbRegularTasks.getTableHeader().addMouseListener(new MouseAdapter() {
+            Point pressedPoint;
+            public void mousePressed(MouseEvent e) {
+                pressedPoint = e.getPoint();
+            }
+            public void mouseReleased(MouseEvent e) {
+                if (!e.getPoint().equals(pressedPoint)) return;
+                int column = tbRegularTasks.getTableHeader().columnAtPoint(e.getPoint());
+                RegularTasksTableModel regularTasksTableModel = (RegularTasksTableModel) tbRegularTasks.getModel();
+                regularTasks = regularTasksTableModel.sortTable(column);
+                int columns = tbRegularTasks.getColumnCount();
+                for (int i=0; i<columns; i++)
+                    tbRegularTasks.getColumnModel().getColumn(i).setHeaderValue(regularTasksTableModel.getColumnName(i));
+            }
+        });
     }
     
     /** Returns font that should be used for all widgets in this component

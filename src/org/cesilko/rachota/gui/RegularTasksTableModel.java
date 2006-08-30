@@ -5,9 +5,11 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 import org.cesilko.rachota.core.RegularTask;
+import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
 /** Table model for regular tasks in settings dialog.
@@ -23,12 +25,73 @@ public class RegularTasksTableModel extends AbstractTableModel {
     public static final int TASK_REGULAR = 2;
     /** Vector of regular tasks. */
     private Vector regularTasks;
+    /** Currently selected sorting column. */
+    private int sortedColumn = TASK_REGULAR;
+    /** Currently selected sorting order. */
+    private boolean sortingOrder = ASCENDING;
+    /** Ascending sorting order. */
+    private static final boolean ASCENDING = true;
+    /** Descending sorting order. */
+    private static final boolean DESCENDING = false;
+    
+    /** Sorts table according to given column and known order.
+     * @param column Column that will be used for sorting.
+     * @return Vector of sorted regular tasks.
+     */
+    public Vector sortTable(final int column) {
+        sortingOrder = !sortingOrder;
+        sortedColumn = column;
+        Settings.getDefault().setSetting("regularTasks.sorting.column", new Integer(column).toString());
+        Settings.getDefault().setSetting("regularTasks.sorting.order", new Boolean(sortingOrder));
+        Vector sortedRegularTasks = new Vector();
+        int count = regularTasks.size();
+        for (int i = 0; i < count; i++) { // Let's take all tasks one by one
+            Iterator iterator = regularTasks.iterator();
+            RegularTask selectedTask = (RegularTask) iterator.next();
+            while (iterator.hasNext()) {
+                RegularTask task = (RegularTask) iterator.next();
+                switch(column) {
+                    case TASK_PRIORITY:
+                        if (sortingOrder == ASCENDING) {
+                            if (task.getPriority() > selectedTask.getPriority()) selectedTask = task;
+                        } else if (task.getPriority() < selectedTask.getPriority()) selectedTask = task;
+                        break;
+                    case TASK_DESCRIPTION:
+                        if (sortingOrder == ASCENDING) {
+                            if (task.getDescription().compareTo(selectedTask.getDescription()) < 0) selectedTask = task;
+                        } else if (task.getDescription().compareTo(selectedTask.getDescription()) > 0) selectedTask = task;
+                        break;
+                    default:
+                        if (sortingOrder == ASCENDING) {
+                            if (task.getFrequency() < selectedTask.getFrequency()) selectedTask = task;
+                        } else if (task.getFrequency() > selectedTask.getFrequency()) selectedTask = task;
+                        break;
+                }
+            }
+            sortedRegularTasks.add(selectedTask);
+            regularTasks.remove(selectedTask);
+        }
+        regularTasks = sortedRegularTasks;
+        return regularTasks;
+    }
     
     /** Creates new table model for regular tasks in settings dialog.
      * @param regularTasks Set of currently planned regular tasks.
      */
     public RegularTasksTableModel(Vector regularTasks) {
         this.regularTasks = regularTasks;
+        Settings settings = Settings.getDefault();
+        try {
+            sortedColumn = Integer.parseInt((String) settings.getSetting("regularTasks.sorting.column"));
+            sortingOrder = ((Boolean) settings.getSetting("regularTasks.sorting.order")).booleanValue();
+        } catch (Exception e) {
+            System.out.println("Error: Can't load sorting of regular tasks. Using default values.");
+            e.printStackTrace();
+            sortedColumn = TASK_REGULAR;
+            sortingOrder = ASCENDING;
+            settings.setSetting("regularTasks.sorting.column", new Integer(sortedColumn).toString());
+            settings.setSetting("regularTasks.sorting.order", new Boolean(sortingOrder));
+        }
     }
     
     /** Returns number of columns in the table i.e. 3.
@@ -69,15 +132,19 @@ public class RegularTasksTableModel extends AbstractTableModel {
      * @return Name of column by given column number.
      */
     public String getColumnName(int column) {
+        String name;
         switch (column) {
             case TASK_PRIORITY:
-                return Translator.getTranslation("TASK_PRIORITY");
+                name = Translator.getTranslation("TASK_PRIORITY");
+                break;
             case TASK_DESCRIPTION:
-                return Translator.getTranslation("TASK_DESCRIPTION");
-            case TASK_REGULAR:
-                return Translator.getTranslation("TASK_REGULAR");
+                name = Translator.getTranslation("TASK_DESCRIPTION");
+                break;
             default:
-                return "N/A";
+                name = Translator.getTranslation("TASK_REGULAR");
         }
+        if (column == sortedColumn)
+            name = name + (sortingOrder == ASCENDING ? " [+]" : " [-]");
+        return name;
     }
 }
