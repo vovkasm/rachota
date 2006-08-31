@@ -729,28 +729,28 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     private void tbPlanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPlanMouseClicked
         checkButtons();
         firePropertyChange("plan_clicked", null, null);
-        if (selectButtonEnabled) { // Selected task can be started
-            Date now = new Date();
-            long delay = 1000;
-            delay = now.getTime() - clickedWhen.getTime();
-            boolean samePoint = clickedWhere.equals(evt.getPoint());
-            if (samePoint & (delay < 250)) {
-                int row = tbPlan.getSelectedRow();
-                DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
-                Task selectedTask = dayTableModel.getTask(row);
-                Boolean checkPriorities = (Boolean) Settings.getDefault().getSetting("checkPriority");
-                if (checkPriorities.booleanValue() & day.existsMorePriorityTask(selectedTask.getPriority())) {
-                    String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-                    int ignorePriority = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.IGNORE_PRIORITY"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-                    if (ignorePriority != JOptionPane.YES_OPTION) return;
-                }
-                setTask(selectedTask, false);
-                checkButtons();
-                btWorkActionPerformed(null);
-            } else {
-                clickedWhere = evt.getPoint();
-                clickedWhen = now;
+        Date now = new Date();
+        long delay = 1000;
+        delay = now.getTime() - clickedWhen.getTime();
+        boolean samePoint = clickedWhere.equals(evt.getPoint());
+        if (samePoint & (delay < 250)) {
+            int row = tbPlan.getSelectedRow();
+            DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+            Task selectedTask = dayTableModel.getTask(row);
+            if (selectedTask.getState() == Task.STATE_DONE) return;
+            if (!Plan.getDefault().isToday(day)) return;
+            Boolean checkPriorities = (Boolean) Settings.getDefault().getSetting("checkPriority");
+            if (checkPriorities.booleanValue() & day.existsMorePriorityTask(selectedTask.getPriority())) {
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+                int ignorePriority = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.IGNORE_PRIORITY"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+                if (ignorePriority != JOptionPane.YES_OPTION) return;
             }
+            setTask(selectedTask, false);
+            checkButtons();
+            btWorkActionPerformed(null);
+        } else {
+            clickedWhere = evt.getPoint();
+            clickedWhen = now;
         }
     }//GEN-LAST:event_tbPlanMouseClicked
     
