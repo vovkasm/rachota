@@ -29,6 +29,7 @@ import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.ClockListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
+import org.cesilko.rachota.core.RegularTask;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
@@ -955,7 +956,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         if (decision == JOptionPane.YES_OPTION) {
             Day targetDay = futureDay ? plan.getDayAfter(day) : plan.getDay(new Date());
             if (targetDay.getTask(selectedTask.getDescription()) == null) {
-                targetDay.addTask(selectedTask.cloneTask());
+                Task clone = selectedTask.cloneTask();
+                if (selectedTask instanceof RegularTask)
+                    clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), selectedTask.getNotes(), selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
+                targetDay.addTask(clone);
                 plan.addDay(targetDay);
             }
             if ((futureDay) && (selectedTask.getState() == Task.STATE_NEW))
