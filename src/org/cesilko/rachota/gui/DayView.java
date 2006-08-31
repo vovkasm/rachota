@@ -1095,6 +1095,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         day.addPropertyChangeListener(this);
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         dayTableModel.setDay(day);
+        dayTableModel.resortRows();
         updateInformation(false);
         // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
         checkButtons();
