@@ -244,7 +244,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
     private void mnSwitchDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSwitchDateActionPerformed
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-        dayView.switchDate();
+        dayView.switchDate(this);
     }//GEN-LAST:event_mnSwitchDateActionPerformed
     
     /** Method called when move time action is required.
@@ -362,7 +362,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#060831";
+    protected static final String build = "#060901";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */

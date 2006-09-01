@@ -6,6 +6,7 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -115,6 +116,13 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         DayTableModel tableModel = (DayTableModel) tbPlan.getModel();
         tableModel.setSortedColumn(DayTableModel.TASK_PRIORITY, false);
         updateInformation(false);
+        JButton fakeButton = new JButton(Translator.getTranslation("DAYVIEW.BT_VIEW"));
+        fakeButton.setFont(getFont());
+        fakeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/edit.png")));
+        double width = fakeButton.getPreferredSize().getWidth();
+        fakeButton.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
+        if (fakeButton.getPreferredSize().getWidth() > width) width = fakeButton.getPreferredSize().getWidth();
+        btEdit.setPreferredSize(new Dimension((int) width, (int) btEdit.getPreferredSize().getHeight()));
         loadRunningTask();
         checkButtons();
         tbPlan.getColumn(Translator.getTranslation("TASK_DESCRIPTION")).setPreferredWidth(240);
@@ -894,8 +902,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     
     /** Method called when switch date action is required.
      */
-    public void switchDate() {
-        DateDialog dateDialog = new DateDialog(day.getDate());
+    public void switchDate(java.awt.Frame parent) {
+        DateDialog dateDialog = new DateDialog(parent, day.getDate());
         dateDialog.addPropertyChangeListener(this);
         dateDialog.setVisible(true);
     }

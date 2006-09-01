@@ -22,9 +22,9 @@ import org.cesilko.rachota.core.Translator;
 public class DateDialog extends javax.swing.JDialog {
     
     /** Creates new form DateDialog */
-    public DateDialog(Date date) {
+    public DateDialog(java.awt.Frame parent, Date date) {
         initComponents();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MMMMMMMMMMMMMMMMM");
         for (int i = 0; i < 12; i++) {
