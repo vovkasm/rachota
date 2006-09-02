@@ -80,14 +80,25 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         String size = (String) Settings.getDefault().getSetting("size");
         String location = (String) Settings.getDefault().getSetting("location");
         if (size != null) {
-            int width = Integer.parseInt(size.substring(1, size.indexOf(",")));
-            int height = Integer.parseInt(size.substring(size.indexOf(",") + 1, size.length() - 1));
-            setSize(width, height);
+            try {
+                int width = Integer.parseInt(size.substring(1, size.indexOf(",")));
+                int height = Integer.parseInt(size.substring(size.indexOf(",") + 1, size.length() - 1));
+                setSize(width, height);
+            } catch (Exception e) {
+                System.out.println("Error: Unable to load size of main window: " + size);
+                e.printStackTrace();
+            }
         }
         if (location != null) {
-            int x = Integer.parseInt(location.substring(1, location.indexOf(",")));
-            int y = Integer.parseInt(location.substring(location.indexOf(",") + 1, location.length() - 1));
-            setLocation(x, y);
+            try {
+                int x = Integer.parseInt(location.substring(1, location.indexOf(",")));
+                int y = Integer.parseInt(location.substring(location.indexOf(",") + 1, location.length() - 1));
+                setLocation(x, y);
+            } catch (Exception e) {
+                System.out.println("Error: Unable to load location of main window: " + location);
+                e.printStackTrace();
+                setLocationRelativeTo(null);
+            }
         } else setLocationRelativeTo(null);
         Clock.getDefault().start();
     }
