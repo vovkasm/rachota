@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JLabel;
+import org.cesilko.rachota.core.Day;
+import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
@@ -21,9 +23,24 @@ import org.cesilko.rachota.core.Translator;
  */
 public class DateDialog extends javax.swing.JDialog {
     
+    /** Identifies dialog for switching current day view. */
+    public static final int TYPE_SWITCH_DATE = 0;
+    /** Identifies dialog for copying task to different day. */
+    public static final int TYPE_COPY_TASK = 1;
+    /** Type of dialog. */
+    private int type;
+    
     /** Creates new form DateDialog */
-    public DateDialog(java.awt.Frame parent, Date date) {
+    public DateDialog(java.awt.Frame parent, Date date, int type) {
         initComponents();
+        this.type = type;
+        switch (type) {
+            case TYPE_SWITCH_DATE:
+                lbSelectDate.setText(Translator.getTranslation("DATEDIALOG.SELECT_DATE"));
+                break;
+            default:
+                lbSelectDate.setText(Translator.getTranslation("DATEDIALOG.COPY_TASK"));
+        }
         setLocationRelativeTo(parent);
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MMMMMMMMMMMMMMMMM");
@@ -218,10 +235,17 @@ public class DateDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_txtDateMouseClicked
 
     private void lbDayMouseClicked(java.awt.event.MouseEvent evt) {
-        JLabel day = (JLabel) evt.getComponent();
+        JLabel selectedDay = (JLabel) evt.getComponent();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(selectedDay.getText()));
+        if (type==TYPE_COPY_TASK) {
+            Plan plan = Plan.getDefault();
+            Day day = plan.getDay(calendar.getTime());
+            boolean today = plan.isToday(day);
+            boolean future = plan.isFuture(day);
+            if (!(today | future)) return;
+        }
         date = calendar.getTime();
         updateDays();
     }
@@ -254,7 +278,13 @@ public class DateDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btCancelActionPerformed
 
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
-        firePropertyChange("date_selected", null, date);
+        switch (type) {
+            case TYPE_SWITCH_DATE:
+                firePropertyChange("date_selected_switch", null, date);
+                break;
+            default:
+                firePropertyChange("date_selected_copy_task", null, date);
+        }
         setVisible(false);
     }//GEN-LAST:event_btOKActionPerformed
     

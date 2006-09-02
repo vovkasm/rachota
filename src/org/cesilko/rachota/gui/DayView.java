@@ -903,7 +903,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     /** Method called when switch date action is required.
      */
     public void switchDate(java.awt.Frame parent) {
-        DateDialog dateDialog = new DateDialog(parent, day.getDate());
+        DateDialog dateDialog = new DateDialog(parent, day.getDate(), DateDialog.TYPE_SWITCH_DATE);
         dateDialog.addPropertyChangeListener(this);
         dateDialog.setVisible(true);
     }
@@ -957,22 +957,9 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         Task selectedTask = dayTableModel.getTask(row);
         Plan plan = Plan.getDefault();
         boolean futureDay = plan.isFuture(plan.getDayAfter(day));
-        String bundleKey = futureDay ? "QUESTION.MOVE_TASK_NEXT" : "QUESTION.MOVE_TASK_TODAY";
-        String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-        String question = Translator.getTranslation(bundleKey, new String[] {selectedTask.getDescription()});
-        int decision = JOptionPane.showOptionDialog(this, question, Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-        if (decision == JOptionPane.YES_OPTION) {
-            Day targetDay = futureDay ? plan.getDayAfter(day) : plan.getDay(new Date());
-            if (targetDay.getTask(selectedTask.getDescription()) == null) {
-                Task clone = selectedTask.cloneTask();
-                if (selectedTask instanceof RegularTask)
-                    clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), selectedTask.getNotes(), selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
-                targetDay.addTask(clone);
-                plan.addDay(targetDay);
-            }
-            if ((futureDay) && (selectedTask.getState() == Task.STATE_NEW))
-                day.removeTask(selectedTask);
-        }
+        DateDialog dateDialog = new DateDialog(null, futureDay ? plan.getDayAfter(day).getDate() : plan.getDay(new Date()).getDate(), DateDialog.TYPE_COPY_TASK);
+        dateDialog.addPropertyChangeListener(this);
+        dateDialog.setVisible(true);
     }
     
     /** Set whether finished tasks should be displayed or not.
@@ -1128,9 +1115,26 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             setDay(day);
             firePropertyChange("day", null, day);
         }
-        if (evt.getPropertyName().equals("date_selected")) {
+        if (evt.getPropertyName().equals("date_selected_switch")) {
             Date date = (Date) evt.getNewValue();
             setDay(Plan.getDefault().getDay(date));
+        }
+        if (evt.getPropertyName().equals("date_selected_copy_task")) {
+            DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+            Task selectedTask = dayTableModel.getTask(tbPlan.getSelectedRow());
+            Day targetDay = Plan.getDefault().getDay((Date) evt.getNewValue());
+            if (targetDay != day) {
+                Plan plan = Plan.getDefault();
+                if (targetDay.getTask(selectedTask.getDescription()) == null) {
+                    Task clone = selectedTask.cloneTask();
+                    if (selectedTask instanceof RegularTask)
+                        clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), selectedTask.getNotes(), selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
+                    targetDay.addTask(clone);
+                    plan.addDay(targetDay);
+                    if ((plan.isFuture(day) | plan.isToday(day)) && (selectedTask.getState() == Task.STATE_NEW))
+                        day.removeTask(selectedTask);
+                }
+            }
         }
         if (evt.getPropertyName().equals("settings")) Plan.getDefault().addRegularTasks(day);
         if (evt.getPropertyName().equals("duration")) taskDurationChanged = true;
