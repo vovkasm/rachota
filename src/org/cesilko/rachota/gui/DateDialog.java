@@ -67,9 +67,10 @@ public class DateDialog extends javax.swing.JDialog {
         int numberOfDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         Font font = getFont();
         JLabel specimen = new JLabel("31");
+        specimen.setFont(font);
         specimen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         Dimension size = specimen.getPreferredSize();
-        size.setSize(size.getWidth() + 1, size.getHeight() + 1);
+        size.setSize(size.getWidth() + 2, size.getHeight() + 2);
         for (int i = 0; i < numberOfDays; i++) {
             calendar.set(Calendar.DAY_OF_MONTH, i+1);
             JLabel day = new JLabel(new Integer(i+1).toString());
