@@ -1017,6 +1017,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         } else txtContent.setText(content);
         cmbContent.setEnabled(contentValues != null);
         txtContent.setEnabled(contentValues == null);
+        historyChart.setHighlightingFilter(getFilter());
+        filterTasks();
     }
     
     /** Sets content rules and values according to currently selected task filter.
