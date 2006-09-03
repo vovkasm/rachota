@@ -910,7 +910,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     
     /** Method called when move time action is required.
      */
-    public void moveTime() {
+    public void moveTime(java.awt.Frame parent) {
         if (!Plan.getDefault().isToday(day)) {
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.ONLY_TODAY"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
             return;
@@ -940,7 +940,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TARGET_TASK"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        MoveTimeDialog moveTimeDialog = new MoveTimeDialog(selectedTask);
+        MoveTimeDialog moveTimeDialog = new MoveTimeDialog(parent, selectedTask);
         moveTimeDialog.addPropertyChangeListener(this);
         moveTimeDialog.setVisible(true);
     }
