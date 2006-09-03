@@ -947,7 +947,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     
     /** Method called when copy task action is required.
      */
-    public void copyTask() {
+    public void copyTask(java.awt.Frame parent) {
         int row = tbPlan.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
@@ -957,7 +957,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         Task selectedTask = dayTableModel.getTask(row);
         Plan plan = Plan.getDefault();
         boolean futureDay = plan.isFuture(plan.getDayAfter(day));
-        DateDialog dateDialog = new DateDialog(null, futureDay ? plan.getDayAfter(day).getDate() : plan.getDay(new Date()).getDate(), DateDialog.TYPE_COPY_TASK);
+        DateDialog dateDialog = new DateDialog(parent, futureDay ? plan.getDayAfter(day).getDate() : plan.getDay(new Date()).getDate(), DateDialog.TYPE_COPY_TASK);
         dateDialog.addPropertyChangeListener(this);
         dateDialog.setVisible(true);
     }

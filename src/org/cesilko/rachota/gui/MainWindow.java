@@ -271,7 +271,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
      */
     private void mnCopyTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCopyTaskActionPerformed
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-        dayView.copyTask();
+        dayView.copyTask(this);
     }//GEN-LAST:event_mnCopyTaskActionPerformed
     
     /** Method called when change settings action is required.
