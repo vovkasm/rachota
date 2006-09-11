@@ -985,7 +985,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         rbTotal.setSelected(totalTime);
         rbFromTo.setSelected(!totalTime);
         chbHighlightTasks.setEnabled(totalTime);
-        if (totalTime) chbHighlightTasks.setSelected(settings.getSetting("history.highlight").toString().equals("true"));
+        if (totalTime) {
+            historyChart.setChartType(HistoryChart.TYPE_TOTAL);
+            chbHighlightTasks.setSelected(settings.getSetting("history.highlight").toString().equals("true"));
+        } else historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
 
         if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
             cmbFilterName.setEnabled(false);
