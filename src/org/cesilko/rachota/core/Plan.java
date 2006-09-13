@@ -376,10 +376,16 @@ public class Plan {
                 }
             }
         }
-        allCategories.add(Translator.getTranslation("CATEGORY.MEETING"));
-        allCategories.add(Translator.getTranslation("CATEGORY.DISCUSSION"));
-        allCategories.add(Translator.getTranslation("CATEGORY.EMAIL"));
-        allCategories.add(Translator.getTranslation("CATEGORY.INTERNET"));
+        String[] defaults = new String[] {
+            Translator.getTranslation("CATEGORY.MEETING"),
+            Translator.getTranslation("CATEGORY.DISCUSSION"),
+            Translator.getTranslation("CATEGORY.EMAIL"),
+            Translator.getTranslation("CATEGORY.INTERNET")
+        };
+        for (int i = 0; i < defaults.length; i++) {
+            if (!allCategories.contains(defaults[i]))
+                allCategories.add(defaults[i]);
+        }
         return allCategories;
     }
 }
