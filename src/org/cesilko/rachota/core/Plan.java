@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
@@ -351,5 +352,34 @@ public class Plan {
             if (indexedDay.getDate().before(day.getDate())) index++;
         }
         return (index != 0);
+    }
+    
+    /** Returns all categories that were used to date.
+     * @return Vector of categories that were used to date.
+     */
+    public Vector getCategories() {
+        Vector allCategories = new Vector();
+        Iterator dayIterator = days.values().iterator();
+        while (dayIterator.hasNext()) {
+            Day day = (Day) dayIterator.next();
+            Vector tasks = day.getTasks();
+            Iterator taskIterator = tasks.iterator();
+            while (taskIterator.hasNext()) {
+                Task task = (Task) taskIterator.next();
+                String keywords = task.getKeyword();
+                if (keywords != null) {
+                    StringTokenizer tokenizer = new StringTokenizer(keywords, " ");
+                    while(tokenizer.hasMoreElements()) {
+                        String category = (String) tokenizer.nextElement();
+                        if (!allCategories.contains(category)) allCategories.add(category);
+                    }
+                }
+            }
+        }
+        allCategories.add(Translator.getTranslation("CATEGORY.MEETING"));
+        allCategories.add(Translator.getTranslation("CATEGORY.DISCUSSION"));
+        allCategories.add(Translator.getTranslation("CATEGORY.EMAIL"));
+        allCategories.add(Translator.getTranslation("CATEGORY.INTERNET"));
+        return allCategories;
     }
 }

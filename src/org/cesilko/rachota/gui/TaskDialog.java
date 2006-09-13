@@ -6,10 +6,14 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.ToolTipManager;
 import org.cesilko.rachota.core.Day;
+import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.RegularTask;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
@@ -27,6 +31,10 @@ public class TaskDialog extends javax.swing.JDialog {
     private Day day;
     /** Flag determining if task can be edited or not. */
     private boolean readOnly;
+    /** Cache for all found categories completion items. */
+    private Vector completionItems;
+    /** Completion window ready to offer categories. */
+    private CompletionWindow completionWindow;
     
     /** Creates new dialog for editing of given task.
      * @param task Task which is going to be edited.
@@ -189,6 +197,20 @@ public class TaskDialog extends javax.swing.JDialog {
 
         txtCategory.setFont(getFont());
         txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_CATEGORY_TOOLTIP"));
+        txtCategory.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCategoryFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCategoryFocusLost(evt);
+            }
+        });
+        txtCategory.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCategoryKeyTyped(evt);
+            }
+        });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 4;
@@ -375,6 +397,23 @@ public class TaskDialog extends javax.swing.JDialog {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-400)/2, (screenSize.height-364)/2, 400, 364);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtCategoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCategoryFocusLost
+        txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_CATEGORY_TOOLTIP"));
+    }//GEN-LAST:event_txtCategoryFocusLost
+
+    private void txtCategoryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCategoryFocusGained
+        if (txtCategory.getText().equals("")) {
+            txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.COMPLETION_HINT"));
+            ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(txtCategory, 0, 0, 0, 0, 0, 0, false));
+        }
+    }//GEN-LAST:event_txtCategoryFocusGained
+    
+    private void txtCategoryKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCategoryKeyTyped
+        if ((evt.getModifiers() == evt.CTRL_MASK) & (evt.getKeyChar() == ' ')) {
+            new CompletionWindow(txtCategory, Plan.getDefault().getCategories()).setVisible(true);
+        }
+    }//GEN-LAST:event_txtCategoryKeyTyped
     
     /** Method called when ok button was pressed.
      * @param evt Event that invoked this method call.
@@ -481,7 +520,6 @@ public class TaskDialog extends javax.swing.JDialog {
     private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
         setVisible(false);
     }//GEN-LAST:event_closeDialog
-    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
