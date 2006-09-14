@@ -108,11 +108,11 @@ public class CompletionWindow extends javax.swing.JDialog {
             completeItem(value);
         }
         if ((evt.getKeyCode() == 38) & (jlCompletion.getSelectedIndex() == 0)) {
-            jlCompletion.setSelectedIndex(jlCompletion.getModel().getSize() - 1);
+            jlCompletion.setSelectedValue(jlCompletion.getModel().getElementAt(jlCompletion.getModel().getSize() - 1), true);
             evt.consume();
         }
         if ((evt.getKeyCode() == 40) & (jlCompletion.getSelectedIndex() == jlCompletion.getModel().getSize() - 1)) {
-            jlCompletion.setSelectedIndex(0);
+            jlCompletion.setSelectedValue(jlCompletion.getModel().getElementAt(0), true);
             evt.consume();
         }
         if ((keyCode == 27) | (keyCode == 10)) setVisible(false);
