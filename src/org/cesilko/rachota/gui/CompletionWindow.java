@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
@@ -152,8 +153,14 @@ public class CompletionWindow extends javax.swing.JDialog {
                 String item = (String) iterator.next();
                 if (item.startsWith(prefix)) filteredItems.add(item);
             }
-            if (filteredItems.size() == 0) filteredItems.add("No suggestion");
         }
+        Vector alreadyUsedItems = getUsedItems();
+        Iterator iterator = alreadyUsedItems.iterator();
+        while (iterator.hasNext()) {
+            String item = (String) iterator.next();
+            if (filteredItems.contains(item)) filteredItems.remove(item);
+        }
+        if (filteredItems.size() == 0) filteredItems.add("No suggestion");
         return filteredItems;
     }
     
@@ -214,5 +221,20 @@ public class CompletionWindow extends javax.swing.JDialog {
      */
     private String getSuffix() {
         return textComponent.getText().substring(textComponent.getCaretPosition());
+    }
+
+    /** Returns list of items that were already used in the text component.
+     * i.e. "meeting int| hello" returns "meeting" and "hello".
+     * @return Items that were already used in the text component.
+     */
+    private Vector getUsedItems() {
+        Vector alreadyUsedItems = new Vector();
+        String prefix = getPrefix() + " " + getSuffix();
+        StringTokenizer tokenizer = new StringTokenizer(prefix);
+        while (tokenizer.hasMoreTokens()) {
+            String item = (String) tokenizer.nextToken();
+            alreadyUsedItems.add(item);
+        }
+        return alreadyUsedItems;
     }
 }
