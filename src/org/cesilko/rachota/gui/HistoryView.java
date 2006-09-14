@@ -979,8 +979,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             } catch (Exception exception) {
                 System.out.println("Error: Cannot load this filter: " + filterData);
                 exception.printStackTrace();
-            } 
+            }
         }
+        historyChart.setHighlightingFilter(getFilter());
+        filterTasks();
         boolean totalTime = settings.getSetting("history.chart").equals("time");
         rbTotal.setSelected(totalTime);
         rbFromTo.setSelected(!totalTime);
@@ -989,7 +991,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             historyChart.setChartType(HistoryChart.TYPE_TOTAL);
             chbHighlightTasks.setSelected(settings.getSetting("history.highlight").toString().equals("true"));
         } else historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
-
+        
         if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
             cmbFilterName.setEnabled(false);
             cmbContentRule.setEnabled(false);
@@ -997,7 +999,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             cmbContent.setEnabled(false);
             return;
         }
-
+        
         cmbFilterName.setEnabled(true);
         cmbContentRule.setEnabled(true);
         cmbFilterName.setSelectedIndex(Integer.parseInt((String) settings.getSetting("history.filter")));
@@ -1020,8 +1022,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         } else txtContent.setText(content);
         cmbContent.setEnabled(contentValues != null);
         txtContent.setEnabled(contentValues == null);
-        historyChart.setHighlightingFilter(getFilter());
-        filterTasks();
     }
     
     /** Sets content rules and values according to currently selected task filter.
@@ -1034,7 +1034,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             cmbContent.setEnabled(false);
             return;
         }
-
+        
         cmbFilterName.setEnabled(true);
         cmbContentRule.setEnabled(true);
         AbstractTaskFilter taskFilter = getFilter();
@@ -1044,7 +1044,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         for (int i=0; i<length; i++)
             cmbContentRule.addItem(contentRules.get(i));
         cmbContentRule.setSelectedIndex(0);
-
+        
         Vector contentValues = taskFilter.getContentValues();
         cmbContent.removeAllItems();
         if (contentValues != null) {
