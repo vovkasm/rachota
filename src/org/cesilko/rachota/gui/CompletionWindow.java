@@ -81,9 +81,17 @@ public class CompletionWindow extends javax.swing.JDialog {
             if (value.equals("No suggestion")) return;
             completeItem(value);
         }
+        if ((evt.getKeyCode() == 38) & (jlCompletion.getSelectedIndex() == 0)) {
+            jlCompletion.setSelectedIndex(jlCompletion.getModel().getSize() - 1);
+            evt.consume();
+        }
+        if ((evt.getKeyCode() == 40) & (jlCompletion.getSelectedIndex() == jlCompletion.getModel().getSize() - 1)) {
+            jlCompletion.setSelectedIndex(0);
+            evt.consume();
+        }
         if ((keyCode == 27) | (keyCode == 10)) setVisible(false);
     }//GEN-LAST:event_jlCompletionKeyPressed
-        // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jlCompletion;
     private javax.swing.JScrollPane spCompletion;
     // End of variables declaration//GEN-END:variables
@@ -145,6 +153,7 @@ public class CompletionWindow extends javax.swing.JDialog {
     private void completeItem(String value) {
         String prefix = getPrefix();
         String suffix = getSuffix();
+        if (suffix.equals("")) suffix = " ";
         textComponent.setText(prefix + value + suffix);
         setVisible(false);
     }
