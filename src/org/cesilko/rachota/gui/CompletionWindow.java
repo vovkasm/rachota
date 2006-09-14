@@ -55,6 +55,19 @@ public class CompletionWindow extends javax.swing.JDialog {
         setModal(true);
         setUndecorated(true);
         spCompletion.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jlCompletion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jlCompletionMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jlCompletionMouseExited(evt);
+            }
+        });
+        jlCompletion.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jlCompletionFocusLost(evt);
+            }
+        });
         jlCompletion.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jlCompletionKeyPressed(evt);
@@ -71,10 +84,23 @@ public class CompletionWindow extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jlCompletionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jlCompletionMouseClicked
+        if (evt.getClickCount() == 2) completeItem((String) jlCompletion.getSelectedValue());
+    }//GEN-LAST:event_jlCompletionMouseClicked
+
+    private void jlCompletionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jlCompletionMouseExited
+        setVisible(false);
+    }//GEN-LAST:event_jlCompletionMouseExited
+
+    private void jlCompletionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jlCompletionFocusLost
+        setVisible(false);
+    }//GEN-LAST:event_jlCompletionFocusLost
     
     private void jlCompletionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jlCompletionKeyPressed
         int keyCode = evt.getKeyCode();
         int keyChar = (int) evt.getKeyChar();
+        if (keyChar == 32) return;
         if (((keyChar > 30) & (keyChar < 256)) | (keyCode == 8)) reduceCompletionBy(evt.getKeyChar());
         if (keyCode == 10) {
             String value = (String) jlCompletion.getSelectedValue();
