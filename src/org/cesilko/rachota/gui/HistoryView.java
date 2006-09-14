@@ -981,7 +981,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 exception.printStackTrace();
             }
         }
-        historyChart.setHighlightingFilter(getFilter());
         filterTasks();
         boolean totalTime = settings.getSetting("history.chart").equals("time");
         rbTotal.setSelected(totalTime);
@@ -1022,6 +1021,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         } else txtContent.setText(content);
         cmbContent.setEnabled(contentValues != null);
         txtContent.setEnabled(contentValues == null);
+        historyChart.setHighlightingFilter(getFilter());
     }
     
     /** Sets content rules and values according to currently selected task filter.

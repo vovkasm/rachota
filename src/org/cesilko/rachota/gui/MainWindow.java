@@ -371,9 +371,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     // End of variables declaration//GEN-END:variables
     
     /** Name and version of application. */
-    protected static final String title = "Rachota 2.1";
+    protected static final String title = "Rachota 2.1 Dev";
     /** Build number. */
-    protected static final String build = "#060913";
+    protected static final String build = "#060914";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
