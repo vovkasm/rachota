@@ -101,7 +101,7 @@ public class CompletionWindow extends javax.swing.JDialog {
     private void jlCompletionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jlCompletionKeyPressed
         int keyCode = evt.getKeyCode();
         int keyChar = (int) evt.getKeyChar();
-        if (keyChar == 32) return;
+        if ((keyChar == 32) | (keyChar == 127)) return;
         if (((keyChar > 30) & (keyChar < 256)) | (keyCode == 8)) reduceCompletionBy(evt.getKeyChar());
         if (keyCode == 10) {
             String value = (String) jlCompletion.getSelectedValue();
@@ -177,7 +177,9 @@ public class CompletionWindow extends javax.swing.JDialog {
         caretPosition = caretPosition + (key == 8 ? -1 : +1);
         if (caretPosition == -1) caretPosition = 0;
         textComponent.setCaretPosition(caretPosition);
-        setCompletionItems(getCompletionItems(key == 32 ? "" : word));
+        Vector newItems = getCompletionItems(word);
+        setCompletionItems(newItems);
+        if (newItems.get(0).equals("No suggestion")) jlCompletion.setSelectedIndex(0);
     }
     
     /** Completes text in text component with selected completion item.

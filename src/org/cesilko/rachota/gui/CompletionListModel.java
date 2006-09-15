@@ -37,7 +37,7 @@ public class CompletionListModel extends AbstractListModel {
      * @param items Vector of new completion items to be used from now.
      */
     public void setItems(Vector items) {
-        completionItems = (Vector) sortItems(items).clone();
+        completionItems = (Vector) sortItems((Vector) items.clone());
         fireContentsChanged(this, 0, getSize());
     }
     
