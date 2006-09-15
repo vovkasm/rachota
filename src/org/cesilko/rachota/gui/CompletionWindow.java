@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
+import org.cesilko.rachota.core.Translator;
 
 /** Window containing list of all suitable completion items.
  * @author Jiri Kovalsky
@@ -105,7 +106,7 @@ public class CompletionWindow extends javax.swing.JDialog {
         if (((keyChar > 30) & (keyChar < 256)) | (keyCode == 8)) reduceCompletionBy(evt.getKeyChar());
         if (keyCode == 10) {
             String value = (String) jlCompletion.getSelectedValue();
-            if (value.equals("No suggestion")) return;
+            if (value.equals(Translator.getTranslation("COMPLETION.NONE"))) return;
             completeItem(value);
         }
         if ((evt.getKeyCode() == 38) & (jlCompletion.getSelectedIndex() == 0)) {
@@ -160,7 +161,7 @@ public class CompletionWindow extends javax.swing.JDialog {
             String item = (String) iterator.next();
             if (filteredItems.contains(item)) filteredItems.remove(item);
         }
-        if (filteredItems.size() == 0) filteredItems.add("No suggestion");
+        if (filteredItems.size() == 0) filteredItems.add(Translator.getTranslation("COMPLETION.NONE"));
         return filteredItems;
     }
     
@@ -179,7 +180,7 @@ public class CompletionWindow extends javax.swing.JDialog {
         textComponent.setCaretPosition(caretPosition);
         Vector newItems = getCompletionItems(word);
         setCompletionItems(newItems);
-        if (newItems.get(0).equals("No suggestion")) jlCompletion.setSelectedIndex(0);
+        if (newItems.get(0).equals(Translator.getTranslation("COMPLETION.NONE"))) jlCompletion.setSelectedIndex(0);
     }
     
     /** Completes text in text component with selected completion item.
