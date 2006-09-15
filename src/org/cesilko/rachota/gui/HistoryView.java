@@ -441,6 +441,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 tbFiltersMouseClicked(evt);
             }
         });
+        tbFilters.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbFiltersKeyReleased(evt);
+            }
+        });
 
         spFilters.setViewportView(tbFilters);
 
@@ -583,6 +588,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         add(tpViews, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tbFiltersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbFiltersKeyReleased
+        checkButtons();
+    }//GEN-LAST:event_tbFiltersKeyReleased
     
     /** Method called when generate report button was clicked.
      * @param evt Event that invoked the action.
