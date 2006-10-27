@@ -94,8 +94,8 @@ public class Translator {
     }
     
     /** Returns mnemonic char found in translated word. As the mnemonic is considered
-     * the character after & char. If & is not found in the translation, space
-     * char is returned.
+     * the character after & char. If & is not found in the translation, invisible
+     * character is returned.
      * @param word Word to be translated and where mnemonic char will be searched for.
      * @return Mnemonic i.e. character right after first occurence of & character in
      * the translated word.
@@ -103,6 +103,6 @@ public class Translator {
     public static char getMnemonic(String word) {
         String translation = getTranslation(word, false);
         int index = translation.indexOf("&");
-        return (index == -1) ? 32 : translation.charAt(index + 1);
+        return (index == -1) ? 31 : translation.charAt(index + 1);
     }
 }
