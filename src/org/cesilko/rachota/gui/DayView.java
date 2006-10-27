@@ -1169,6 +1169,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             model.setSelectedColumn(2, true);
             model.setSelectedColumn(3, true);
             model.setSortedColumn(0, false);
+            model.setSortedColumn(0, true);
             model.fireTableStructureChanged();
             tbPlan.getColumnModel().getColumn(1).setPreferredWidth(240);
             tbPlan.getColumnModel().getColumn(3).setPreferredWidth(100);
