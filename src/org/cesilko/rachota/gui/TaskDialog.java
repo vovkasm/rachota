@@ -6,6 +6,7 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
@@ -404,13 +405,16 @@ public class TaskDialog extends javax.swing.JDialog {
 
     private void txtCategoryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCategoryFocusGained
         if (txtCategory.getText().equals("")) {
-            txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.COMPLETION_HINT"));
+            int modifier = System.getProperty("os.name").indexOf("Windows") != -1 ? KeyEvent.CTRL_MASK : KeyEvent.SHIFT_MASK;
+            txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.COMPLETION_HINT", new String[]{KeyEvent.getKeyModifiersText(modifier)}));
             ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(txtCategory, 0, 0, 0, 0, 0, 0, false));
         }
     }//GEN-LAST:event_txtCategoryFocusGained
     
     private void txtCategoryKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCategoryKeyTyped
-        if ((evt.getModifiers() == evt.CTRL_MASK) & (evt.getKeyChar() == ' ')) {
+        int modifier = System.getProperty("os.name").indexOf("Windows") != -1 ? evt.CTRL_MASK : evt.SHIFT_MASK;
+        if ((evt.getModifiers() == modifier) & (evt.getKeyChar() == ' ')) {
+            evt.consume();
             new CompletionWindow(txtCategory, Plan.getDefault().getCategories()).setVisible(true);
         }
     }//GEN-LAST:event_txtCategoryKeyTyped

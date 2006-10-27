@@ -189,7 +189,6 @@ public class CompletionWindow extends javax.swing.JDialog {
     private void completeItem(String value) {
         String prefix = getPrefix();
         String suffix = getSuffix();
-        if (suffix.equals("")) suffix = " ";
         textComponent.setText(prefix + value + suffix);
         setVisible(false);
     }
