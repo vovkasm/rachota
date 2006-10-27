@@ -376,10 +376,10 @@ public class Task implements ClockListener {
                 break;
             case DayTableModel.TASK_DESCRIPTION:
                 if (ascendingOrder) {
-                    if (task.getDescription().compareTo(description) > 0)
+                    if (task.getDescription().toLowerCase().compareTo(description) > 0)
                         task = this;
                 } else
-                    if (task.getDescription().compareTo(description) < 0)
+                    if (task.getDescription().toLowerCase().compareTo(description) < 0)
                         task = this;
                 break;
             case DayTableModel.TASK_DURATION:
@@ -410,10 +410,10 @@ public class Task implements ClockListener {
                 break;
             case DayTableModel.TASK_KEYWORD:
                 if (ascendingOrder) {
-                    if (task.getKeyword().compareTo(keyword) > 0)
+                    if (task.getKeyword().toLowerCase().compareTo(keyword) > 0)
                         task = this;
                 } else
-                    if (task.getKeyword().compareTo(keyword) < 0)
+                    if (task.getKeyword().toLowerCase().compareTo(keyword) < 0)
                         task = this;
                 break;
             case DayTableModel.TASK_PRIVATE:
