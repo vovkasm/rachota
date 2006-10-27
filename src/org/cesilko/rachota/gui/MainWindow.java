@@ -321,6 +321,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         Settings.getDefault().setSetting("location", "[" + (int) getBounds().getLocation().getX() + "," + (int) getBounds().getLocation().getY() + "]");
         HistoryView historyView = (HistoryView) tpViews.getComponentAt(TAB_HISTORY_VIEW);
         historyView.saveSetup();
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        dayView.saveSetup();
         Settings.saveSettings();
         String task = (String) Settings.getDefault().getSetting("runningTask");
         if ((task != null) && !task.equals("null")) {
@@ -373,7 +375,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1 Dev";
     /** Build number. */
-    protected static final String build = "#060915";
+    protected static final String build = "#061027";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */

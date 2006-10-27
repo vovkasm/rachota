@@ -45,6 +45,9 @@ public class DayTableModel extends AbstractTableModel {
     /** Identification of keyword column. */
     public static final int TASK_PRIVATE = 7;
     
+    /** Identification of no column. */
+    public static final int TASK_NONE = -1;
+    
     /** Which column is used to sort tasks. */
     private int sortedColumn;
     
@@ -60,13 +63,13 @@ public class DayTableModel extends AbstractTableModel {
     /** Translations of all column names. */
     String[] columnNames = {
         Translator.getTranslation("TASK_PRIORITY"),
-                Translator.getTranslation("TASK_DESCRIPTION"),
-                Translator.getTranslation("TASK_DURATION"),
-                Translator.getTranslation("TASK_STATE"),
-                Translator.getTranslation("TASK_REGULAR"),
-                Translator.getTranslation("TASK_NOTIFICATION"),
-                Translator.getTranslation("TASK_KEYWORD"),
-                Translator.getTranslation("TASK_PRIVATE")
+        Translator.getTranslation("TASK_DESCRIPTION"),
+        Translator.getTranslation("TASK_DURATION"),
+        Translator.getTranslation("TASK_STATE"),
+        Translator.getTranslation("TASK_REGULAR"),
+        Translator.getTranslation("TASK_NOTIFICATION"),
+        Translator.getTranslation("TASK_KEYWORD"),
+        Translator.getTranslation("TASK_PRIVATE")
     };
     
     /**
@@ -76,15 +79,15 @@ public class DayTableModel extends AbstractTableModel {
     public DayTableModel(Day day) {
         setDay(day);
         columns = new Hashtable();
-        setSelectedColumn(TASK_PRIORITY, true);
-        setSelectedColumn(TASK_DESCRIPTION, true);
-        setSelectedColumn(TASK_DURATION, true);
-        setSelectedColumn(TASK_STATE, true);
+        setSelectedColumn(TASK_PRIORITY, false);
+        setSelectedColumn(TASK_DESCRIPTION, false);
+        setSelectedColumn(TASK_DURATION, false);
+        setSelectedColumn(TASK_STATE, false);
         setSelectedColumn(TASK_REGULAR, false);
         setSelectedColumn(TASK_NOTIFICATION, false);
         setSelectedColumn(TASK_KEYWORD, false);
         setSelectedColumn(TASK_PRIVATE, false);
-        sortedColumn = TASK_PRIORITY;
+        sortedColumn = TASK_NONE;
         sortedAscending = false;
     }
     
@@ -243,15 +246,11 @@ public class DayTableModel extends AbstractTableModel {
     }
     
     /**
-     * Returns how many columns are selected i.e. visible.
-     * @return Number of selected columns.
+     * Returns how many columns are available in total.
+     * @return Number of columns that can be selected.
      */
-    public int getSelectedColumnsCount() {
-        int size = columns.size();
-        int selectedColumns = 0;
-        for (int i=0; i<size; i++)
-            if (isSelectedColumn(i)) selectedColumns++;
-        return selectedColumns;
+    public int getAllColumnsCount() {
+        return columns.size();
     }
     
     
@@ -317,5 +316,25 @@ public class DayTableModel extends AbstractTableModel {
             }
         }
         return visibleTasks.indexOf(task);
+    }
+
+    /** Returns column that is currently sorted.
+     *@return Visible column number that is being sorted.
+     */
+    public int getSortedColumn() {
+        int length = columnNames.length;
+        int count = 0;
+        for (int i=0; i<length; i++) {
+            if (i == sortedColumn) return count;
+            if (isSelectedColumn(i)) count++;
+        }
+        return 0;
+    }
+
+    /** Returns sorting order that is currently used.
+     *@return Returns + char in case of ascending order or - char in case of descending order.
+     */
+    public String getSortedOrder() {
+        return sortedAscending ? "+" : "-";
     }
 }

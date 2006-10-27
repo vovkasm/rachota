@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -70,7 +72,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                         public void itemStateChanged(ItemEvent e) {
                             tableModel.setSelectedColumn(columnID, item.isSelected());
                             tableModel.fireTableStructureChanged();
-                            if (tableModel.getSelectedColumnsCount() == 1) {
+                            if (tableModel.getColumnCount() == 1) {
                                 JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) menu.getComponent(tableModel.getColumnID(0));
                                 menuItem.setEnabled(false);
                             } else for (int j=0; j<count; j++) {
@@ -81,7 +83,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                     });
                     menu.add(item);
                 }
-                if (tableModel.getSelectedColumnsCount() == 1) {
+                if (tableModel.getColumnCount() == 1) {
                     JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) menu.getComponent(tableModel.getColumnID(0));
                     menuItem.setEnabled(false);
                 }
@@ -113,8 +115,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                     tbPlan.getColumnModel().getColumn(i).setHeaderValue(dayTableModel.getColumnName(i));
             }
         });
+        loadSetup();
         DayTableModel tableModel = (DayTableModel) tbPlan.getModel();
-        tableModel.setSortedColumn(DayTableModel.TASK_PRIORITY, false);
         updateInformation(false);
         JButton fakeButton = new JButton(Translator.getTranslation("DAYVIEW.BT_VIEW"));
         fakeButton.setFont(getFont());
@@ -125,8 +127,6 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         btEdit.setPreferredSize(new Dimension((int) width, (int) btEdit.getPreferredSize().getHeight()));
         loadRunningTask();
         checkButtons();
-        tbPlan.getColumn(Translator.getTranslation("TASK_DESCRIPTION")).setPreferredWidth(240);
-        tbPlan.getColumn(Translator.getTranslation("TASK_STATE")).setPreferredWidth(100);
         tbPlan.getTableHeader().setForeground(java.awt.Color.BLUE);
         tbPlan.getTableHeader().setBackground(java.awt.Color.LIGHT_GRAY);
         tbPlan.getTableHeader().setFont(getFont());
@@ -1144,5 +1144,54 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             dayTableModel.resortRows();
         }
         updateInformation(taskDurationChanged);
+    }
+
+    /** Saves setup customized by user i.e. selected columns and their widths. */
+    void saveSetup() {
+        DayTableModel model = (DayTableModel) tbPlan.getModel();
+        int count = model.getColumnCount();
+        String selectedColumns = "";
+        for (int i = 0; i < count; i++) {
+            int size = tbPlan.getColumnModel().getColumn(i).getWidth();
+            selectedColumns = selectedColumns + "[" + model.getColumnID(i) + "," + size + "]";
+        }
+        Settings.getDefault().setSetting("day.columns", selectedColumns);
+        Settings.getDefault().setSetting("day.sortedColumn", "" + model.getSortedColumn() + model.getSortedOrder());
+    }
+    
+    /** Loads setup customized by user i.e. selected columns and their widths. */
+    void loadSetup() {
+        DayTableModel model = (DayTableModel) tbPlan.getModel();
+        String selectedColumns = (String) Settings.getDefault().getSetting("day.columns");
+        if (selectedColumns == null) {
+            model.setSelectedColumn(0, true);
+            model.setSelectedColumn(1, true);
+            model.setSelectedColumn(2, true);
+            model.setSelectedColumn(3, true);
+            model.setSortedColumn(0, false);
+            model.fireTableStructureChanged();
+            tbPlan.getColumnModel().getColumn(1).setPreferredWidth(240);
+            tbPlan.getColumnModel().getColumn(3).setPreferredWidth(100);
+            return;
+        }
+        StringTokenizer tokenizer = new StringTokenizer(selectedColumns, "[");
+        Vector widths = new Vector();
+        while (tokenizer.hasMoreElements()) {
+            String columnData = (String) tokenizer.nextElement();
+            model.setSelectedColumn(Integer.parseInt(columnData.substring(0, 1)), true);
+            widths.add(Integer.valueOf(columnData.substring(2, columnData.length()-1)));
+        }
+        model.fireTableStructureChanged();
+        String sortedColumn = (String) Settings.getDefault().getSetting("day.sortedColumn");
+        if (sortedColumn != null) {
+            model.setSortedColumn(Integer.parseInt(sortedColumn.substring(0, 1)), false);
+            if (sortedColumn.substring(1).indexOf("-") != -1) model.setSortedColumn(Integer.parseInt(sortedColumn.substring(0, 1)), true);
+            model.fireTableStructureChanged();
+        }
+        int count = widths.size();
+        for (int i = 0; i<count; i++) {
+            Integer width = (Integer) widths.get(i);
+            tbPlan.getColumnModel().getColumn(i).setPreferredWidth(width.intValue());
+        }
     }
 }
