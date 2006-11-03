@@ -1,7 +1,24 @@
 /*
- * DurationFilter.java
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
  *
- * Created on 11 August 2005, 07:41
+ * You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+ * or http://www.netbeans.org/cddl.txt.
+ *
+ * When distributing Covered Code, include this CDDL Header Notice in each file
+ * and include the License file at http://www.netbeans.org/cddl.txt.
+ * If applicable, add the following below the CDDL Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ * The Original Software is NetBeans.
+ * The Initial Developer of the Original Software is Jiri Kovalsky
+ * Portions created by Jiri Kovalsky are Copyright (C) 2006
+ * All Rights Reserved.
+ *
+ * Contributor(s): Jiri Kovalsky
+ * Created on 11 August 2005  07:41
+ * DurationFilter.java
  */
 
 package org.cesilko.rachota.core.filters;
