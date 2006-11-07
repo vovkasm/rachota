@@ -23,6 +23,7 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Calendar;
@@ -102,6 +103,10 @@ public class TaskDialog extends javax.swing.JDialog {
             spHours.setEnabled(false);
             spMinutes.setEnabled(false);
         }
+        Dimension size = spHours.getPreferredSize();
+        spHours.setPreferredSize(new Dimension((int) (size.getWidth()*1.5), (int) size.getHeight()));
+        spMinutes.setPreferredSize(new Dimension((int) (size.getWidth()*1.5), (int) size.getHeight()));
+        pack();
     }
     
     /** Creates new dialog for creating new task for given day.
@@ -174,8 +179,6 @@ public class TaskDialog extends javax.swing.JDialog {
         btOK = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
 
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
         setTitle(Translator.getTranslation("TASKDIALOG.TITLE"));
         setModal(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -183,6 +186,7 @@ public class TaskDialog extends javax.swing.JDialog {
                 closeDialog(evt);
             }
         });
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         lblDescription.setDisplayedMnemonic(Translator.getMnemonic("TASKDIALOG.LBL_DESCRIPTION"));
         lblDescription.setFont(getFont());
@@ -228,7 +232,6 @@ public class TaskDialog extends javax.swing.JDialog {
                 txtCategoryKeyTyped(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 4;
@@ -292,7 +295,6 @@ public class TaskDialog extends javax.swing.JDialog {
                 chbNotificationChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
@@ -300,6 +302,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(chbNotification, gridBagConstraints);
 
+        spHours.setFont(getFont());
         spHours.setToolTipText(Translator.getTranslation("TASKDIALOG.JSP_HOURS_TOOLTIP"));
         spHours.setMinimumSize(new java.awt.Dimension(35, 18));
         spHours.setPreferredSize(new java.awt.Dimension(35, 18));
@@ -308,7 +311,6 @@ public class TaskDialog extends javax.swing.JDialog {
                 spHoursStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -321,6 +323,7 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         getContentPane().add(lblColon, gridBagConstraints);
 
+        spMinutes.setFont(getFont());
         spMinutes.setToolTipText(Translator.getTranslation("TASKDIALOG.JSP_MINUTES_TOOLTIP"));
         spMinutes.setMinimumSize(new java.awt.Dimension(35, 18));
         spMinutes.setPreferredSize(new java.awt.Dimension(35, 18));
@@ -329,7 +332,6 @@ public class TaskDialog extends javax.swing.JDialog {
                 spMinutesStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -390,7 +392,6 @@ public class TaskDialog extends javax.swing.JDialog {
                 btOKActionPerformed(evt);
             }
         });
-
         pnButtons.add(btOK);
 
         btCancel.setFont(getFont());
@@ -402,7 +403,6 @@ public class TaskDialog extends javax.swing.JDialog {
                 btCancelActionPerformed(evt);
             }
         });
-
         pnButtons.add(btCancel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
