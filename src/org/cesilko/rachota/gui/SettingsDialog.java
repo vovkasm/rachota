@@ -122,8 +122,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         btOK = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
 
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(Translator.getTranslation("SETTINGSDIALOG.TITLE"));
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -131,11 +129,12 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 formWindowClosing(evt);
             }
         });
-
-        pnGeneral.setLayout(new java.awt.GridBagLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         pnGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
         pnGeneral.setFont(getFont());
+        pnGeneral.setLayout(new java.awt.GridBagLayout());
+
         lblWorkingHours.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_WORKING_HOURS"));
         lblWorkingHours.setFont(getFont());
         lblWorkingHours.setLabelFor(txtHours);
@@ -144,15 +143,14 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblWorkingHours, gridBagConstraints);
 
+        txtHours.setFont(getFont());
         txtHours.setText("8.0");
         txtHours.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_HOURS_TOOLTIP"));
-        txtHours.setPreferredSize(new java.awt.Dimension(30, 19));
         txtHours.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtHoursFocusLost(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(txtHours, gridBagConstraints);
@@ -247,11 +245,12 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(pnGeneral, gridBagConstraints);
 
-        pnRegularTasks.setLayout(new java.awt.GridBagLayout());
-
         pnRegularTasks.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
         pnRegularTasks.setFont(getFont());
+        pnRegularTasks.setLayout(new java.awt.GridBagLayout());
+
         spRegularTasks.setPreferredSize(new java.awt.Dimension(350, 150));
+
         tbRegularTasks.setFont(getFont());
         tbRegularTasks.setModel(new RegularTasksTableModel(regularTasks));
         tbRegularTasks.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -264,7 +263,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 tbRegularTasksMouseClicked(evt);
             }
         });
-
         spRegularTasks.setViewportView(tbRegularTasks);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -283,7 +281,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 btAddActionPerformed(evt);
             }
         });
-
         pnButtons.add(btAdd);
 
         btEdit.setFont(getFont());
@@ -296,7 +293,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 btEditActionPerformed(evt);
             }
         });
-
         pnButtons.add(btEdit);
 
         btRemove.setFont(getFont());
@@ -309,7 +305,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 btRemoveActionPerformed(evt);
             }
         });
-
         pnButtons.add(btRemove);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -334,7 +329,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 btOKActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -351,7 +345,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 btCancelActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
