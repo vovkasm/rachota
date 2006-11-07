@@ -185,9 +185,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         lblFilteredTime = new javax.swing.JLabel();
         txtFilteredTime = new javax.swing.JTextField();
 
+        setName(Translator.getTranslation("HISTORYVIEW.TB_NAME"));
         setLayout(new java.awt.GridBagLayout());
 
-        setName(Translator.getTranslation("HISTORYVIEW.TB_NAME"));
         lblPeriod.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_PERIOD"));
         lblPeriod.setFont(getFont());
         lblPeriod.setLabelFor(cmbPeriod);
@@ -203,7 +203,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 cmbPeriodItemStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -219,13 +218,13 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 btReportActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(btReport, gridBagConstraints);
 
+        spMinus.setFont(getFont());
         spMinus.setToolTipText(Translator.getTranslation("HISTORYVIEW.SP_MINUS_TOOLTIP"));
         spMinus.setPreferredSize(new java.awt.Dimension(60, 23));
         spMinus.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -233,7 +232,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 spMinusStateChanged(evt);
             }
         });
-
         pnPeriod.add(spMinus);
 
         btBackward.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/previous.png")));
@@ -243,7 +241,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 btBackwardActionPerformed(evt);
             }
         });
-
         pnPeriod.add(btBackward);
 
         txtDate.setEditable(false);
@@ -256,7 +253,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 txtDateMouseClicked(evt);
             }
         });
-
         pnPeriod.add(txtDate);
 
         btForward.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/next.png")));
@@ -266,9 +262,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 btForwardActionPerformed(evt);
             }
         });
-
         pnPeriod.add(btForward);
 
+        spPlus.setFont(getFont());
         spPlus.setToolTipText(Translator.getTranslation("HISTORYVIEW.SP_PLUS_TOOLTIP"));
         spPlus.setPreferredSize(new java.awt.Dimension(60, 23));
         spPlus.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -276,7 +272,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 spPlusStateChanged(evt);
             }
         });
-
         pnPeriod.add(spPlus);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -288,9 +283,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         add(pnPeriod, gridBagConstraints);
 
         tpViews.setFont(getFont());
-        pnTimes.setLayout(new java.awt.GridBagLayout());
 
         pnTimes.setFont(getFont());
+        pnTimes.setLayout(new java.awt.GridBagLayout());
+
         lblChartType.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_CHART_TYPE"));
         lblChartType.setFont(getFont());
         lblChartType.setLabelFor(rbFromTo);
@@ -309,7 +305,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 rbTotalActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -325,7 +320,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 rbFromToActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -343,7 +337,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 chbHighlightTasksActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
@@ -359,7 +352,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 cmbFilterNameItemStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -375,7 +367,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 cmbContentRuleItemStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -391,7 +382,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 cmbContentItemStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
@@ -408,7 +398,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 txtContentKeyTyped(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -437,9 +426,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TIMES_TAB_NAME"), pnTimes);
 
+        pnTasks.setFont(getFont());
         pnTasks.setLayout(new java.awt.GridBagLayout());
 
-        pnTasks.setFont(getFont());
         lblFilters.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_FILTERS"));
         lblFilters.setFont(getFont());
         lblFilters.setLabelFor(tbFilters);
@@ -451,6 +440,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         spFilters.setMinimumSize(new java.awt.Dimension(453, 80));
         spFilters.setPreferredSize(new java.awt.Dimension(453, 80));
+
         tbFilters.setFont(getFont());
         tbFilters.setModel(new FiltersTableModel());
         tbFilters.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -463,7 +453,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 tbFiltersKeyReleased(evt);
             }
         });
-
         spFilters.setViewportView(tbFilters);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -485,7 +474,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 btAddFilterActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -501,7 +489,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 btEditFilterActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btEditFilter, gridBagConstraints);
@@ -516,7 +503,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 btRemoveFilterActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -539,6 +525,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnTasks.add(lblTasks, gridBagConstraints);
 
         spTasks.setPreferredSize(new java.awt.Dimension(453, 100));
+
         tbTasks.setModel(new FilteredTasksTableModel());
         spTasks.setViewportView(tbTasks);
 
@@ -560,7 +547,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 chbGroupTasksActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -603,7 +589,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(tpViews, gridBagConstraints);
-
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbFiltersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbFiltersKeyReleased
@@ -1317,6 +1302,15 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                     "," + filter.getContentRule() +
                     "," + (contentValues == null ? content : "" + contentValues.indexOf(content)) + "]");
         }
+        FilteredTasksTableModel model = (FilteredTasksTableModel) tbTasks.getModel();
+        String columnWidths = "";
+        for (int i = 0; i < 3; i++) {
+            int size = tbTasks.getColumnModel().getColumn(i).getWidth();
+            columnWidths = columnWidths + "[" + size + "]";
+        }
+        settings.setSetting("history.columns", columnWidths);
+        settings.setSetting("history.sortedColumn", "" + model.getSortedColumn() + model.getSortedOrder());
+        settings.setSetting("history.range", "[" + spMinus.getValue() + "," + spPlus.getValue() + "]");
     }
     
     /** Method called when some property of task was changed.

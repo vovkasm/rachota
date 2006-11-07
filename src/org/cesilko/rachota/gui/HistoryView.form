@@ -93,6 +93,9 @@
       <SubComponents>
         <Component class="javax.swing.JSpinner" name="spMinus">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.SP_MINUS_TOOLTIP&quot;)" type="code"/>
             </Property>
@@ -150,6 +153,9 @@
         </Component>
         <Component class="javax.swing.JSpinner" name="spPlus">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="Form" name="getFont" type="method"/>
+            </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;HISTORYVIEW.SP_PLUS_TOOLTIP&quot;)" type="code"/>
             </Property>
