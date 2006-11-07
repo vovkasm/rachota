@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JLabel;
+import javax.swing.SpinnerDateModel;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
@@ -66,7 +67,8 @@ public class DateDialog extends javax.swing.JDialog {
             cmbMonth.addItem(sdf.format(calendar.getTime()));
         }
         calendar.setTime(date);
-        spYear.setValue(new Integer(calendar.get(Calendar.YEAR)));
+        spYear.setValue(date);
+        spYear.setEditor(new javax.swing.JSpinner.DateEditor(spYear, "yyyy"));
         cmbMonth.setSelectedIndex(calendar.get(Calendar.MONTH));
         this.date = date;
         updateDays();
@@ -112,6 +114,7 @@ public class DateDialog extends javax.swing.JDialog {
             });
             pnDays.add(day, gridBagConstraints);
         }
+        previousYear = (Date) spYear.getValue();
         repaint();
         pack();
     }
@@ -141,10 +144,10 @@ public class DateDialog extends javax.swing.JDialog {
         btOK = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
 
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(Translator.getTranslation("DATEDIALOG.TITLE"));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
         lbSelectDate.setFont(getFont());
         lbSelectDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbSelectDate.setLabelFor(cmbMonth);
@@ -154,12 +157,12 @@ public class DateDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(lbSelectDate, gridBagConstraints);
 
+        cmbMonth.setFont(getFont());
         cmbMonth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbMonthActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -167,13 +170,13 @@ public class DateDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(cmbMonth, gridBagConstraints);
 
-        spYear.setPreferredSize(new java.awt.Dimension(50, 20));
+        spYear.setFont(getFont());
+        spYear.setModel(new SpinnerDateModel());
         spYear.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spYearStateChanged(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -181,9 +184,8 @@ public class DateDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(spYear, gridBagConstraints);
 
-        pnDays.setLayout(new java.awt.GridBagLayout());
-
         pnDays.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnDays.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
@@ -193,6 +195,7 @@ public class DateDialog extends javax.swing.JDialog {
         getContentPane().add(pnDays, gridBagConstraints);
 
         txtDate.setEditable(false);
+        txtDate.setFont(getFont());
         txtDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDate.setToolTipText(Translator.getTranslation("DATEDIALOG.TXT_DATE_TOOLTIP"));
         txtDate.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -200,7 +203,6 @@ public class DateDialog extends javax.swing.JDialog {
                 txtDateMouseClicked(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
@@ -208,6 +210,7 @@ public class DateDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(txtDate, gridBagConstraints);
 
+        btOK.setFont(getFont());
         btOK.setMnemonic(Translator.getMnemonic("DATEDIALOG.BT_OK"));
         btOK.setText(Translator.getTranslation("DATEDIALOG.BT_OK"));
         btOK.setToolTipText(Translator.getTranslation("DATEDIALOG.BT_OK_TOOLTIP"));
@@ -216,7 +219,6 @@ public class DateDialog extends javax.swing.JDialog {
                 btOKActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -224,6 +226,7 @@ public class DateDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(btOK, gridBagConstraints);
 
+        btCancel.setFont(getFont());
         btCancel.setMnemonic(Translator.getMnemonic("DATEDIALOG.BT_CANCEL"));
         btCancel.setText(Translator.getTranslation("DATEDIALOG.BT_CANCEL"));
         btCancel.setToolTipText(Translator.getTranslation("DATEDIALOG.BT_CANCEL_TOOLTIP"));
@@ -232,7 +235,6 @@ public class DateDialog extends javax.swing.JDialog {
                 btCancelActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -246,7 +248,7 @@ public class DateDialog extends javax.swing.JDialog {
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        spYear.setValue(new Integer(calendar.get(Calendar.YEAR)));
+        spYear.setValue(new Date());
         cmbMonth.setSelectedIndex(calendar.get(Calendar.MONTH));
         date = new Date();
         updateDays();
@@ -269,11 +271,13 @@ public class DateDialog extends javax.swing.JDialog {
     }
 
     private void spYearStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spYearStateChanged
-        Integer year = (Integer) spYear.getValue();
-        if (year.intValue() < 1970) spYear.setValue(previousYear);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime((Date) spYear.getValue());
+        int year = calendar.get(Calendar.YEAR);
+        if (year < 1970) spYear.setValue(previousYear);
         else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, year.intValue());
+            calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, cmbMonth.getSelectedIndex());
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             date = calendar.getTime();
@@ -283,8 +287,7 @@ public class DateDialog extends javax.swing.JDialog {
 
     private void cmbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMonthActionPerformed
         Calendar calendar = Calendar.getInstance();
-        Integer year = (Integer) spYear.getValue();
-        calendar.set(Calendar.YEAR, year.intValue());
+        calendar.setTime((Date) spYear.getValue());
         calendar.set(Calendar.MONTH, cmbMonth.getSelectedIndex());
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         date = calendar.getTime();
@@ -316,5 +319,5 @@ public class DateDialog extends javax.swing.JDialog {
     private javax.swing.JTextField txtDate;
     // End of variables declaration//GEN-END:variables
     private Date date = new Date();
-    private Integer previousYear = new Integer(2006);
+    private Date previousYear = new Date();
 }
