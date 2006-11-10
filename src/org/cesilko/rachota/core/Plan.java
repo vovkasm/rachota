@@ -261,6 +261,7 @@ public class Plan {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         DiaryScanner.createDTD();
+        if (diaries == null) return;
         ProgressMonitor pm = new ProgressMonitor(null, Translator.getTranslation("MESSAGE.PROGRESS_LOADING"), null, 0,  diaries.length - 1);
         for (int i=0; i<diaries.length; i++) {
             try {

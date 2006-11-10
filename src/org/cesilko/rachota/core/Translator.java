@@ -30,9 +30,12 @@ package org.cesilko.rachota.core;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.PropertyResourceBundle;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.Tools;
 
 /** Translator class providing localization.
@@ -55,11 +58,19 @@ public class Translator {
         try {
             if (location.indexOf(".jar!") == -1)
                 inputStream = new FileInputStream(location.substring(0, location.indexOf("Translator.class")) + dictionaryName);
-            else {
-                String fileName = System.getProperty("os.name").indexOf("Windows") == -1 ? "/" : "";
-                fileName = fileName + location.substring(6, location.indexOf(".jar") + 4);
-                fileName = Tools.replaceAll(fileName, "%20", " "); // Space in path is replaced by %20 and this needs to be changed
-                JarFile jarFile = new JarFile(fileName);
+            else { // http://rachota.sourceforge.net/rachota_21.jar!/org/cesilko/rachota/core/Translator.class
+                JarFile jarFile;
+                if (location.indexOf("http://") != -1) {
+                    String fileName = location.substring(0, location.indexOf("!/") + 2);
+                    url = new URL("jar:" + fileName);
+                    JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
+                    jarFile = jarConnection.getJarFile();
+                } else {
+                    String fileName = System.getProperty("os.name").indexOf("Windows") == -1 ? "/" : "";
+                    fileName = fileName + location.substring(6, location.indexOf(".jar") + 4);
+                    fileName = Tools.replaceAll(fileName, "%20", " "); // Space in path is replaced by %20 and this needs to be changed
+                    jarFile = new JarFile(fileName);
+                }
                 ZipEntry entry = jarFile.getEntry("org/cesilko/rachota/core/" + dictionaryName);
                 if (entry == null) {
                     entry = jarFile.getEntry("org/cesilko/rachota/core/Dictionary_en_US.properties");

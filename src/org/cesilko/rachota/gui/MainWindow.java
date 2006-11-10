@@ -58,12 +58,23 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 else JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.USERDIR_ERROR", new String[] {(String) Settings.getDefault().getSetting("userDir")}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.WARNING_MESSAGE);
             } else printHelp = true;
         }
+        String userDir = (String) Settings.getDefault().getSetting("userDir");
+        if (userDir.indexOf("rachota.sourceforge.net") != -1) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setDialogTitle(Translator.getTranslation("QUESTION.DIARY_LOCATION"));
+            fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
+            fileChooser.setApproveButtonMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_SELECT"));
+            int decision = fileChooser.showOpenDialog(null);
+            if (decision != JFileChooser.APPROVE_OPTION) return;
+            Settings.getDefault().setSetting("userDir", fileChooser.getSelectedFile().getAbsolutePath());
+        }
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println(">> " + title + " << (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
         System.out.println("   http://rachota.sourceforge.net");
         System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
         System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
-        System.out.println("   " + Translator.getTranslation("INFORMATION.USERDIR") + ": " + Settings.getDefault().getSetting("userDir"));
+        System.out.println("   " + Translator.getTranslation("INFORMATION.USERDIR") + ": " + userDir);
         if (printHelp) {
             System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar Rachota.jar [-userdir=<diary_folder>] where:");
             System.out.println("      <diary_folder> is directory with settings and diary files e.g. C:\\Rachota");
@@ -392,7 +403,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1 RC";
     /** Build number. */
-    protected static final String build = "#061108";
+    protected static final String build = "#061110";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
