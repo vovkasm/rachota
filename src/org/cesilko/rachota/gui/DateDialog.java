@@ -11,7 +11,7 @@
  * If applicable, add the following below the CDDL Header, with the fields
  * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- * The Original Software is NetBeans.
+ * The Original Software is Rachota.
  * The Initial Developer of the Original Software is Jiri Kovalsky
  * Portions created by Jiri Kovalsky are Copyright (C) 2006
  * All Rights Reserved.
