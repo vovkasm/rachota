@@ -11,7 +11,7 @@
  * If applicable, add the following below the CDDL Header, with the fields
  * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- * The Original Software is NetBeans.
+ * The Original Software is PNG Image Writer.
  * The Initial Developer of the Original Software is Alexandre Iline
  * Portions created by Alexandre Iline are Copyright (C) 2006
  * All Rights Reserved.
