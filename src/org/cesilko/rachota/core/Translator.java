@@ -35,7 +35,6 @@ import java.net.URL;
 import java.util.PropertyResourceBundle;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.Tools;
 
 /** Translator class providing localization.
