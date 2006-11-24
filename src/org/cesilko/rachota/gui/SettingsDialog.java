@@ -23,7 +23,6 @@
 
 package org.cesilko.rachota.gui;
 
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
