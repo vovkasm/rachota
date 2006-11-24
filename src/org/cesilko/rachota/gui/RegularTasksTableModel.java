@@ -101,9 +101,8 @@ public class RegularTasksTableModel extends AbstractTableModel {
         try {
             sortedColumn = Integer.parseInt((String) settings.getSetting("regularTasks.sorting.column"));
             sortingOrder = ((Boolean) settings.getSetting("regularTasks.sorting.order")).booleanValue();
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println("Error: Can't load sorting of regular tasks. Using default values.");
-            e.printStackTrace();
             sortedColumn = TASK_REGULAR;
             sortingOrder = ASCENDING;
             settings.setSetting("regularTasks.sorting.column", new Integer(sortedColumn).toString());
