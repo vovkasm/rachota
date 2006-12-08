@@ -296,6 +296,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     }// </editor-fold>//GEN-END:initComponents
     
 private void formWindowDeiconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowDeiconified
+    if (!System.getProperty("java.version").startsWith("1.6")) return;
     SystemTray systemTray = SystemTray.getSystemTray();
     TrayIcon[] trayIcons = systemTray.getTrayIcons();
     for (int i = 0; i < trayIcons.length; i++) {
@@ -308,6 +309,7 @@ private void formWindowDeiconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:
 }//GEN-LAST:event_formWindowDeiconified
 
 private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowIconified
+    if (!System.getProperty("java.version").startsWith("1.6")) return;
     if (SystemTray.isSupported()) {
         final SystemTray systemTray = SystemTray.getSystemTray();
         Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
@@ -473,6 +475,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         if (evt.getPropertyName().equals("day"))
             tpViews.setSelectedIndex(0);
         if (!isVisible()) {
+            if (!System.getProperty("java.version").startsWith("1.6")) return;
             TrayIcon[] trayIcons = SystemTray.getSystemTray().getTrayIcons();
             for (int i = 0; i < trayIcons.length; i++) {
                 TrayIcon trayIcon = trayIcons[i];
