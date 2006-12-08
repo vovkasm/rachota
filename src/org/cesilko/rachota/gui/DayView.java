@@ -23,6 +23,7 @@
 
 package org.cesilko.rachota.gui;
 
+import org.cesilko.rachota.gui.*;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ItemEvent;
@@ -1092,7 +1093,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      * @param task Task to be selected.
      * @param startTask Whether the task should be started.
      */
-    private void setTask(Task task, boolean startTask) {
+    public void setTask(Task task, boolean startTask) {
         if ((this.task != null) && (this.task.isRunning())) btRelaxActionPerformed(null);
         this.task = task;
         txtTask.setText(task.getDescription());
@@ -1115,6 +1116,20 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         updateInformation(false);
         // requiredDay = (Plan.getDefault().getDay(new Date()) != day);
         checkButtons();
+    }
+    
+    /** Returns day that is currently being displayed.
+     * @return Day that is currently displayed by day view.
+     */
+    public Day getDay() {
+        return day;
+    }
+    
+    /** Returns task that is currently selected.
+     * @return Task that is currently selected or null if none is selected.
+     */
+    public Task getTask() {
+        return task;
     }
     
     /** Method called when some property of task was changed.
@@ -1211,5 +1226,20 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             Integer width = (Integer) widths.get(i);
             tbPlan.getColumnModel().getColumn(i).setPreferredWidth(width.intValue());
         }
+    }
+    
+    /** Stops working on currently selected running task. */
+    public void pauseTask() {
+        btRelaxActionPerformed(null);
+    }
+
+    /** Starts working on currently selected task. */
+    public void startTask() {
+        btWorkActionPerformed(null);
+    }
+
+    /** Finishes working on currently selected task. */
+    public void finishTask() {
+        btDoneActionPerformed(null);
     }
 }

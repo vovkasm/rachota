@@ -22,17 +22,30 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.awt.AWTException;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
+import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
 /** Main window of the Rachota application.
@@ -70,7 +83,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             Settings.getDefault().setSetting("userDir", fileChooser.getSelectedFile().getAbsolutePath());
         }
         System.out.println("----------------------------------------------------------------------------------");
-        System.out.println(">> " + title + " << (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
+        System.out.println("»» " + title + " «« (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
         System.out.println("   http://rachota.sourceforge.net");
         System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
         System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
@@ -161,16 +174,20 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools = new javax.swing.JMenu();
         mnSwitchDate = new javax.swing.JMenuItem();
 
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_small.png")).getImage());
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
+            public void windowDeiconified(java.awt.event.WindowEvent evt) {
+                formWindowDeiconified(evt);
+            }
+            public void windowIconified(java.awt.event.WindowEvent evt) {
+                formWindowIconified(evt);
+            }
         });
-
+        getContentPane().setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -179,10 +196,12 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         getContentPane().add(tpViews, gridBagConstraints);
 
         mbMenu.setFont(getFont());
+
         mnSystem.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_SYSTEM"));
         mnSystem.setText(Translator.getTranslation("MAINWINDOW.MN_SYSTEM"));
         mnSystem.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_SYSTEM_TOOLTIP"));
         mnSystem.setFont(getFont());
+
         mnAbout.setFont(getFont());
         mnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/info.png")));
         mnAbout.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_ABOUT"));
@@ -193,7 +212,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 mnAboutActionPerformed(evt);
             }
         });
-
         mnSystem.add(mnAbout);
 
         mnSettings.setFont(getFont());
@@ -206,9 +224,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 mnSettingsActionPerformed(evt);
             }
         });
-
         mnSystem.add(mnSettings);
-
         mnSystem.add(separator);
 
         mnExit.setFont(getFont());
@@ -221,7 +237,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 mnExitActionPerformed(evt);
             }
         });
-
         mnSystem.add(mnExit);
 
         mbMenu.add(mnSystem);
@@ -230,6 +245,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask.setText(Translator.getTranslation("MAINWINDOW.MN_TASK"));
         mnTask.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_TASK_TOOLTIP"));
         mnTask.setFont(getFont());
+
         mnCopyTask.setFont(getFont());
         mnCopyTask.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_task.png")));
         mnCopyTask.setMnemonic(Translator.getMnemonic("MAINWINDOW.MOVE_TASK"));
@@ -240,7 +256,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 mnCopyTaskActionPerformed(evt);
             }
         });
-
         mnTask.add(mnCopyTask);
 
         mnMoveTime.setFont(getFont());
@@ -253,7 +268,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 mnMoveTimeActionPerformed(evt);
             }
         });
-
         mnTask.add(mnMoveTime);
 
         mbMenu.add(mnTask);
@@ -262,6 +276,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools.setText(Translator.getTranslation("MAINWINDOW.MN_TOOLS"));
         mnTools.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_TOOLS_TOOLTIP"));
         mnTools.setFont(getFont());
+
         mnSwitchDate.setFont(getFont());
         mnSwitchDate.setMnemonic(Translator.getMnemonic("MAINWINDOW.SWITCH_DATE"));
         mnSwitchDate.setText(Translator.getTranslation("MAINWINDOW.SWITCH_DATE"));
@@ -271,7 +286,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 mnSwitchDateActionPerformed(evt);
             }
         });
-
         mnTools.add(mnSwitchDate);
 
         mbMenu.add(mnTools);
@@ -280,6 +294,47 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+private void formWindowDeiconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowDeiconified
+    SystemTray systemTray = SystemTray.getSystemTray();
+    TrayIcon[] trayIcons = systemTray.getTrayIcons();
+    for (int i = 0; i < trayIcons.length; i++) {
+        TrayIcon trayIcon = trayIcons[i];
+        if (trayIcon.getToolTip().equals(title)) {
+            systemTray.remove(trayIcon);
+            break;
+        }
+    }
+}//GEN-LAST:event_formWindowDeiconified
+
+private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowIconified
+    if (SystemTray.isSupported()) {
+        final SystemTray systemTray = SystemTray.getSystemTray();
+        Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
+        final TrayIcon trayIcon = new TrayIcon(image, title, getTrayPopupMenu());
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setVisible(true);
+                setState(java.awt.Frame.NORMAL);
+                requestFocus();
+                TrayIcon[] trayIcons = systemTray.getTrayIcons();
+                for (int i = 0; i < trayIcons.length; i++) {
+                    TrayIcon trayIcon = trayIcons[i];
+                    if (trayIcon.getToolTip().startsWith(title)) {
+                        systemTray.remove(trayIcon);
+                        break;
+                    }
+                }
+            }
+        };
+        trayIcon.setImageAutoSize(true);
+        trayIcon.addActionListener(actionListener);
+        try {
+            systemTray.add(trayIcon);
+            setVisible(false);
+        } catch (AWTException ex) { System.out.println("Error: Can't create Rachota system tray icon."); };
+    }
+}//GEN-LAST:event_formWindowIconified
 
     private void mnSwitchDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSwitchDateActionPerformed
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
@@ -327,7 +382,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         text = text + Translator.getTranslation("INFORMATION.PROGRAM");
         text = text + "\n<html><body><a href=\"http://rachota.sourceforge.net\">http://rachota.sourceforge.net</a></body";
         text = text + "\n\njiri.kovalsky@centrum.cz\n2006 (c)";
-        JOptionPane.showMessageDialog(this, text, Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, text, Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE, new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_name_48.png")));
     }//GEN-LAST:event_mnAboutActionPerformed
     
     /** Method called when application should be exited.
@@ -403,7 +458,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1 RC";
     /** Build number. */
-    protected static final String build = "#061124";
+    protected static final String build = "#061208";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
@@ -417,5 +472,96 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         setTitle(title + " " + dayView.getTitleSuffix());
         if (evt.getPropertyName().equals("day"))
             tpViews.setSelectedIndex(0);
+        if (!isVisible()) {
+            TrayIcon[] trayIcons = SystemTray.getSystemTray().getTrayIcons();
+            for (int i = 0; i < trayIcons.length; i++) {
+                TrayIcon trayIcon = trayIcons[i];
+                if (trayIcon.getToolTip().startsWith(title)) {
+                    trayIcon.setPopupMenu(getTrayPopupMenu());
+                    trayIcon.setToolTip(title + " " + dayView.getTitleSuffix());
+                    break;
+                }
+            }
+        }
+    }
+    
+    private PopupMenu getTrayPopupMenu() {
+        final SystemTray systemTray = SystemTray.getSystemTray();
+        ActionListener maximizeListener = new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                setVisible(true);
+                setState(java.awt.Frame.NORMAL);
+                requestFocus();
+                TrayIcon[] trayIcons = systemTray.getTrayIcons();
+                for (int i = 0; i < trayIcons.length; i++) {
+                    TrayIcon trayIcon = trayIcons[i];
+                    if (trayIcon.getToolTip().startsWith(title)) {
+                        systemTray.remove(trayIcon);
+                        break;
+                    }
+                }
+            }
+        };
+        PopupMenu popup = new PopupMenu();
+        MenuItem menuItem = new MenuItem("Open Rachota");
+        menuItem.addActionListener(maximizeListener);
+        menuItem.setFont(getFont().deriveFont(Font.BOLD));
+        popup.add(menuItem);
+        ActionListener newTaskListener = new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+                new TaskDialog(dayView.getDay()).setVisible(true);
+            }
+        };
+        menuItem = new MenuItem("New task ...");
+        menuItem.addActionListener(newTaskListener);
+        popup.add(menuItem);
+        Iterator tasks = Plan.getDefault().getDay(new Date()).getTasks().iterator();
+        Task selectedTask = null;
+        while(tasks.hasNext()) {
+            final Task task = (Task) tasks.next();
+            if (task.getState() == Task.STATE_DONE) continue;
+            if (popup.getItemCount() == 2) popup.addSeparator();
+            menuItem = new MenuItem(task.getDescription());
+            DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+            if (task == dayView.getTask()) {
+                menuItem.setFont(getFont().deriveFont(Font.BOLD));
+                selectedTask = task;
+            }
+            ActionListener actionListener = new ActionListener() {
+                public void actionPerformed(ActionEvent arg0) {
+                    DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+                    dayView.setTask(task, true);
+                }
+            };
+            menuItem.addActionListener(actionListener);
+            popup.add(menuItem);
+        }
+        ActionListener startStopTaskListener = new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+                Task task = dayView.getTask();
+                if (task.isRunning()) dayView.pauseTask();
+                else dayView.startTask();
+            }
+        };
+        ActionListener finishTaskListener = new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+                Task task = dayView.getTask();
+                dayView.finishTask();
+            }
+        };
+        if (selectedTask != null) {
+            popup.addSeparator();
+            if (selectedTask.isRunning()) menuItem = new MenuItem("Relax");
+            else menuItem = new MenuItem("Work");
+            menuItem.addActionListener(startStopTaskListener);
+            popup.add(menuItem);
+            menuItem = new MenuItem("Done");
+            menuItem.addActionListener(finishTaskListener);
+            popup.add(menuItem);
+        }
+        return popup;
     }
 }
