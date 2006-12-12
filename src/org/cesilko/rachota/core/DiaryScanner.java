@@ -99,7 +99,6 @@ public class DiaryScanner {
 	calendar.set(Calendar.WEEK_OF_YEAR, week_id);
 	calendar.set(Calendar.DAY_OF_WEEK, day_id);
 	Vector tasks = new Vector();
-	Day day = new Day(tasks, calendar.getTime(), start_time, finish_time);
 	
 	NodeList nodes = dayElement.getChildNodes();
 	for (int i = 0; i < nodes.getLength(); i++) {
@@ -107,9 +106,10 @@ public class DiaryScanner {
 	    if (node.getNodeType() == Node.ELEMENT_NODE) {
 		Element taskElement = (Element) node;
 		Task task = loadTask(taskElement);
-		day.addTask(task);
+		tasks.add(task);
 	    }
 	}
+	Day day = new Day(tasks, calendar.getTime(), start_time, finish_time);
 	Plan.getDefault().addDay(day);
     }
     
@@ -130,6 +130,7 @@ public class DiaryScanner {
 	boolean automaticStart = false;
 	boolean privateTask = false;
 	int repetition = -1;
+        boolean idle = false;
 	
 	NodeList nodes = taskElement.getChildNodes();
 	for (int i = 0; i < nodes.getLength(); i++) {
@@ -152,12 +153,19 @@ public class DiaryScanner {
 		    privateTask = true;
 		if (nodeElement.getTagName().equals("repetition"))
 		    repetition = loadRepetition(nodeElement);
+		if (nodeElement.getTagName().equals("idle"))
+		    idle = true;
 	    }
 	}
 	Date notificationTime = (notification == -1 ? null : new Date(notification));
+        task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
 	if (repetition != -1)
 	    task = new RegularTask(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask, repetition);
-	else task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
+	if (idle) {
+            task = new IdleTask();
+            task.addDuration(duration);
+            task.setState(state);
+        }
 	return task;
     }
     

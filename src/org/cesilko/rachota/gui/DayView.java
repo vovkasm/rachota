@@ -587,28 +587,28 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         add(pnButtons, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void btNextWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNextWeekActionPerformed
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(day.getDate());
         calendar.add(Calendar.DAY_OF_YEAR, 7);
         setDay(Plan.getDefault().getDay(calendar.getTime()));
     }//GEN-LAST:event_btNextWeekActionPerformed
-
+    
     private void btNextMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNextMonthActionPerformed
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(day.getDate());
         calendar.add(Calendar.MONTH, 1);
         setDay(Plan.getDefault().getDay(calendar.getTime()));
     }//GEN-LAST:event_btNextMonthActionPerformed
-
+    
     private void btPreviousMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPreviousMonthActionPerformed
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(day.getDate());
         calendar.add(Calendar.MONTH, -1);
         setDay(Plan.getDefault().getDay(calendar.getTime()));
     }//GEN-LAST:event_btPreviousMonthActionPerformed
-
+    
     private void btPreviousWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPreviousWeekActionPerformed
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(day.getDate());
@@ -726,6 +726,9 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         firePropertyChange("task_done", task, null);
         task = null;
         checkButtons();
+        Task idleTimeTask = day.getIdleTask();
+        idleTimeTask.startWork();
+        idleTimeTask.addPropertyChangeListener(this);
     }//GEN-LAST:event_btDoneActionPerformed
     
     /** Method called when Relax button is pressed.
@@ -738,12 +741,18 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         task.removePropertyChangeListener(this);
         firePropertyChange("task_suspended", task, null);
         checkButtons();
+        Task idleTimeTask = day.getIdleTask();
+        idleTimeTask.startWork();
+        idleTimeTask.addPropertyChangeListener(this);
     }//GEN-LAST:event_btRelaxActionPerformed
     
     /** Method called when Work button is pressed.
      * @param evt Event that invoked this action.
      */
     private void btWorkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkActionPerformed
+        Task idleTimeTask = day.getIdleTask();
+        if (idleTimeTask.isRunning()) idleTimeTask.suspendWork();
+        idleTimeTask.removePropertyChangeListener(this);
         task.startWork();
         task.addPropertyChangeListener(this);
         firePropertyChange("task_resumed", null, task);
@@ -765,6 +774,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             Task selectedTask = dayTableModel.getTask(row);
             if (selectedTask.getState() == Task.STATE_DONE) return;
+            if (selectedTask.isIdleTask()) return;
             if (!Plan.getDefault().isToday(day)) return;
             Boolean checkPriorities = (Boolean) Settings.getDefault().getSetting("checkPriority");
             if (checkPriorities.booleanValue() & day.existsMorePriorityTask(selectedTask.getPriority())) {
@@ -866,6 +876,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             if (today) {
                 row = dayTableModel.getRow(task);
                 if (row != -1) dayTableModel.fireTableRowsUpdated(row, row);
+                row = dayTableModel.getRow(day.getIdleTask());
+                dayTableModel.fireTableRowsUpdated(row, row);
             }
             boolean warnHoursExceeded = ((Boolean) Settings.getDefault().getSetting("warnHoursExceeded")).booleanValue();
             if (warnHoursExceeded && !warningConfirmed) {
@@ -893,20 +905,24 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         boolean taskSelected = row != -1;
         boolean taskFinished = false;
         boolean taskAlreadySelected = false;
+        boolean idleTask = false;
         if (taskSelected) {
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             Task selectedTask = dayTableModel.getTask(row);
-            taskFinished = selectedTask.getState() == Task.STATE_DONE;
-            taskAlreadySelected = task == selectedTask;
+            if (selectedTask.isIdleTask()) idleTask = true;
+            else {
+                taskFinished = selectedTask.getState() == Task.STATE_DONE;
+                taskAlreadySelected = task == selectedTask;
+            }
         }
-        btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !taskFinished);
+        btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !taskFinished & !idleTask);
         selectButtonEnabled = btSelect.isEnabled();
         btAdd.setEnabled(futureDay);
-        btRemove.setEnabled(futureDay & taskSelected);
-        btEdit.setEnabled(taskSelected);
+        btRemove.setEnabled(futureDay & taskSelected & !idleTask);
+        btEdit.setEnabled(taskSelected & !idleTask);
         btEdit.setText(Translator.getTranslation("DAYVIEW.BT_VIEW"));
         btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_VIEW_TOOLTIP"));
-        if (futureDay & taskSelected & !taskFinished) {
+        if (futureDay & taskSelected & !taskFinished & !idleTask) {
             btEdit.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
             btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_EDIT_TOOLTIP"));
         }
@@ -1177,7 +1193,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         }
         updateInformation(taskDurationChanged);
     }
-
+    
     /** Saves setup customized by user i.e. selected columns and their widths. */
     void saveSetup() {
         DayTableModel model = (DayTableModel) tbPlan.getModel();
@@ -1232,14 +1248,28 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     public void pauseTask() {
         btRelaxActionPerformed(null);
     }
-
+    
     /** Starts working on currently selected task. */
     public void startTask() {
         btWorkActionPerformed(null);
     }
-
+    
     /** Finishes working on currently selected task. */
     public void finishTask() {
         btDoneActionPerformed(null);
+    }
+    
+    /** Sets given task as selected and starts to work on it.
+     * @param task Task that will be selected and run.
+     */
+    public void selectTask(Task task) {
+        Boolean checkPriorities = (Boolean) Settings.getDefault().getSetting("checkPriority");
+        if (checkPriorities.booleanValue() & day.existsMorePriorityTask(task.getPriority())) {
+            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+            int ignorePriority = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.IGNORE_PRIORITY"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+            if (ignorePriority != JOptionPane.YES_OPTION) return;
+        }
+        setTask(task, true);
+        checkButtons();
     }
 }

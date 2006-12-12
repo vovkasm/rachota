@@ -28,7 +28,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -79,6 +78,7 @@ public class Day implements PropertyChangeListener {
      */
     public void setTasks(Vector tasks) {
         this.tasks = tasks;
+        if (getIdleTask() == null) addTask(new IdleTask());
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "tasks", null, tasks));
     }
     
@@ -149,6 +149,17 @@ public class Day implements PropertyChangeListener {
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
             if (task.getDescription().equals(description))
+                return task;
+        }
+        return null;
+    }
+    
+    /** Returns idle task of the day. */
+    public Task getIdleTask() {
+        Iterator iterator = tasks.iterator();
+        while (iterator.hasNext()) {
+            Task task = (Task) iterator.next();
+            if (task.isIdleTask())
                 return task;
         }
         return null;

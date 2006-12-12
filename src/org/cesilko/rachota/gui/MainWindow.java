@@ -28,7 +28,6 @@ import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,7 +37,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
@@ -530,6 +528,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         while(tasks.hasNext()) {
             final Task task = (Task) tasks.next();
             if (task.getState() == Task.STATE_DONE) continue;
+            if (task.isIdleTask()) continue;
             if (popup.getItemCount() == 2) popup.addSeparator();
             menuItem = new MenuItem(task.getDescription());
             DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
@@ -540,7 +539,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             ActionListener actionListener = new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
                     DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-                    dayView.setTask(task, true);
+                    dayView.selectTask(task);
                     Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
                     TrayIcon[] trayIcons = systemTray.getTrayIcons();
                     for (int i = 0; i < trayIcons.length; i++) {

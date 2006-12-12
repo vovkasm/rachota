@@ -361,7 +361,7 @@ public class Task implements ClockListener {
         Date now = new Date();
         long timeSinceLastTick = now.getTime() - timeStamp.getTime();
         addDuration(timeSinceLastTick);
-        Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
+        if (!isIdleTask()) Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
         timeStamp = new Date();
         lastSaving = lastSaving + timeSinceLastTick;
         int savingPeriod = Integer.parseInt((String) Settings.getDefault().getSetting("savingPeriod")) * 1000;
@@ -459,5 +459,10 @@ public class Task implements ClockListener {
      */
     public String toString() {
         return getDescription();
+    }
+
+    /** Returns false meaning that the task does not measure idle time. */
+    public boolean isIdleTask() {
+        return false;
     }
 }
