@@ -312,7 +312,13 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     if (!System.getProperty("java.version").startsWith("1.6")) return;
     if (SystemTray.isSupported()) {
         final SystemTray systemTray = SystemTray.getSystemTray();
-        Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        Image image;
+        Task task = dayView.getTask();
+        if (task == null) image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
+        else
+            if (task.isRunning()) image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
+            else image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
         final TrayIcon trayIcon = new TrayIcon(image, title, getTrayPopupMenu());
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -506,7 +512,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             }
         };
         PopupMenu popup = new PopupMenu();
-        MenuItem menuItem = new MenuItem("Open Rachota");
+        MenuItem menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.OPEN"));
         menuItem.addActionListener(maximizeListener);
         menuItem.setFont(getFont().deriveFont(Font.BOLD));
         popup.add(menuItem);
@@ -516,7 +522,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 new TaskDialog(dayView.getDay()).setVisible(true);
             }
         };
-        menuItem = new MenuItem("New task ...");
+        menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.NEW"));
         menuItem.addActionListener(newTaskListener);
         popup.add(menuItem);
         Iterator tasks = Plan.getDefault().getDay(new Date()).getTasks().iterator();
@@ -535,6 +541,15 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 public void actionPerformed(ActionEvent arg0) {
                     DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
                     dayView.setTask(task, true);
+                    Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
+                    TrayIcon[] trayIcons = systemTray.getTrayIcons();
+                    for (int i = 0; i < trayIcons.length; i++) {
+                        TrayIcon trayIcon = trayIcons[i];
+                        if (trayIcon.getToolTip().startsWith(title)) {
+                            trayIcon.setImage(image);
+                            break;
+                        }
+                    }
                 }
             };
             menuItem.addActionListener(actionListener);
@@ -544,8 +559,22 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             public void actionPerformed(ActionEvent arg0) {
                 DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
                 Task task = dayView.getTask();
-                if (task.isRunning()) dayView.pauseTask();
-                else dayView.startTask();
+                Image image;
+                if (task.isRunning()) {
+                    dayView.pauseTask();
+                    image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
+                } else {
+                    dayView.startTask();
+                    image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
+                }
+                TrayIcon[] trayIcons = systemTray.getTrayIcons();
+                for (int i = 0; i < trayIcons.length; i++) {
+                    TrayIcon trayIcon = trayIcons[i];
+                    if (trayIcon.getToolTip().startsWith(title)) {
+                        trayIcon.setImage(image);
+                        break;
+                    }
+                }
             }
         };
         ActionListener finishTaskListener = new ActionListener() {
@@ -553,15 +582,24 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
                 Task task = dayView.getTask();
                 dayView.finishTask();
+                Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
+                TrayIcon[] trayIcons = systemTray.getTrayIcons();
+                for (int i = 0; i < trayIcons.length; i++) {
+                    TrayIcon trayIcon = trayIcons[i];
+                    if (trayIcon.getToolTip().startsWith(title)) {
+                        trayIcon.setImage(image);
+                        break;
+                    }
+                }
             }
         };
         if (selectedTask != null) {
             popup.addSeparator();
-            if (selectedTask.isRunning()) menuItem = new MenuItem("Relax");
-            else menuItem = new MenuItem("Work");
+            if (selectedTask.isRunning()) menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.RELAX"));
+            else menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.WORK"));
             menuItem.addActionListener(startStopTaskListener);
             popup.add(menuItem);
-            menuItem = new MenuItem("Done");
+            menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.DONE"));
             menuItem.addActionListener(finishTaskListener);
             popup.add(menuItem);
         }
