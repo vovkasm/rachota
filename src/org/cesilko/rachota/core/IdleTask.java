@@ -34,7 +34,7 @@ public class IdleTask extends Task {
     
     /** Creates a new instance of idle task. */
     public IdleTask() {
-        super(Translator.getTranslation("TASK.IDLE_DESCRIPTION"), Translator.getTranslation("TASK.IDLE_KEYWORD"), Translator.getTranslation("TASK.IDLE_NOTES"), Task.PRIORITY_LOW, Task.STATE_NEW, 0, null, false, true);
+        super(Translator.getTranslation("TASK.IDLE_DESCRIPTION"), Translator.getTranslation("TASK.IDLE_KEYWORD"), Translator.getTranslation("TASK.IDLE_NOTES"), Task.PRIORITY_LOW, Task.STATE_NEW, 0, null, false, false);
     }
     
     /** Returns true meaning that the task measure idle time. */
