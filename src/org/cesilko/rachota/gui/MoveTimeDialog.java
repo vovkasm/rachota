@@ -48,7 +48,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         Iterator iterator = today.getTasks().iterator();
         while (iterator.hasNext()) {
             task = (Task) iterator.next();
-            if (task.getState() == Task.STATE_DONE) continue;
+            if (task.isIdleTask()) continue;
             if (task.equals(this.task)) continue;
             cmbSelectTask.addItem(task);
         }

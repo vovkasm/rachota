@@ -30,10 +30,8 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
@@ -960,7 +958,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             filteredTasks.addAll(day.getTasks());
         }
         FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
-        iterator = filtersTableModel.getFilters().iterator();
+        Vector filters = (Vector) filtersTableModel.getFilters().clone();
+        filters.add(new IdleFilter(IdleFilter.RULE_EQUALS_NOT, new Boolean(true)));
+        iterator = filters.iterator();
         while (iterator.hasNext()) {
             AbstractTaskFilter abstractTaskFilter = (AbstractTaskFilter) iterator.next();
             filteredTasks = abstractTaskFilter.filterTasks(filteredTasks);

@@ -903,35 +903,31 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         boolean futureDay = Plan.getDefault().isFuture(day) | today;
         int row = tbPlan.getSelectedRow();
         boolean taskSelected = row != -1;
-        boolean taskFinished = false;
         boolean taskAlreadySelected = false;
         boolean idleTask = false;
         if (taskSelected) {
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             Task selectedTask = dayTableModel.getTask(row);
             if (selectedTask.isIdleTask()) idleTask = true;
-            else {
-                taskFinished = selectedTask.getState() == Task.STATE_DONE;
-                taskAlreadySelected = task == selectedTask;
-            }
+            else taskAlreadySelected = task == selectedTask;
         }
-        btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !taskFinished & !idleTask);
+        btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !idleTask);
         selectButtonEnabled = btSelect.isEnabled();
         btAdd.setEnabled(futureDay);
         btRemove.setEnabled(futureDay & taskSelected & !idleTask);
         btEdit.setEnabled(taskSelected & !idleTask);
         btEdit.setText(Translator.getTranslation("DAYVIEW.BT_VIEW"));
         btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_VIEW_TOOLTIP"));
-        if (futureDay & taskSelected & !taskFinished & !idleTask) {
+        if (futureDay & taskSelected & !idleTask) {
             btEdit.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
             btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_EDIT_TOOLTIP"));
         }
         taskSelected = task != null;
         boolean taskRunning = taskSelected && task.isRunning();
-        taskFinished = taskSelected && task.getState() == Task.STATE_DONE;
-        btWork.setEnabled(taskSelected & !taskFinished & !taskRunning);
-        btRelax.setEnabled(taskSelected & !taskFinished & taskRunning);
-        btDone.setEnabled(taskSelected & !taskFinished);
+        boolean taskStarted = taskSelected && task.getState() == Task.STATE_STARTED;
+        btWork.setEnabled(taskSelected & !taskRunning);
+        btRelax.setEnabled(taskSelected & taskRunning);
+        btDone.setEnabled(taskSelected & taskStarted);
     }
     
     /** Method called when switch date action is required.
@@ -960,15 +956,11 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TIME"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (selectedTask.getState() == Task.STATE_DONE) {
-            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.TASK_DONE"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         boolean existsTargetTask = false;
         Iterator iterator = day.getTasks().iterator();
         while (iterator.hasNext()) {
             Task anyTask = (Task) iterator.next();
-            if ((anyTask.getState() != Task.STATE_DONE) && (anyTask != selectedTask)) existsTargetTask = true;
+            if (anyTask != selectedTask) existsTargetTask = true;
         }
         if (!existsTargetTask) {
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TARGET_TASK"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
