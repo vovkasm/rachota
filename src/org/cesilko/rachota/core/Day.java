@@ -240,6 +240,7 @@ public class Day implements PropertyChangeListener {
         long totalTime = 0;
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
+            if (task.isIdleTask()) continue;
             if (!task.privateTask() || countPrivateTasks.booleanValue()) totalTime = totalTime + task.getDuration();
         }
         return totalTime;
