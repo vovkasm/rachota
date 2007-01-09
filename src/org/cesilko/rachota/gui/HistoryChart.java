@@ -230,6 +230,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                     if (taskFilter != null) {
                         Vector filteredTasks = taskFilter.filterTasks(day.getTasks());
                         if (filteredTasks.size() != 0) {
+                            filteredTasks.remove(day.getIdleTask());
                             Iterator iterator = filteredTasks.iterator();
                             long totalTime = 0;
                             Boolean countPrivateTasks = (Boolean) Settings.getDefault().getSetting("countPrivateTasks");
