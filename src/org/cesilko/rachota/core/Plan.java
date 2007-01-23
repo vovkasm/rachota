@@ -225,7 +225,7 @@ public class Plan {
             PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
             stream.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
             stream.println("<!--");
-            stream.println("    Rachota 2.0 diary file - editing not recommended");
+            stream.println("    Rachota 2.1 diary file - editing not recommended");
             stream.println("    " + new Date());
             stream.println("-->");
             stream.println("<!DOCTYPE week SYSTEM \"diary.dtd\">");
@@ -286,7 +286,7 @@ public class Plan {
             PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
             stream.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
             stream.println("<!--");
-            stream.println("    Rachota 2.0 regular tasks - editing not recommended");
+            stream.println("    Rachota 2.1 regular tasks - editing not recommended");
             stream.println("    " + new Date());
             stream.println("-->");
             stream.println("<!DOCTYPE week SYSTEM \"regular_tasks.dtd\">");
