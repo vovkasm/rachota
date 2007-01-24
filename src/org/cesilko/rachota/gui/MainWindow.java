@@ -387,7 +387,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         String text = title + " (build " + build + ")\n";
         text = text + Translator.getTranslation("INFORMATION.PROGRAM");
         text = text + "\n<html><body><a href=\"http://rachota.sourceforge.net\">http://rachota.sourceforge.net</a></body";
-        text = text + "\n\njiri.kovalsky@centrum.cz\n2006 (c)";
+        text = text + "\n\njiri.kovalsky@centrum.cz\n2007 ©";
         JOptionPane.showMessageDialog(this, text, Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE, new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_name_48.png")));
     }//GEN-LAST:event_mnAboutActionPerformed
     
@@ -462,9 +462,9 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     // End of variables declaration//GEN-END:variables
     
     /** Name and version of application. */
-    protected static final String title = "Rachota 2.1 RC";
+    protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070109";
+    protected static final String build = "#070124";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
