@@ -464,7 +464,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070124";
+    protected static final String build = "#070206";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
@@ -480,7 +480,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             tpViews.setSelectedIndex(0);
         if (!isVisible()) {
             if (!System.getProperty("java.version").startsWith("1.6")) return;
-            TrayIcon[] trayIcons = SystemTray.getSystemTray().getTrayIcons();
+            TrayIcon[] trayIcons;
+            try { trayIcons = SystemTray.getSystemTray().getTrayIcons(); } catch (UnsupportedOperationException e) { return; }
             for (int i = 0; i < trayIcons.length; i++) {
                 TrayIcon trayIcon = trayIcons[i];
                 if (trayIcon.getToolTip().startsWith(title)) {
