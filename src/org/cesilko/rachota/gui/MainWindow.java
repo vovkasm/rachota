@@ -140,6 +140,11 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             }
         } else setLocationRelativeTo(null);
         Clock.getDefault().start();
+        // htietgens: start IdleTask if configured
+        boolean automaticStart = ((Boolean) Settings.getDefault().getSetting("automaticStart")).booleanValue();
+        if (automaticStart) {
+            dayView.setTask(dayView.getDay().getIdleTask(), true);
+        }
     }
     
     /** Returns font that should be used for all widgets in this component
@@ -464,7 +469,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070208";
+    protected static final String build = "#070309";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */

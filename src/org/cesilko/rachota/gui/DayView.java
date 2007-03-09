@@ -726,7 +726,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         firePropertyChange("task_done", task, null);
         task = null;
         checkButtons();
-        Task idleTimeTask = day.getIdleTask();
+        Task idleTimeTask = Plan.getDefault().getDay(new Date()).getIdleTask();
         idleTimeTask.startWork();
         idleTimeTask.addPropertyChangeListener(this);
     }//GEN-LAST:event_btDoneActionPerformed
@@ -741,7 +741,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         task.removePropertyChangeListener(this);
         firePropertyChange("task_suspended", task, null);
         checkButtons();
-        Task idleTimeTask = day.getIdleTask();
+        Task idleTimeTask = Plan.getDefault().getDay(new Date()).getIdleTask();
         idleTimeTask.startWork();
         idleTimeTask.addPropertyChangeListener(this);
     }//GEN-LAST:event_btRelaxActionPerformed
@@ -1001,7 +1001,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      */
     public String getTitleSuffix() {
         String suffix = "-";
-        if ((task != null) && (task.isRunning()))
+        if ((task != null) && (task.isRunning()) && (!task.isIdleTask()))
             suffix = suffix + " " + task.getDescription();
         Day today = Plan.getDefault().getDay(new Date());
         suffix = suffix + " [" + Tools.getTime(today.getTotalTime()) + "]";

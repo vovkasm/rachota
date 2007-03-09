@@ -48,7 +48,8 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         Iterator iterator = today.getTasks().iterator();
         while (iterator.hasNext()) {
             task = (Task) iterator.next();
-            if (task.isIdleTask()) continue;
+            // htietgens: next line deactivated to shop up IdleTask in MoveTimeDialog
+            // if (task.isIdleTask()) continue;
             if (task.equals(this.task)) continue;
             cmbSelectTask.addItem(task);
         }
