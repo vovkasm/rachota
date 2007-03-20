@@ -77,7 +77,12 @@ public class Day implements PropertyChangeListener {
      * @param tasks Tasks of day.
      */
     public void setTasks(Vector tasks) {
-        this.tasks = tasks;
+        this.tasks = new Vector();
+        Iterator iterator = tasks.iterator();
+        while (iterator.hasNext()) {
+            Task task = (Task) iterator.next();
+            addTask(task);
+        }
         if (getIdleTask() == null) addTask(new IdleTask());
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "tasks", null, tasks));
     }

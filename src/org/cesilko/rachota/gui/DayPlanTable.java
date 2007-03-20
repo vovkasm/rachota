@@ -23,6 +23,7 @@
 
 package org.cesilko.rachota.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -36,6 +37,9 @@ public class DayPlanTable extends JTable {
     
     private Task selectedTask = null;
     
+    /** Sets given task as selected to render it properly.
+     * @param selectedTask Task that was selected by user.
+     */
     public void setSelectedTask(Task selectedTask) {
         this.selectedTask = selectedTask;
     }
@@ -54,8 +58,8 @@ public class DayPlanTable extends JTable {
             if (selectedTask == null) return renderer;
             DayTableModel dayTableModel = (DayTableModel) getModel();
             if (dayTableModel.getRow(selectedTask) != row) return renderer;
-            renderer.setBackground( java.awt.Color.DARK_GRAY );
-            renderer.setForeground( java.awt.Color.GREEN );
+            renderer.setBackground(Color.DARK_GRAY);
+            renderer.setForeground(Color.GREEN);
             return renderer;
         }
     }
