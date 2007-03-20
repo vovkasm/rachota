@@ -194,7 +194,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         btDone = new javax.swing.JButton();
         lblPlan = new javax.swing.JLabel();
         spPlan = new javax.swing.JScrollPane();
-        tbPlan = new javax.swing.JTable();
+        tbPlan = new DayPlanTable();
         chbShowFinished = new javax.swing.JCheckBox();
         pnButtons = new javax.swing.JPanel();
         btSelect = new javax.swing.JButton();
@@ -870,7 +870,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         int row = tbPlan.getSelectedRow();
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         if (task != null)
-            txtTask.setText(task.getDescription());
+            if (!task.isIdleTask()) txtTask.setText(task.getDescription());
         boolean today = Plan.getDefault().isToday(day);
         if (taskDurationChanged) {
             if (today) {
@@ -922,7 +922,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             btEdit.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
             btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_EDIT_TOOLTIP"));
         }
-        taskSelected = task != null;
+        taskSelected = task != null && !task.isIdleTask();
         boolean taskRunning = taskSelected && task.isRunning();
         boolean taskStarted = taskSelected && task.getState() == Task.STATE_STARTED;
         btWork.setEnabled(taskSelected & !taskRunning);
@@ -1104,7 +1104,14 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     public void setTask(Task task, boolean startTask) {
         if ((this.task != null) && (this.task.isRunning())) btRelaxActionPerformed(null);
         this.task = task;
+        if (task.isIdleTask()) {
+            task.startWork();
+            task.addPropertyChangeListener(this);
+            return;
+        }
         txtTask.setText(task.getDescription());
+        DayPlanTable dayPlanTable = (DayPlanTable) tbPlan;
+        dayPlanTable.setSelectedTask(task);
         updateInformation(false);
         if (startTask) btWorkActionPerformed(null);
     }
