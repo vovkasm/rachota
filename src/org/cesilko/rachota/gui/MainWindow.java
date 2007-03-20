@@ -143,7 +143,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         // htietgens: start IdleTask if configured
         boolean automaticStart = ((Boolean) Settings.getDefault().getSetting("automaticStart")).booleanValue();
         if (automaticStart) {
-            dayView.setTask(dayView.getDay().getIdleTask(), true);
+            Task task = dayView.getTask();
+            if ((task == null) || (!task.isRunning()))
+                dayView.setTask(dayView.getDay().getIdleTask(), true);
         }
     }
     
@@ -469,7 +471,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070309";
+    protected static final String build = "#070320";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
