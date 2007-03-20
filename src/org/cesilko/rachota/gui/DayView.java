@@ -1061,7 +1061,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             updateInformation(false);
             requiredDay = true;
         } */
-        Iterator iterator = day.getTasks().iterator();
+        Iterator iterator = Plan.getDefault().getDay(new Date()).getTasks().iterator();
         while (iterator.hasNext()) {
             final Task task = (Task) iterator.next();
             if (task.getState() == Task.STATE_DONE) continue;
