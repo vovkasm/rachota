@@ -55,6 +55,20 @@ public class Tools {
         return text;
     }
     
+    /** Transforms time in milliseconds to text string.
+     * @param time Time in milliseconds.
+     * @return Textual representation of time in format hh:mm.
+     */
+    public static String getTimeShort(double time) {
+        long hours = (long) time/(1000*60*60);
+        String text = ((hours > 9) ? "" : "0") + hours;
+        time = time - hours * (1000*60*60);
+        long minutes = (long) time/(1000*60);
+        text = text + ":" + ((minutes > 9) ? "" : "0") + minutes;
+        time = time - minutes*(1000*60);
+        return text;
+    }
+    
     /** Transforms time of Date to text string.
      * @param time Time in Date object.
      * @return Textual representation of time in format hh:mm.
