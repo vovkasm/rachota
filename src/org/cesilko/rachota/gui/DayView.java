@@ -996,15 +996,35 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         updateInformation(false);
     }
     
-    /** Get suffix to be appended to title of application.
-     * @return Title suffix: name of current task and/or total time.
+    /** Get suffix to be appended to title of application depending on user preference.
+     * @return Title suffix: name of current task and/or total/task time or nothing.
      */
     public String getTitleSuffix() {
-        String suffix = "-";
-        if ((task != null) && (task.isRunning()) && (!task.isIdleTask()))
-            suffix = suffix + " " + task.getDescription();
-        Day today = Plan.getDefault().getDay(new Date());
-        suffix = suffix + " [" + Tools.getTime(today.getTotalTime()) + "]";
+        String showTime = (String) Settings.getDefault().getSetting("showTime");
+        if (showTime.equals("none")) return "";
+        boolean usableTask = (task != null) && !task.isIdleTask();
+        String taskDescription = usableTask ? task.getDescription() + " " : "";
+        String taskTime = usableTask ? Tools.getTimeShort(task.getDuration()) : "";
+        String totalTime = Tools.getTimeShort(Plan.getDefault().getDay(new Date()).getTotalTime());
+        if (showTime.equals("both")) {
+            // Rachota 2.1 - Discussion [00:13 / 05:12]
+            // Rachota 2.1 - [05:12]
+            String suffix = "- " + taskDescription + "[";
+            if (usableTask) suffix = suffix + taskTime + " / ";
+            suffix = suffix + totalTime + "]";
+            return suffix;
+        }
+        if (showTime.equals("total")) {
+            // Rachota 2.1 - [05:12] Discussion
+            // Rachota 2.1 - [05:12]
+            String suffix = "- [" + totalTime + "]";
+            if (usableTask) suffix = suffix + " " + taskDescription;
+            return suffix;
+        }
+        // Rachota 2.1 - Discussion [00:13]
+        // Rachota 2.1
+        String suffix = "";
+        if (usableTask) suffix = suffix + "- " + taskDescription + "[" + taskTime + "]";
         return suffix;
     }
     

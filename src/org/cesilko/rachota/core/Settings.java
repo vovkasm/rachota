@@ -72,6 +72,7 @@ public class Settings {
         settingsMap.put("location", null);
         // htietgens: new param for automatic starting of IdleTask on startup of program
         settingsMap.put("automaticStart", new Boolean(true));
+        settingsMap.put("showTime", "both");
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
