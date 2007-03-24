@@ -24,6 +24,7 @@
 package org.cesilko.rachota.gui;
 
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -150,6 +151,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                 txtHoursFocusLost(evt);
             }
         });
+        txtHours.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtHoursKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(txtHours, gridBagConstraints);
@@ -173,6 +179,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbHoursNotReached.setSelected(true);
         chbHoursNotReached.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_NOT_REACHED"));
         chbHoursNotReached.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_NOT_REACHED_TOOLTIP"));
+        chbHoursNotReached.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbHoursNotReachedKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
@@ -184,6 +195,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbHoursExceeded.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_HOURS_EXCEEDED"));
         chbHoursExceeded.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_EXCEEDED"));
         chbHoursExceeded.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_HOURS_EXCEEDED_TOOLTIP"));
+        chbHoursExceeded.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbHoursExceededKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -197,6 +213,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbMoveUnfinished.setSelected(true);
         chbMoveUnfinished.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_MOVE_UNFINISHED"));
         chbMoveUnfinished.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_MOVE_UNFINISHED_TOOLTIP"));
+        chbMoveUnfinished.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbMoveUnfinishedKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
@@ -208,6 +229,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbArchiveNotStarted.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED"));
         chbArchiveNotStarted.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED"));
         chbArchiveNotStarted.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_ARCHIVE_NOT_STARTED_TOOLTIP"));
+        chbArchiveNotStarted.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbArchiveNotStartedKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
@@ -220,6 +246,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbCheckPriority.setSelected(true);
         chbCheckPriority.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_CHECK_PRIORITY"));
         chbCheckPriority.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_CHECK_PRIORITY_TOOLTIP"));
+        chbCheckPriority.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbCheckPriorityKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
@@ -231,6 +262,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbCountPrivate.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_COUNT_PRIVATE"));
         chbCountPrivate.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_COUNT_PRIVATE"));
         chbCountPrivate.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_COUNT_PRIVATE_TOOLTIP"));
+        chbCountPrivate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbCountPrivateKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
@@ -249,6 +285,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         pnRegularTasks.setLayout(new java.awt.GridBagLayout());
 
         spRegularTasks.setPreferredSize(new java.awt.Dimension(350, 150));
+        spRegularTasks.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spRegularTasksKeyPressed(evt);
+            }
+        });
 
         tbRegularTasks.setFont(getFont());
         tbRegularTasks.setModel(new RegularTasksTableModel(regularTasks));
@@ -354,6 +395,46 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void spRegularTasksKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spRegularTasksKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_spRegularTasksKeyPressed
+
+private void chbCountPrivateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbCountPrivateKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbCountPrivateKeyPressed
+
+private void chbCheckPriorityKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbCheckPriorityKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbCheckPriorityKeyPressed
+
+private void chbArchiveNotStartedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbArchiveNotStartedKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbArchiveNotStartedKeyPressed
+
+private void chbMoveUnfinishedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbMoveUnfinishedKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbMoveUnfinishedKeyPressed
+
+private void chbHoursExceededKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbHoursExceededKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbHoursExceededKeyPressed
+
+private void chbHoursNotReachedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbHoursNotReachedKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbHoursNotReachedKeyPressed
+
+private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoursKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_txtHoursKeyPressed
     
     /** Method called when any key was released while table with regular tasks had focus.
      * @param evt Event that invoked this method call.

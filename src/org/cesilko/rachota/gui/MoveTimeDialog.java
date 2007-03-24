@@ -24,6 +24,7 @@
 package org.cesilko.rachota.gui;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.Iterator;
 import org.cesilko.rachota.core.Day;
@@ -104,6 +105,11 @@ public class MoveTimeDialog extends javax.swing.JDialog {
 
         cmbSelectTask.setFont(getFont());
         cmbSelectTask.setToolTipText(Translator.getTranslation("MOVETIMEDIALOG.SELECT_TASK_TOOLTIP"));
+        cmbSelectTask.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbSelectTaskKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 6;
@@ -126,6 +132,11 @@ public class MoveTimeDialog extends javax.swing.JDialog {
                 spHoursStateChanged(evt);
             }
         });
+        spHours.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spHoursKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -144,6 +155,11 @@ public class MoveTimeDialog extends javax.swing.JDialog {
                 spMinutesStateChanged(evt);
             }
         });
+        spMinutes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spMinutesKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -159,6 +175,11 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         spSeconds.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spSecondsStateChanged(evt);
+            }
+        });
+        spSeconds.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spSecondsKeyPressed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -195,8 +216,27 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         getContentPane().add(pnButtons, gridBagConstraints);
 
         pack();
-    }// </editor-fold>
-//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
+
+private void spSecondsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spSecondsKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_spSecondsKeyPressed
+
+private void spMinutesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spMinutesKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_spMinutesKeyPressed
+
+private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spHoursKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_spHoursKeyPressed
+
+private void cmbSelectTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbSelectTaskKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+                        }//GEN-LAST:event_cmbSelectTaskKeyPressed
     /** Method called when seconds were be changed.
      * @param evt Event that invoked this method call.
      */
@@ -246,7 +286,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         task.addDuration(-duration);
         firePropertyChange("time_changed", null, null);
     }//GEN-LAST:event_btOKActionPerformed
-        // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btOK;
     private javax.swing.JComboBox cmbSelectTask;

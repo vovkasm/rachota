@@ -199,6 +199,11 @@ public class TaskDialog extends javax.swing.JDialog {
 
         txtDescription.setFont(getFont());
         txtDescription.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_DESCRIPTION_TOOLTIP"));
+        txtDescription.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDescriptionKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 4;
@@ -228,6 +233,9 @@ public class TaskDialog extends javax.swing.JDialog {
             }
         });
         txtCategory.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCategoryKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtCategoryKeyTyped(evt);
             }
@@ -252,6 +260,11 @@ public class TaskDialog extends javax.swing.JDialog {
         taNotes.setFont(getFont());
         taNotes.setRows(3);
         taNotes.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_NOTES_TOOLTIP"));
+        taNotes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                taNotesKeyPressed(evt);
+            }
+        });
         spNotes.setViewportView(taNotes);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -278,6 +291,11 @@ public class TaskDialog extends javax.swing.JDialog {
         cmbPriority.addItem(Task.getPriority(i));
         cmbPriority.setSelectedIndex(Task.PRIORITY_MEDIUM);
         cmbPriority.setToolTipText(Translator.getTranslation("TASKDIALOG.CMB_PRIORITY_TOOLTIP"));
+        cmbPriority.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbPriorityKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 4;
@@ -295,6 +313,11 @@ public class TaskDialog extends javax.swing.JDialog {
                 chbNotificationChanged(evt);
             }
         });
+        chbNotification.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbNotificationKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
@@ -309,6 +332,11 @@ public class TaskDialog extends javax.swing.JDialog {
         spHours.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spHoursStateChanged(evt);
+            }
+        });
+        spHours.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spHoursKeyPressed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -332,6 +360,11 @@ public class TaskDialog extends javax.swing.JDialog {
                 spMinutesStateChanged(evt);
             }
         });
+        spMinutes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spMinutesKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -342,6 +375,11 @@ public class TaskDialog extends javax.swing.JDialog {
         chbAutoStart.setMnemonic(Translator.getMnemonic("TASKDIALOG.CHB_AUTOSTART"));
         chbAutoStart.setText(Translator.getTranslation("TASKDIALOG.CHB_AUTOSTART"));
         chbAutoStart.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_AUTOSTART_TOOLTIP"));
+        chbAutoStart.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbAutoStartKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -353,6 +391,11 @@ public class TaskDialog extends javax.swing.JDialog {
         chbRegular.setFont(getFont());
         chbRegular.setText(Translator.getTranslation("TASKDIALOG.CHB_REGULAR"));
         chbRegular.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_REGULAR_TOOLTIP"));
+        chbRegular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbRegularKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
@@ -365,6 +408,11 @@ public class TaskDialog extends javax.swing.JDialog {
         cmbRepetition.addItem(RegularTask.getFrequency(i));
         cmbRepetition.setSelectedIndex(RegularTask.FREQUENCY_DAILY);
         cmbRepetition.setToolTipText(Translator.getTranslation("TASKDIALOG.CMB_REPETITION_TOOLTIP"));
+        cmbRepetition.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbRepetitionKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
@@ -376,6 +424,11 @@ public class TaskDialog extends javax.swing.JDialog {
         chbPrivate.setMnemonic(Translator.getMnemonic("TASKDIALOG.CHB_PRIVATE"));
         chbPrivate.setText(Translator.getTranslation("TASKDIALOG.CHB_PRIVATE"));
         chbPrivate.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_PRIVATE_TOOLTIP"));
+        chbPrivate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbPrivateKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 3;
@@ -415,6 +468,61 @@ public class TaskDialog extends javax.swing.JDialog {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-400)/2, (screenSize.height-364)/2, 400, 364);
     }// </editor-fold>//GEN-END:initComponents
+
+private void chbPrivateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbPrivateKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbPrivateKeyPressed
+
+private void cmbRepetitionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbRepetitionKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_cmbRepetitionKeyPressed
+
+private void chbRegularKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbRegularKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbRegularKeyPressed
+
+private void chbAutoStartKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbAutoStartKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbAutoStartKeyPressed
+
+private void spMinutesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spMinutesKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_spMinutesKeyPressed
+
+private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spHoursKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_spHoursKeyPressed
+
+private void chbNotificationKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbNotificationKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_chbNotificationKeyPressed
+
+private void cmbPriorityKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbPriorityKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_cmbPriorityKeyPressed
+
+private void taNotesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taNotesKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.isControlDown())
+        btOKActionPerformed(null);
+}//GEN-LAST:event_taNotesKeyPressed
+
+private void txtCategoryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCategoryKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_txtCategoryKeyPressed
+
+private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_txtDescriptionKeyPressed
 
     private void txtCategoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCategoryFocusLost
         txtCategory.setToolTipText(Translator.getTranslation("TASKDIALOG.TXT_CATEGORY_TOOLTIP"));
