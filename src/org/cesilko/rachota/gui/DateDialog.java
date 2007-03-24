@@ -26,6 +26,7 @@ package org.cesilko.rachota.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -163,6 +164,11 @@ public class DateDialog extends javax.swing.JDialog {
                 cmbMonthActionPerformed(evt);
             }
         });
+        cmbMonth.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbMonthKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -185,6 +191,11 @@ public class DateDialog extends javax.swing.JDialog {
         getContentPane().add(spYear, gridBagConstraints);
 
         pnDays.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnDays.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                pnDaysKeyPressed(evt);
+            }
+        });
         pnDays.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
@@ -244,6 +255,16 @@ public class DateDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void pnDaysKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pnDaysKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_pnDaysKeyPressed
+
+private void cmbMonthKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbMonthKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_cmbMonthKeyPressed
 
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
         Calendar calendar = Calendar.getInstance();
