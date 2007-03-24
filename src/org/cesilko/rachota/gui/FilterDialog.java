@@ -22,6 +22,7 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Settings;
@@ -96,8 +97,6 @@ public class FilterDialog extends javax.swing.JDialog {
         btOK = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
 
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
         setTitle(Translator.getTranslation("FILTERDIALOG.TITLE"));
         setModal(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -105,6 +104,7 @@ public class FilterDialog extends javax.swing.JDialog {
                 formWindowClosing(evt);
             }
         });
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         lbFilterName.setDisplayedMnemonic(Translator.getMnemonic("FILTERDIALOG.NAME"));
         lbFilterName.setFont(getFont());
@@ -122,7 +122,11 @@ public class FilterDialog extends javax.swing.JDialog {
                 cmbFilterNameItemStateChanged(evt);
             }
         });
-
+        cmbFilterName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbFilterNameKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -142,6 +146,11 @@ public class FilterDialog extends javax.swing.JDialog {
 
         cmbContentRule.setFont(getFont());
         cmbContentRule.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_RULE_TOOLTIP"));
+        cmbContentRule.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbContentRuleKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -162,6 +171,11 @@ public class FilterDialog extends javax.swing.JDialog {
         cmbContent.setFont(getFont());
         cmbContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
         cmbContent.setEnabled(false);
+        cmbContent.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbContentKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -173,6 +187,11 @@ public class FilterDialog extends javax.swing.JDialog {
         txtContent.setFont(getFont());
         txtContent.setToolTipText(Translator.getTranslation("FILTERDIALOG.CONTENT_TOOLTIP"));
         txtContent.setPreferredSize(new java.awt.Dimension(100, 19));
+        txtContent.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtContentKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -191,7 +210,6 @@ public class FilterDialog extends javax.swing.JDialog {
                 btOKActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -206,7 +224,6 @@ public class FilterDialog extends javax.swing.JDialog {
                 btCancelActionPerformed(evt);
             }
         });
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnButtons.add(btCancel, gridBagConstraints);
@@ -220,6 +237,26 @@ public class FilterDialog extends javax.swing.JDialog {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-265)/2, (screenSize.height-240)/2, 265, 240);
     }// </editor-fold>//GEN-END:initComponents
+
+private void cmbContentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbContentKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_cmbContentKeyPressed
+
+private void txtContentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContentKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_txtContentKeyPressed
+
+private void cmbContentRuleKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbContentRuleKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_cmbContentRuleKeyPressed
+
+private void cmbFilterNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbFilterNameKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+}//GEN-LAST:event_cmbFilterNameKeyPressed
     
     /** Method called when any filter is selected.
      * @param evt Event that invoked this action.
