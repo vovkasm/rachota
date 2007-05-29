@@ -370,6 +370,12 @@ public class Task implements ClockListener {
             Settings.saveSettings();
             lastSaving = 0;
         }
+        long backupAge = new Date().getTime() - Long.parseLong(System.getProperty("backupCreated"));
+        long requiredBackupAge = Integer.parseInt((String) Settings.getDefault().getSetting("backupAge")) * 60 * 1000;
+        if (backupAge > requiredBackupAge) {
+            Plan.createBackup();
+            System.setProperty("backupCreated", "" + new Date().getTime());
+        }
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
     
@@ -460,8 +466,10 @@ public class Task implements ClockListener {
     public String toString() {
         return getDescription();
     }
-
-    /** Returns false meaning that the task does not measure idle time. */
+    
+    /** Returns false meaning that the task does not measure idle time.
+     * @return True if this is an idle task, false otherwise.
+     */
     public boolean isIdleTask() {
         return false;
     }
