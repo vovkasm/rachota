@@ -147,6 +147,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             if ((task == null) || (!task.isRunning()))
                 dayView.setTask(dayView.getDay().getIdleTask(), true);
         }
+        createSystemTray();
     }
     
     /** Returns font that should be used for all widgets in this component
@@ -185,9 +186,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
-            public void windowDeiconified(java.awt.event.WindowEvent evt) {
-                formWindowDeiconified(evt);
-            }
             public void windowIconified(java.awt.event.WindowEvent evt) {
                 formWindowIconified(evt);
             }
@@ -208,7 +206,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnSystem.setFont(getFont());
 
         mnAbout.setFont(getFont());
-        mnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/info.png")));
+        mnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/info.png"))); // NOI18N
         mnAbout.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_ABOUT"));
         mnAbout.setText(Translator.getTranslation("MAINWINDOW.MN_ABOUT"));
         mnAbout.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_ABOUT_TOOLTIP"));
@@ -220,7 +218,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnSystem.add(mnAbout);
 
         mnSettings.setFont(getFont());
-        mnSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/service.png")));
+        mnSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/service.png"))); // NOI18N
         mnSettings.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_SETTINGS"));
         mnSettings.setText(Translator.getTranslation("MAINWINDOW.MN_SETTINGS"));
         mnSettings.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_SETTINGS_TOOLTIP"));
@@ -233,7 +231,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnSystem.add(separator);
 
         mnExit.setFont(getFont());
-        mnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/exit.png")));
+        mnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/exit.png"))); // NOI18N
         mnExit.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_EXIT"));
         mnExit.setText(Translator.getTranslation("MAINWINDOW.MN_EXIT"));
         mnExit.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_EXIT_TOOLTIP"));
@@ -252,7 +250,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask.setFont(getFont());
 
         mnCopyTask.setFont(getFont());
-        mnCopyTask.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_task.png")));
+        mnCopyTask.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_task.png"))); // NOI18N
         mnCopyTask.setMnemonic(Translator.getMnemonic("MAINWINDOW.MOVE_TASK"));
         mnCopyTask.setText(Translator.getTranslation("MAINWINDOW.MOVE_TASK"));
         mnCopyTask.setToolTipText(Translator.getTranslation("MAINWINDOW.MOVE_TASK_TOOLTIP"));
@@ -264,7 +262,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask.add(mnCopyTask);
 
         mnMoveTime.setFont(getFont());
-        mnMoveTime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_time.png")));
+        mnMoveTime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/move_time.png"))); // NOI18N
         mnMoveTime.setMnemonic(Translator.getMnemonic("MAINWINDOW.MOVE_TIME"));
         mnMoveTime.setText(Translator.getTranslation("MAINWINDOW.MOVE_TIME"));
         mnMoveTime.setToolTipText(Translator.getTranslation("MAINWINDOW.MOVE_TIME_TOOLTIP"));
@@ -299,56 +297,11 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-private void formWindowDeiconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowDeiconified
-    if (!System.getProperty("java.version").startsWith("1.6")) return;
-    SystemTray systemTray = SystemTray.getSystemTray();
-    TrayIcon[] trayIcons = systemTray.getTrayIcons();
-    for (int i = 0; i < trayIcons.length; i++) {
-        TrayIcon trayIcon = trayIcons[i];
-        if (trayIcon.getToolTip().equals(title)) {
-            systemTray.remove(trayIcon);
-            break;
-        }
-    }
-}//GEN-LAST:event_formWindowDeiconified
 
 private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowIconified
-    if (!System.getProperty("java.version").startsWith("1.6")) return;
-    if (SystemTray.isSupported()) {
-        final SystemTray systemTray = SystemTray.getSystemTray();
-        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-        Image image;
-        Task task = dayView.getTask();
-        if (task == null) image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
-        else
-            if (task.isRunning() && !task.isIdleTask()) image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
-            else image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
-        final TrayIcon trayIcon = new TrayIcon(image, title, getTrayPopupMenu());
-        ActionListener actionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setVisible(true);
-                setState(java.awt.Frame.NORMAL);
-                requestFocus();
-                TrayIcon[] trayIcons = systemTray.getTrayIcons();
-                for (int i = 0; i < trayIcons.length; i++) {
-                    TrayIcon trayIcon = trayIcons[i];
-                    if (trayIcon.getToolTip().startsWith(title)) {
-                        systemTray.remove(trayIcon);
-                        break;
-                    }
-                }
-            }
-        };
-        trayIcon.setImageAutoSize(true);
-        trayIcon.addActionListener(actionListener);
-        try {
-            systemTray.add(trayIcon);
-            setVisible(false);
-        } catch (AWTException ex) { System.out.println("Error: Can't create Rachota system tray icon."); };
-    }
+        setVisible(false);
 }//GEN-LAST:event_formWindowIconified
-
+    
     private void mnSwitchDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSwitchDateActionPerformed
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         dayView.switchDate(this);
@@ -471,7 +424,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070325";
+    protected static final String build = "#070529";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
@@ -485,17 +438,28 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         setTitle(title + " " + dayView.getTitleSuffix());
         if (evt.getPropertyName().equals("day"))
             tpViews.setSelectedIndex(0);
-        if (!isVisible()) {
-            if (!System.getProperty("java.version").startsWith("1.6")) return;
-            TrayIcon[] trayIcons;
-            try { trayIcons = SystemTray.getSystemTray().getTrayIcons(); } catch (UnsupportedOperationException e) { return; }
-            for (int i = 0; i < trayIcons.length; i++) {
-                TrayIcon trayIcon = trayIcons[i];
-                if (trayIcon.getToolTip().startsWith(title)) {
-                    trayIcon.setPopupMenu(getTrayPopupMenu());
-                    trayIcon.setToolTip(title + " " + dayView.getTitleSuffix());
-                    break;
+        updateSystemTray(dayView);
+    }
+    
+    private void updateSystemTray(DayView dayView) {
+        if (!System.getProperty("java.version").startsWith("1.6")) return;
+        TrayIcon[] trayIcons;
+        try { trayIcons = SystemTray.getSystemTray().getTrayIcons(); } catch (UnsupportedOperationException e) { return; }
+        for (int i = 0; i < trayIcons.length; i++) {
+            TrayIcon trayIcon = trayIcons[i];
+            if (trayIcon.getToolTip().startsWith(title)) {
+                Task task = dayView.getTask();
+                String currentRachotaTrayColor = System.getProperty("rachotaTrayColor");
+                String neededRachotaTrayColor = "red";
+                if ((task != null) && task.isRunning() && !task.isIdleTask()) neededRachotaTrayColor = "blue";
+                if (!neededRachotaTrayColor.equals(currentRachotaTrayColor)) { // To prevent flashing icon in system tray
+                    if (neededRachotaTrayColor.equals("red")) trayIcon.setImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage());
+                    else trayIcon.setImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage());
+                    System.setProperty("rachotaTrayColor", neededRachotaTrayColor);
                 }
+                trayIcon.setPopupMenu(getTrayPopupMenu());
+                trayIcon.setToolTip(title + " " + dayView.getTitleSuffix());
+                break;
             }
         }
     }
@@ -507,14 +471,6 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 setVisible(true);
                 setState(java.awt.Frame.NORMAL);
                 requestFocus();
-                TrayIcon[] trayIcons = systemTray.getTrayIcons();
-                for (int i = 0; i < trayIcons.length; i++) {
-                    TrayIcon trayIcon = trayIcons[i];
-                    if (trayIcon.getToolTip().startsWith(title)) {
-                        systemTray.remove(trayIcon);
-                        break;
-                    }
-                }
             }
         };
         PopupMenu popup = new PopupMenu();
@@ -611,5 +567,39 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             popup.add(menuItem);
         }
         return popup;
+    }
+
+    private void createSystemTray() {
+        if (!System.getProperty("java.version").startsWith("1.6")) return;
+        if (SystemTray.isSupported()) {
+            final SystemTray systemTray = SystemTray.getSystemTray();
+            DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+            Image image;
+            Task task = dayView.getTask();
+            if (task == null) {
+                image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
+                System.setProperty("rachotaTrayColor", "red");
+            }
+            else
+                if (task.isRunning() && !task.isIdleTask()) {
+                    image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
+                    System.setProperty("rachotaTrayColor", "blue");
+                } else {
+                    image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
+                    System.setProperty("rachotaTrayColor", "red");
+                }
+            final TrayIcon trayIcon = new TrayIcon(image, title, getTrayPopupMenu());
+            ActionListener actionListener = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    setVisible(true);
+                    setState(java.awt.Frame.NORMAL);
+                    requestFocus();
+                }
+            };
+            trayIcon.setImageAutoSize(true);
+            trayIcon.addActionListener(actionListener);
+            try { systemTray.add(trayIcon); }
+            catch (AWTException ex) { System.out.println("Error: Can't create Rachota system tray icon."); };
+        }
     }
 }
