@@ -23,7 +23,6 @@
 
 package org.cesilko.rachota.gui;
 
-import org.cesilko.rachota.gui.*;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ItemEvent;
@@ -1065,22 +1064,43 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     /** Method called when one clock tick is over.
      */
     public void tick() {
-        /* Day today = Plan.getDefault().getDay(new Date());
-        if ((today != day) && !requiredDay) {
-            if (task != null) btRelaxActionPerformed(null);
-            if (day.isModified()) Plan.getDefault().addDay(day);
-            ChangeHandler.getDefault().removeChangeEventListener(this, day);
-            day = today;
-            Plan.getDefault().addRegularTasks(day);
-            Boolean moveUnfinishedTasks = (Boolean) Settings.getDefault().getSetting("moveUnfinished");
-            if (moveUnfinishedTasks) Plan.getDefault().copyUnfinishedTasks();
-            ChangeHandler.getDefault().addChangeEventListener(this, day);
-            DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
-            dayTableModel.setDay(day);
-            dayTableModel.fireTableDataChanged();
-            updateInformation(false);
-            requiredDay = true;
-        } */
+        Calendar calendar = Calendar.getInstance();
+        if ((calendar.get(Calendar.HOUR_OF_DAY) + calendar.get(Calendar.MINUTE) + calendar.get(Calendar.SECOND)) == 0) {
+            class NightSwitch extends Thread {
+                
+                DayView dayView = null;
+                
+                public NightSwitch(DayView dayView) {
+                    this.dayView = dayView;
+                }
+                
+                public void run() {
+                    try { sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); };
+                    Clock.getDefault().suspendClock();
+                    boolean runningTask = task.isRunning();
+                    if (runningTask) task.suspendWork();
+                    else day.getIdleTask().suspendWork();
+                    task.removePropertyChangeListener(dayView);
+                    Boolean moveUnfinishedTasks = (Boolean) Settings.getDefault().getSetting("moveUnfinished");
+                    if (moveUnfinishedTasks.booleanValue()) Plan.getDefault().copyUnfinishedTasks();
+                    setDay(Plan.getDefault().getDayAfter(day));
+                    Task newTask = day.getTask(task.getDescription());
+                    if (newTask != null) setTask(newTask, runningTask);
+                    else {
+                        firePropertyChange("task_suspended", task, null);
+                        task = null;
+                        checkButtons();
+                        txtTask.setText(null);
+                        Task idleTimeTask = day.getIdleTask();
+                        idleTimeTask.startWork();
+                        idleTimeTask.addPropertyChangeListener(dayView);
+                    }
+                    Clock.getDefault().resumeClock();
+                }
+            }
+            NightSwitch nightSwitch = new NightSwitch(this);
+            nightSwitch.start();
+        }
         Iterator iterator = Plan.getDefault().getDay(new Date()).getTasks().iterator();
         while (iterator.hasNext()) {
             final Task task = (Task) iterator.next();
