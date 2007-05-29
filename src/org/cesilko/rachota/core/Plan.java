@@ -170,6 +170,26 @@ public class Plan {
         return regularTasks;
     }
     
+    /** Creates a backup copy of current diary. */
+    public static void createBackup() {
+        org.cesilko.rachota.core.Plan plan = org.cesilko.rachota.core.Plan.getDefault();
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTime(new java.util.Date());
+        int thisWeek = calendar.get(java.util.Calendar.WEEK_OF_YEAR);
+        plan.saveWeek(thisWeek, true);
+        File backupFile = new File((String) Settings.getDefault().getSetting("userDir") + File.separator + "backup_diary.xml");
+        try {
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            builder.parse(backupFile);
+        } catch (Exception e) {
+            System.out.println("Error: Can't create backup_diary.xml file. Another try in " + Settings.getDefault().getSetting("backupAge") + " minute(s).");
+            e.printStackTrace();
+            backupFile.delete();
+        }
+        
+    }
+    
     /** Saves all days to XML files.
      * @return True if plan was saved successfully, false otherwise
      */
@@ -181,7 +201,7 @@ public class Plan {
         int weekToSave = plan.getNextWeekToSave(thisWeek - 2);
         boolean planSaved = true;
         while (weekToSave != -1) {
-            planSaved = planSaved & plan.saveWeek(weekToSave);
+            planSaved = planSaved & plan.saveWeek(weekToSave, false);
             weekToSave = plan.getNextWeekToSave(weekToSave);
         }
         return planSaved;
@@ -213,13 +233,15 @@ public class Plan {
     
     /** Saves week with given index of year.
      * @param week Index of year to be saved.
+     * @param isBackup If true backup will be created otherwise common diary file.
      * @return True if week was successfully saved, false otherwise.
      */
-    private boolean saveWeek(int week) {
+    private boolean saveWeek(int week, boolean isBackup) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         String location = (String) Settings.getDefault().getSetting("userDir");
-        location = location + File.separator + "diary_" + year + "_" + week + ".xml";
+        if (isBackup) location = location + File.separator + "backup_diary.xml";
+        else location = location + File.separator + "diary_" + year + "_" + week + ".xml";
         try {
             String encoding = (String) Settings.getDefault().getSetting("systemEncoding");
             PrintStream stream = new PrintStream(new BufferedOutputStream(new FileOutputStream(location)), true, encoding);
@@ -271,7 +293,21 @@ public class Plan {
                 pm.setProgress(i);
             } catch (SAXParseException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.READ_ERROR", new String[] {diaries[i].getName()}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+                File backupFile = new File(userDir + File.separator + "backup_diary.xml");
+                int currentWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+                if (backupFile.exists() & diaries[i].getName().equals("diary_" + currentYear + "_" + currentWeek + ".xml")) {
+                    String message = Translator.getTranslation("ERROR.DIARY_CORRUPTED", new String[] {diaries[i].getName()});
+                    String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO"), Translator.getTranslation("DATEDIALOG.BT_CANCEL")};
+                    int decision = JOptionPane.showOptionDialog(null, message, Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, buttons, buttons[0]);
+                    if (decision == JOptionPane.CANCEL_OPTION) System.exit(-1);
+                    if (decision == JOptionPane.YES_OPTION) {
+                        DiaryScanner scanner = scanner = new DiaryScanner(builder.parse(backupFile));
+                        pm.setNote("backup_diary.xml");
+                        scanner.loadDocument();
+                        pm.setProgress(diaries.length-1);
+                    }
+                } else JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.READ_ERROR", new String[] {diaries[i].getName()}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -355,7 +391,7 @@ public class Plan {
             }
         }
     }
-
+    
     /** Finds out if there is any day in plan before specified day.
      * @param day Day whose predecessor existence should be verified.
      * @return True if any day before given day exists in plan. False

@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -73,6 +74,8 @@ public class Settings {
         // htietgens: new param for automatic starting of IdleTask on startup of program
         settingsMap.put("automaticStart", new Boolean(true));
         settingsMap.put("showTime", "both");
+        settingsMap.put("backupAge", "10");
+        System.setProperty("backupCreated", "" + new Date().getTime());
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
