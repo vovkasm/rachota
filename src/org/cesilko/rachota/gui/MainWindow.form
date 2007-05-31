@@ -168,9 +168,6 @@
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Translator.getTranslation(&quot;MAINWINDOW.MN_TOOLS_TOOLTIP&quot;)" type="code"/>
             </Property>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection component="Form" name="getFont" type="method"/>
-            </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnSwitchDate">
