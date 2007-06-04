@@ -1077,18 +1077,25 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                 public void run() {
                     try { sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); };
                     Clock.getDefault().suspendClock();
-                    boolean runningTask = task.isRunning();
-                    if (runningTask) task.suspendWork();
-                    else day.getIdleTask().suspendWork();
-                    task.removePropertyChangeListener(dayView);
-                    Boolean moveUnfinishedTasks = (Boolean) Settings.getDefault().getSetting("moveUnfinished");
-                    if (moveUnfinishedTasks.booleanValue()) Plan.getDefault().copyUnfinishedTasks();
-                    setDay(Plan.getDefault().getDayAfter(day));
-                    Task newTask = day.getTask(task.getDescription());
-                    if (newTask != null) setTask(newTask, runningTask);
+                    boolean runningTask = (task != null) && task.isRunning();
+                    if (runningTask) {
+                        task.suspendWork();
+                        task.removePropertyChangeListener(dayView);
+                    }
                     else {
-                        firePropertyChange("task_suspended", task, null);
-                        task = null;
+                        day.getIdleTask().suspendWork();
+                        day.getIdleTask().removePropertyChangeListener(dayView);
+                    }
+                    Boolean moveUnfinishedTasks = (Boolean) Settings.getDefault().getSetting("moveUnfinished");
+                    if (moveUnfinishedTasks.booleanValue()) {
+                        Plan.getDefault().copyUnfinishedTasks();
+                    }
+                    setDay(Plan.getDefault().getDayAfter(day));
+                    Task newTask = (task != null) ? day.getTask(task.getDescription()) : null;
+                    if (newTask != null) {
+                        setTask(newTask, runningTask);
+                    } else task = null;
+                    if (!runningTask) {
                         checkButtons();
                         txtTask.setText(null);
                         Task idleTimeTask = day.getIdleTask();
