@@ -81,7 +81,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             Settings.getDefault().setSetting("userDir", fileChooser.getSelectedFile().getAbsolutePath());
         }
         System.out.println("----------------------------------------------------------------------------------");
-        System.out.println("Â»Â» " + title + " Â«Â« (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
+        System.out.println("»» " + title + " «« (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
         System.out.println("   http://rachota.sourceforge.net");
         System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
         System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
@@ -350,7 +350,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         String text = title + " (build " + build + ")\n";
         text = text + Translator.getTranslation("INFORMATION.PROGRAM");
         text = text + "\n<html><body><a href=\"http://rachota.sourceforge.net\">http://rachota.sourceforge.net</a></body";
-        text = text + "\n\njiri.kovalsky@centrum.cz\n2007 Â©";
+        text = text + "\n\njiri.kovalsky@centrum.cz\n2007 ©";
         JOptionPane.showMessageDialog(this, text, Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE, new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_name_48.png")));
     }//GEN-LAST:event_mnAboutActionPerformed
     
@@ -427,7 +427,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070529";
+    protected static final String build = "#070603";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
