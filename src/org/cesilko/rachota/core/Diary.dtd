@@ -26,7 +26,7 @@ id - number of day in week)
 (duration - total time how long user worked on task so far,
 state - information about progress on task)
 -->
-<!ELEMENT task (repetition|notification|notes|keyword|description|priority|private)*>
+<!ELEMENT task (repetition|notification|notes|keyword|description|priority|private|idle)*>
 <!ATTLIST task
     duration CDATA #IMPLIED
     state CDATA #IMPLIED
@@ -56,6 +56,9 @@ time - when user should start working on a task)
 
 <!--- Identification of private task. -->
 <!ELEMENT private EMPTY>
+
+<!--- Identification of idle task. -->
+<!ELEMENT idle EMPTY>
   
 <!--- Identification of regular task.
 (frequency - type of repetition)
