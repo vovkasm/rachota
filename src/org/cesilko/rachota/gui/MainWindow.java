@@ -93,8 +93,10 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, JP, MX, RO, RU or US");
             System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
+        StartupWindow startupWindow = StartupWindow.getInstance();
         Settings.loadSettings();
         new MainWindow().setVisible(true);
+        startupWindow.hideWindow();
     }
     
     /** Creates new application main window.
@@ -102,7 +104,10 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
      */
     public MainWindow() throws Exception {
         Plan.loadPlan();
+        StartupWindow startupWindow = StartupWindow.getInstance();
+        startupWindow.setProgressMessage("regular_tasks.xml");
         Plan.loadRegularTasks();
+        startupWindow.setProgressMessage(Translator.getTranslation("INFORMATION.OPEN_MAIN_WINDOW"));
         Boolean moveUnfinishedTasks = (Boolean) Settings.getDefault().getSetting("moveUnfinished");
         if (moveUnfinishedTasks.booleanValue()) Plan.getDefault().copyUnfinishedTasks();
         initComponents();
@@ -427,7 +432,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070603";
+    protected static final String build = "#070611";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
