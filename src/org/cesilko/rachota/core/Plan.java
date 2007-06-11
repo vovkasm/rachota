@@ -39,6 +39,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.cesilko.rachota.gui.StartupWindow;
 import org.xml.sax.SAXParseException;
 
 /** Plan containing all days that have some tasks planned. Plan also contains
@@ -284,13 +285,14 @@ public class Plan {
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         DiaryScanner.createDTD();
         if (diaries == null) return;
-        ProgressMonitor pm = new ProgressMonitor(null, Translator.getTranslation("MESSAGE.PROGRESS_LOADING"), null, 0,  diaries.length - 1);
+        StartupWindow startupWindow = StartupWindow.getInstance();
+        startupWindow.setNumberOfDiaries(diaries.length);
         for (int i=0; i<diaries.length; i++) {
             try {
                 DiaryScanner scanner = scanner = new DiaryScanner(builder.parse(diaries[i]));
-                pm.setNote(diaries[i].getName());
+                startupWindow.setProgressMessage(diaries[i].getName());
                 scanner.loadDocument();
-                pm.setProgress(i);
+                startupWindow.setProgress(i);
             } catch (SAXParseException e) {
                 e.printStackTrace();
                 File backupFile = new File(userDir + File.separator + "backup_diary.xml");
@@ -303,9 +305,9 @@ public class Plan {
                     if (decision == JOptionPane.CANCEL_OPTION) System.exit(-1);
                     if (decision == JOptionPane.YES_OPTION) {
                         DiaryScanner scanner = scanner = new DiaryScanner(builder.parse(backupFile));
-                        pm.setNote("backup_diary.xml");
+                        startupWindow.setProgressMessage("backup_diary.xml");
                         scanner.loadDocument();
-                        pm.setProgress(diaries.length-1);
+                        startupWindow.setProgress(diaries.length-1);
                     }
                 } else JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.READ_ERROR", new String[] {diaries[i].getName()}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
             }
