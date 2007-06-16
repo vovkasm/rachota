@@ -89,8 +89,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         if (printHelp) {
             System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar Rachota.jar [-userdir=<diary_folder>] where:");
             System.out.println("      <diary_folder> is directory with settings and diary files e.g. C:\\Rachota");
-            System.out.println("      <language_id> is Java language code e.g. cs, de, en, es, hu, ja, pt, ro or ru");
-            System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, JP, MX, RO, RU or US");
+            System.out.println("      <language_id> is Java language code e.g. cs, de, en, es, hu, it, ja, pt, ro or ru");
+            System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US");
             System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
         StartupWindow startupWindow = StartupWindow.getInstance();
@@ -432,7 +432,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070611";
+    protected static final String build = "#070616";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
