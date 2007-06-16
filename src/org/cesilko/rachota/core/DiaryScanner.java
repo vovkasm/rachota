@@ -92,8 +92,12 @@ public class DiaryScanner {
 	int day_id = Integer.parseInt(dayElement.getAttributeNode("id").getValue());
 	String start = dayElement.getAttributeNode("start").getValue();
 	String finish = dayElement.getAttributeNode("finish").getValue();
-	Date start_time = start.equals("00:00") ? null : new Date(Tools.getTime(start));
-	Date finish_time = finish.equals("00:00") ? null : new Date(Tools.getTime(finish));
+	Date start_time = null;
+        Date finish_time = null;
+        if (!finish.equals("00:00")) {
+            finish_time = new Date(Tools.getTime(finish));
+            start_time = new Date(Tools.getTime(start));
+        }
 	Calendar calendar = Calendar.getInstance();
 	calendar.set(Calendar.YEAR, week_year);
 	calendar.set(Calendar.WEEK_OF_YEAR, week_id);
