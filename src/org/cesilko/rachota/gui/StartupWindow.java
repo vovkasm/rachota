@@ -160,6 +160,7 @@ public class StartupWindow extends javax.swing.JFrame {
         }
         
         Fader fader = new Fader();
+        fader.setPriority(Thread.MIN_PRIORITY);
         fader.start();
     }
 }
