@@ -63,6 +63,8 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
     public static final int TYPE_TOTAL = 0;
     /** Chart displaying from/to times for days. */
     public static final int TYPE_FROM_TO = 1;
+    /** Chart displaying used/wasted time ratio. */
+    public static final int TYPE_TIME_USAGE = 2;
     /** Left space before chart e.g. distance between left edge and X axis. */
     private static final int INSET_LEFT = 20;
     /** Right space behind chart. */
@@ -141,7 +143,23 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
             if (chartType == TYPE_TOTAL) {
                 int hours = (int) day.getTotalTime()/(1000*60*60);
                 if (hours > maxValueY) maxValueY = hours;
-            } else {
+            }
+            if (chartType == TYPE_TIME_USAGE) {
+                Iterator tasks = day.getTasks().iterator();
+                long totalTime = 0;
+                while (tasks.hasNext()) {
+                    Task task = (Task) tasks.next();
+                    totalTime = totalTime + task.getDuration();
+                }
+                if (day.getIdleTask().getDuration() == 0) {
+                    java.util.Date finishTime = day.getFinishTime();
+                    if (finishTime != null)
+                        totalTime = day.getFinishTime().getTime() - day.getStartTime().getTime();
+                }
+                int hours = (int) totalTime/(1000*60*60);
+                if (hours > maxValueY) maxValueY = hours;
+            }
+            if (chartType == TYPE_FROM_TO) {
                 if (day.getStartTime() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(day.getStartTime());
@@ -257,7 +275,8 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                     if (correction <= xStep + 2)
                         graphics.drawString(value, (int) (x + xStep/2 - correction/2 - 1), height - INSET_BOTTOM - columnHeight - 10);
                 }
-            } else { // TYPE_FROM_TO chart type was selected.
+            }
+            if (chartType == TYPE_FROM_TO) {
                 if (day.getStartTime() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(day.getStartTime());
@@ -287,6 +306,77 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                     if ((!finish.equals("0:00"))  && (widthFinish <= xStep + 2))
                         graphics.drawString(finish, (int) (x + xStep/2 - widthFinish/2 - 1), y1 - 10);
                 }
+            }
+            if (chartType == TYPE_TIME_USAGE) {
+                Task idleTask = day.getIdleTask();
+                Iterator tasks = day.getTasks().iterator();
+                double privateTime = 0;
+                double totalTime = 0;
+                while(tasks.hasNext()) {
+                    Task task = (Task) tasks.next();
+                    if (task.privateTask()) privateTime = privateTime + (task.getDuration() / (double) (1000*60*60));
+                    else if (!task.isIdleTask()) totalTime = totalTime + (task.getDuration() / (double) (1000*60*60));
+                }
+                double idleTime = 0;
+                if (idleTask.getDuration() == 0) {
+                    java.util.Date finishTime = day.getFinishTime();
+                    if (finishTime != null) {
+                        idleTime = day.getFinishTime().getTime() - day.getStartTime().getTime() - day.getTotalTime();
+                        idleTime = idleTime / (double) (1000*60*60);
+                    }
+                } else idleTime = idleTask.getDuration() / (double) (1000*60*60);
+
+                int x = INSET_LEFT + (int) (xStep * i) + (xStep > 4 ? 2 : 0);
+                int totalHeight = (int) ((height - INSET_BOTTOM - INSET_TOP) * ((totalTime + privateTime) / maxValueY));
+                if (totalHeight != 0) {
+                    graphics.setColor(Color.LIGHT_GRAY);
+                    graphics.fillRect(x, height - INSET_BOTTOM - totalHeight, (int) (xStep > 4 ? xStep - 3 : xStep), totalHeight);
+                    graphics.setColor(Color.DARK_GRAY);
+                    graphics.drawRect(x, height - INSET_BOTTOM - totalHeight, (int) (xStep > 4 ? xStep - 3 : xStep), totalHeight);
+                }
+                int privateHeight = (int) ((height - INSET_BOTTOM - INSET_TOP) * (privateTime / maxValueY));
+                if (privateHeight != 0) {
+                    graphics.setColor(Color.BLUE);
+                    graphics.fillRect(x, height - INSET_BOTTOM - privateHeight, (int) (xStep > 4 ? xStep - 3 : xStep), privateHeight);
+                    graphics.setColor(Color.DARK_GRAY);
+                    graphics.drawRect(x, height - INSET_BOTTOM - privateHeight, (int) (xStep > 4 ? xStep - 3 : xStep), privateHeight);
+                }
+                int idleHeight = (int) ((height - INSET_BOTTOM - INSET_TOP) * (idleTime / maxValueY));
+                if (idleHeight != 0) {
+                    graphics.setColor(Color.CYAN);
+                    graphics.fillRect(x, height - INSET_BOTTOM - totalHeight - idleHeight, (int) (xStep > 4 ? xStep - 3 : xStep), idleHeight);
+                    graphics.setColor(Color.DARK_GRAY);
+                    graphics.drawRect(x, height - INSET_BOTTOM - totalHeight - idleHeight, (int) (xStep > 4 ? xStep - 3 : xStep), idleHeight);
+                }
+                graphics.setColor(Color.BLACK);
+                String working_Time = Translator.getTranslation("HISTORYCHART.WORKING_TIME");
+                String private_Time = Translator.getTranslation("HISTORYCHART.PRIVATE_TIME");
+                String idle_Time = Translator.getTranslation("HISTORYCHART.IDLE_TIME");
+                int correction = graphics.getFontMetrics().stringWidth(working_Time);
+                int maxCorrection = correction;
+                correction = graphics.getFontMetrics().stringWidth(private_Time);
+                if (correction > maxCorrection) maxCorrection = correction;
+                correction = graphics.getFontMetrics().stringWidth(idle_Time);
+                if (correction > maxCorrection) maxCorrection = correction;
+                graphics.setColor(Color.WHITE);
+                graphics.fillRect(width - INSET_RIGHT - maxCorrection - 25, INSET_TOP + 5, maxCorrection + 20, 50);
+                graphics.setColor(Color.DARK_GRAY);
+                graphics.drawRect(width - INSET_RIGHT - maxCorrection - 25, INSET_TOP + 5, maxCorrection + 20, 50);
+                graphics.drawString(working_Time, width - INSET_RIGHT - maxCorrection - 6, INSET_TOP + 20);
+                graphics.drawString(private_Time, width - INSET_RIGHT - maxCorrection - 6, INSET_TOP + 35);
+                graphics.drawString(idle_Time, width - INSET_RIGHT - maxCorrection - 6, INSET_TOP + 50);
+                graphics.setColor(Color.LIGHT_GRAY);
+                graphics.fillRect(width - INSET_RIGHT - 20 - maxCorrection, INSET_TOP + 10, 10, 10);
+                graphics.setColor(Color.DARK_GRAY);
+                graphics.drawRect(width - INSET_RIGHT - 20 - maxCorrection, INSET_TOP + 10, 10, 10);
+                graphics.setColor(Color.BLUE);
+                graphics.fillRect(width - INSET_RIGHT - 20 - maxCorrection, INSET_TOP + 25, 10, 10);
+                graphics.setColor(Color.DARK_GRAY);
+                graphics.drawRect(width - INSET_RIGHT - 20 - maxCorrection, INSET_TOP + 25, 10, 10);
+                graphics.setColor(Color.CYAN);
+                graphics.fillRect(width - INSET_RIGHT - 20 - maxCorrection, INSET_TOP + 40, 10, 10);
+                graphics.setColor(Color.DARK_GRAY);
+                graphics.drawRect(width - INSET_RIGHT - 20 - maxCorrection, INSET_TOP + 40, 10, 10);
             }
         }
         if ((chartType == TYPE_TOTAL) && (taskFilter != null)) {
