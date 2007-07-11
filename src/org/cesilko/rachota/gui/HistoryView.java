@@ -67,7 +67,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_YEAR));
         historyChart = new HistoryChart(getDays(), null, HistoryChart.TYPE_TOTAL);
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -161,6 +161,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         lblChartType = new javax.swing.JLabel();
         rbTotal = new javax.swing.JRadioButton();
         rbFromTo = new javax.swing.JRadioButton();
+        rbTimeUsage = new javax.swing.JRadioButton();
         chbHighlightTasks = new javax.swing.JCheckBox();
         cmbFilterName = new javax.swing.JComboBox();
         cmbContentRule = new javax.swing.JComboBox();
@@ -208,7 +209,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         add(cmbPeriod, gridBagConstraints);
 
         btReport.setFont(getFont());
-        btReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/report.png")));
+        btReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/report.png"))); // NOI18N
         btReport.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REPORT"));
         btReport.setText(Translator.getTranslation("HISTORYVIEW.BT_REPORT"));
         btReport.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_REPORT_TOOLTIP"));
@@ -233,7 +234,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         });
         pnPeriod.add(spMinus);
 
-        btBackward.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/previous.png")));
+        btBackward.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/previous.png"))); // NOI18N
         btBackward.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_BACKWARD_TOOLTIP"));
         btBackward.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,7 +255,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         });
         pnPeriod.add(txtDate);
 
-        btForward.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/next.png")));
+        btForward.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/next.png"))); // NOI18N
         btForward.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_FORWARD_TOOLTIP"));
         btForward.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -327,6 +328,22 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
         pnTimes.add(rbFromTo, gridBagConstraints);
 
+        rbTimeUsage.setFont(getFont());
+        rbTimeUsage.setText(Translator.getTranslation("HISTORYVIEW.TYPE_TIME_USAGE"));
+        rbTimeUsage.setToolTipText(Translator.getTranslation("HISTORYVIEW.TYPE_TIME_USAGE_TOOLTIP"));
+        rbTimeUsage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbTimeUsageActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
+        pnTimes.add(rbTimeUsage, gridBagConstraints);
+
         chbHighlightTasks.setFont(getFont());
         chbHighlightTasks.setMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_HIGHLIGHT_TASKS"));
         chbHighlightTasks.setText(Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS"));
@@ -337,7 +354,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -352,7 +369,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(cmbFilterName, gridBagConstraints);
@@ -367,7 +384,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimes.add(cmbContentRule, gridBagConstraints);
@@ -382,7 +399,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -399,7 +416,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -464,7 +481,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnButtons.setLayout(new java.awt.GridBagLayout());
 
         btAddFilter.setFont(getFont());
-        btAddFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/new_filter.png")));
+        btAddFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/new_filter.png"))); // NOI18N
         btAddFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_ADD_FILTER"));
         btAddFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_ADD_FILTER"));
         btAddFilter.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_ADD_FILTER_TOOLTIP"));
@@ -479,7 +496,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnButtons.add(btAddFilter, gridBagConstraints);
 
         btEditFilter.setFont(getFont());
-        btEditFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/edit_filter.png")));
+        btEditFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/edit_filter.png"))); // NOI18N
         btEditFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_EDIT_FILTER"));
         btEditFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_EDIT_FILTER"));
         btEditFilter.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_EDIT_FILTER_TOOLTIP"));
@@ -493,7 +510,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnButtons.add(btEditFilter, gridBagConstraints);
 
         btRemoveFilter.setFont(getFont());
-        btRemoveFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/remove_filter.png")));
+        btRemoveFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/remove_filter.png"))); // NOI18N
         btRemoveFilter.setMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_REMOVE_FILTER"));
         btRemoveFilter.setText(Translator.getTranslation("HISTORYVIEW.BT_REMOVE_FILTER"));
         btRemoveFilter.setToolTipText(Translator.getTranslation("HISTORYVIEW.BT_REMOVE_FILTER_TOOLTIP"));
@@ -590,6 +607,15 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         add(tpViews, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void rbTimeUsageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTimeUsageActionPerformed
+        rbTotal.setSelected(false);
+        rbFromTo.setSelected(false);
+        rbTimeUsage.setSelected(true);
+        chbHighlightTasks.setEnabled(false);
+        historyChart.setChartType(HistoryChart.TYPE_TIME_USAGE);
+        setComponents();
+}//GEN-LAST:event_rbTimeUsageActionPerformed
+
     private void tbFiltersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbFiltersKeyReleased
         checkButtons();
     }//GEN-LAST:event_tbFiltersKeyReleased
@@ -614,6 +640,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      */
     private void rbFromToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbFromToActionPerformed
         rbTotal.setSelected(false);
+        rbTimeUsage.setSelected(false);
         rbFromTo.setSelected(true);
         chbHighlightTasks.setEnabled(false);
         historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
@@ -626,6 +653,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     private void rbTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTotalActionPerformed
         rbTotal.setSelected(true);
         rbFromTo.setSelected(false);
+        rbTimeUsage.setSelected(false);
         chbHighlightTasks.setEnabled(true);
         historyChart.setChartType(HistoryChart.TYPE_TOTAL);
         setComponents();
@@ -822,6 +850,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     private javax.swing.JPanel pnTimes;
     private javax.swing.JPanel pnTotalTime;
     private javax.swing.JRadioButton rbFromTo;
+    private javax.swing.JRadioButton rbTimeUsage;
     private javax.swing.JRadioButton rbTotal;
     private javax.swing.JScrollPane spFilters;
     private javax.swing.JSpinner spMinus;
@@ -994,14 +1023,25 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             }
         }
         filterTasks();
-        boolean totalTime = settings.getSetting("history.chart").equals("time");
-        rbTotal.setSelected(totalTime);
-        rbFromTo.setSelected(!totalTime);
-        chbHighlightTasks.setEnabled(totalTime);
-        if (totalTime) {
+        rbTotal.setSelected(false);
+        rbFromTo.setSelected(false);
+        rbTimeUsage.setSelected(false);
+        chbHighlightTasks.setEnabled(false);
+        String chartType = (String) settings.getSetting("history.chart");
+        if (chartType.equals("time")) {
+            rbTotal.setSelected(true);
+            chbHighlightTasks.setEnabled(true);
             historyChart.setChartType(HistoryChart.TYPE_TOTAL);
             chbHighlightTasks.setSelected(settings.getSetting("history.highlight").toString().equals("true"));
-        } else historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
+        }
+        if (chartType.equals("from/to")) {
+            rbFromTo.setSelected(true);
+            historyChart.setChartType(HistoryChart.TYPE_FROM_TO);
+        }
+        if (chartType.equals("usage")) {
+            rbTimeUsage.setSelected(true);
+            historyChart.setChartType(HistoryChart.TYPE_TIME_USAGE);
+        }
         
         if (!chbHighlightTasks.isSelected() || !chbHighlightTasks.isEnabled()) {
             cmbFilterName.setEnabled(false);
@@ -1284,7 +1324,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         Settings settings = Settings.getDefault();
         settings.setSetting("history.period", new Integer(cmbPeriod.getSelectedIndex()));
         if (rbFromTo.isSelected()) settings.setSetting("history.chart", "from/to");
-        else settings.setSetting("history.chart", "time");
+        if (rbTotal.isSelected()) settings.setSetting("history.chart", "time");
+        if (rbTimeUsage.isSelected()) settings.setSetting("history.chart", "usage");
         settings.setSetting("history.highlight", new Boolean(chbHighlightTasks.isSelected()));
         settings.setSetting("history.filter", new Integer(cmbFilterName.getSelectedIndex()));
         settings.setSetting("history.rule", new Integer(cmbContentRule.getSelectedIndex()));
