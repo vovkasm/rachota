@@ -1222,9 +1222,17 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
             Day firstDay = (Day) days.get(0);
             Day lastDay = (Day) days.get(days.size() - 1);
+            int numberOfWorkingDays = 0;
+            Iterator iterator = days.iterator();
+            while(iterator.hasNext()) {
+                Day day = (Day) iterator.next();
+                if (day.getTotalTime() != 0) numberOfWorkingDays++;
+            }
             writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.PERIOD") + "</u></td><td width=\"20\"/><td>" + df.format(firstDay.getDate()) + " - " + df.format(lastDay.getDate()) + "</td></tr>");
             writer.write("\n");
             writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u></td><td width=\"20\"/><td>" + days.size() + "</td></tr>");
+            writer.write("\n");
+            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_WORK_DAYS") + "</u></td><td width=\"20\"/><td>" + numberOfWorkingDays + "</td></tr>");
             writer.write("\n");
             writer.write("    </table><br/>");
             writer.write("\n");
