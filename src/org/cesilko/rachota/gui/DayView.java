@@ -768,13 +768,28 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         long delay = 1000;
         delay = now.getTime() - clickedWhen.getTime();
         boolean samePoint = clickedWhere.equals(evt.getPoint());
+        Plan plan = Plan.getDefault();
         if (samePoint & (delay < 250)) {
             int row = tbPlan.getSelectedRow();
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             Task selectedTask = dayTableModel.getTask(row);
-            if (selectedTask.getState() == Task.STATE_DONE) return;
             if (selectedTask.isIdleTask()) return;
-            if (!Plan.getDefault().isToday(day)) return;
+            if (!plan.isFuture(day) && !plan.isToday(day)) { // Let's copy the task to "today"
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+                int ignorePriority = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.MOVE_TASK_TODAY", new String[] {selectedTask.getDescription()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+                if (ignorePriority != JOptionPane.YES_OPTION) return;
+                Day today = plan.getDay(new Date());
+                if (today.getTask(selectedTask.getDescription()) == null) {
+                    Task clone = selectedTask.cloneTask();
+                    if (selectedTask instanceof RegularTask)
+                        clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), selectedTask.getNotes(), selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
+                    today.addTask(clone);
+                    // plan.addDay(today);
+                    return;
+                }
+            }
+            if (!plan.isToday(day)) return;
+            if (selectedTask.getState() == Task.STATE_DONE) return;
             Boolean checkPriorities = (Boolean) Settings.getDefault().getSetting("checkPriority");
             if (checkPriorities.booleanValue() & day.existsMorePriorityTask(selectedTask.getPriority())) {
                 String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
