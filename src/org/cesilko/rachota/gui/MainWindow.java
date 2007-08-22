@@ -35,11 +35,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
+import org.cesilko.rachota.core.ClockListener;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
@@ -49,7 +51,7 @@ import org.cesilko.rachota.core.Translator;
 /** Main window of the Rachota application.
  * @author Jiri Kovalsky
  */
-public class MainWindow extends javax.swing.JFrame implements PropertyChangeListener {
+public class MainWindow extends javax.swing.JFrame implements PropertyChangeListener, ClockListener {
     
     /**
      * Main method called when application is started.
@@ -432,7 +434,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070803";
+    protected static final String build = "#070822";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
@@ -609,5 +611,32 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             try { systemTray.add(trayIcon); }
             catch (AWTException ex) { System.out.println("Error: Can't create Rachota system tray icon."); };
         }
+    }
+
+    public void tick() {
+        Calendar calendar = Calendar.getInstance();
+        int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
+        if (reportedWeek != null) {
+            int week = Integer.parseInt(reportedWeek);
+            if (week == currentWeek) return;
+        }
+        String RID = "os=" + System.getProperty("os.name") + "|" + System.getProperty("os.arch") + "|" + System.getProperty("os.version") + "&" +
+              "jv=" + System.getProperty("java.version") + "&" +
+              "un=" + System.getProperty("user.name") + "&" +
+              "ud=" + System.getProperty("user.dir");
+        String url_string = "http://rachota.sourceforge.net/cgi-bin/reportUsage.php?" + RID;
+        try { 
+        /*
+            URL url = new URL(url_string);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.disconnect();
+          */
+        }
+        catch (Exception e) {
+            System.out.println("Error: Can't connect to Rachota Analytics server.");
+            e.printStackTrace();
+        }
+        Settings.getDefault().setSetting("rachota.reported.week", "" + currentWeek);
     }
 }
