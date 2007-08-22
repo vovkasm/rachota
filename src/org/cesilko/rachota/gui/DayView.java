@@ -633,6 +633,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
         int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.REMOVE_TASK", new String[] {description}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
         if (decision == JOptionPane.YES_OPTION) {
+            if (selectedTask.getDuration() != 0) {
+                decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.REMOVE_NONZERO_TASK"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
+                if (decision == JOptionPane.NO_OPTION) return;
+            }
             if (task == selectedTask)
                 btDoneActionPerformed(null);
             day.removeTask(selectedTask);
@@ -657,7 +661,9 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      * @param evt Event that invoked the action.
      */
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
-        new TaskDialog(day).setVisible(true);
+        TaskDialog dialog = new TaskDialog(day);
+        dialog.addPropertyChangeListener(this);
+        dialog.setVisible(true);
     }//GEN-LAST:event_btAddActionPerformed
     
     /** Method called when select button is pressed.
@@ -1218,6 +1224,12 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             TaskDialog taskDialog = (TaskDialog) evt.getSource();
             taskDialog.removePropertyChangeListener(this);
             checkButtons();
+            String startTaskNow = System.getProperty("startTaskNow");
+            if ((startTaskNow != null) && (startTaskNow.equals("true"))) {
+                Task task = (Task) evt.getNewValue();
+                setTask(task, true);
+                System.getProperties().remove("startTaskNow");
+            }
         }
         if (evt.getPropertyName().equals("day")) {
             Day day = (Day) evt.getNewValue();
