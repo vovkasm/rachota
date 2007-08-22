@@ -1161,7 +1161,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     /** Generates HTML file with work statistics for selected period.
      */
     private void createReport() {
-        String location = (String) Settings.getDefault().getSetting("userDir");
+        String location = (String) Settings.getDefault().getSetting("reportDir");
+        if (location == null) location = (String) Settings.getDefault().getSetting("userDir");
         JFileChooser fileChooser = new JFileChooser(location);
         fileChooser.setFileFilter(new FileFilter() {
             public boolean accept(File f) {
@@ -1179,6 +1180,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         File file = fileChooser.getSelectedFile();
         String fileName = file.getAbsolutePath();
         if (!fileName.endsWith(".html")) file = new File(fileName + ".html");
+        Settings.getDefault().setSetting("reportDir", file.getParent());
         fileName = file.getAbsolutePath();
         fileName = fileName.substring(0, fileName.indexOf("."));
         if (file.exists()) {
@@ -1187,6 +1189,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             if (decision != JOptionPane.YES_OPTION) return;
         }
         String description = JOptionPane.showInputDialog(this, Translator.getTranslation("QUESTION.REPORT_DESCRIPTION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
+        if (description == null) return;
         try {
             //BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), (String) Settings.getDefault().getSetting("systemEncoding"));
