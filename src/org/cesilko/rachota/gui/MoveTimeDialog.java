@@ -221,21 +221,29 @@ public class MoveTimeDialog extends javax.swing.JDialog {
 private void spSecondsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spSecondsKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_spSecondsKeyPressed
 
 private void spMinutesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spMinutesKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_spMinutesKeyPressed
 
 private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spHoursKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_spHoursKeyPressed
 
 private void cmbSelectTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbSelectTaskKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
                         }//GEN-LAST:event_cmbSelectTaskKeyPressed
     /** Method called when seconds were be changed.
      * @param evt Event that invoked this method call.

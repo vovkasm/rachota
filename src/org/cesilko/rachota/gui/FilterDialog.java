@@ -241,21 +241,29 @@ public class FilterDialog extends javax.swing.JDialog {
 private void cmbContentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbContentKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_cmbContentKeyPressed
 
 private void txtContentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContentKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_txtContentKeyPressed
 
 private void cmbContentRuleKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbContentRuleKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_cmbContentRuleKeyPressed
 
 private void cmbFilterNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbFilterNameKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_cmbFilterNameKeyPressed
     
     /** Method called when any filter is selected.

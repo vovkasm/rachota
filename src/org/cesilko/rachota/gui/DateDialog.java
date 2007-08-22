@@ -259,11 +259,15 @@ public class DateDialog extends javax.swing.JDialog {
 private void pnDaysKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pnDaysKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_pnDaysKeyPressed
 
 private void cmbMonthKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbMonthKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_cmbMonthKeyPressed
 
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked

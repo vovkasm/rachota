@@ -399,41 +399,57 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 private void spRegularTasksKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spRegularTasksKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_spRegularTasksKeyPressed
 
 private void chbCountPrivateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbCountPrivateKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbCountPrivateKeyPressed
 
 private void chbCheckPriorityKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbCheckPriorityKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbCheckPriorityKeyPressed
 
 private void chbArchiveNotStartedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbArchiveNotStartedKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbArchiveNotStartedKeyPressed
 
 private void chbMoveUnfinishedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbMoveUnfinishedKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbMoveUnfinishedKeyPressed
 
 private void chbHoursExceededKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbHoursExceededKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbHoursExceededKeyPressed
 
 private void chbHoursNotReachedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbHoursNotReachedKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbHoursNotReachedKeyPressed
 
 private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoursKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_txtHoursKeyPressed
     
     /** Method called when any key was released while table with regular tasks had focus.
