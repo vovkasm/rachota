@@ -34,10 +34,15 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
@@ -121,6 +126,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         dayView.addPropertyChangeListener(historyView);
         historyView.addPropertyChangeListener(dayView);
         tpViews.add(historyView, TAB_HISTORY_VIEW);
+        // AnalyticsView analyticsView = new AnalyticsView();
+        // tpViews.add(analyticsView, TAB_ANALYTICS_VIEW);
         pack();
         setTitle(title + " " + dayView.getTitleSuffix());
         String size = (String) Settings.getDefault().getSetting("size");
@@ -155,6 +162,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 dayView.setTask(dayView.getDay().getIdleTask(), true);
         }
         createSystemTray();
+        Clock.getDefault().addListener(this);
     }
     
     /** Returns font that should be used for all widgets in this component
@@ -439,6 +447,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
     private static final int TAB_HISTORY_VIEW = 1;
+    /** Index of analytics view tab. */
+    private static final int TAB_ANALYTICS_VIEW = 2;
     
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
@@ -491,11 +501,21 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         ActionListener newTaskListener = new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-                new TaskDialog(dayView.getDay()).setVisible(true);
+                TaskDialog dialog = new TaskDialog(dayView.getDay());
+                dialog.addPropertyChangeListener(dayView);
+                dialog.setVisible(true);
             }
         };
         menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.NEW"));
         menuItem.addActionListener(newTaskListener);
+        popup.add(menuItem);
+        ActionListener exitListener = new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                formWindowClosing(null);
+            }
+        };
+        menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.MN_EXIT"));
+        menuItem.addActionListener(exitListener);
         popup.add(menuItem);
         Iterator tasks = Plan.getDefault().getDay(new Date()).getTasks().iterator();
         Task selectedTask = null;
@@ -503,7 +523,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             final Task task = (Task) tasks.next();
             if (task.getState() == Task.STATE_DONE) continue;
             if (task.isIdleTask()) continue;
-            if (popup.getItemCount() == 2) popup.addSeparator();
+            if (popup.getItemCount() == 3) popup.addSeparator();
             menuItem = new MenuItem(task.getDescription());
             DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
             if (task == dayView.getTask()) {
@@ -614,6 +634,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     }
 
     public void tick() {
+        Boolean reportActivity = (Boolean) Settings.getDefault().getSetting("reportActivity");
+        if (!reportActivity.booleanValue()) return;
         Calendar calendar = Calendar.getInstance();
         int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
@@ -621,21 +643,49 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             int week = Integer.parseInt(reportedWeek);
             if (week == currentWeek) return;
         }
-        String RID = "os=" + System.getProperty("os.name") + "|" + System.getProperty("os.arch") + "|" + System.getProperty("os.version") + "&" +
-              "jv=" + System.getProperty("java.version") + "&" +
-              "un=" + System.getProperty("user.name") + "&" +
-              "ud=" + System.getProperty("user.dir");
-        String url_string = "http://rachota.sourceforge.net/cgi-bin/reportUsage.php?" + RID;
-        try { 
-        /*
+        String RID = System.getProperty("os.name") + "|" +
+              System.getProperty("os.arch") + "|" +
+              System.getProperty("os.version") + "|" +
+              System.getProperty("java.version") + "|" +
+              Locale.getDefault().getDisplayCountry(Locale.US) + "|" +
+              System.getProperty("user.name") + "|" +
+              System.getProperty("user.dir"); // Rachota Identification
+        Plan plan = Plan.getDefault();
+        calendar.set(Calendar.WEEK_OF_YEAR, currentWeek - 1);
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        Day day = plan.getDay(calendar.getTime());
+        long totalTime = 0;
+        long idleTime = 0;
+        long privateTime = 0;
+        for (int i=0; i<7; i++) {
+            Iterator tasks = day.getTasks().iterator();
+            while (tasks.hasNext()) {
+                Task task = (Task) tasks.next();
+                if (task.isIdleTask()) idleTime = idleTime + task.getDuration();
+                else if (task.privateTask()) privateTime = privateTime + task.getDuration();
+                else totalTime = totalTime + task.getDuration();
+            }
+            calendar.add(Calendar.DAY_OF_WEEK, 1);
+            day = plan.getDay(calendar.getTime());
+        }
+        String WUT = "" + totalTime + "|" + idleTime + "|" + privateTime; // Week Usage Times
+        try {
+            RID = URLEncoder.encode(RID, "UTF-8");
+            WUT = URLEncoder.encode(WUT, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+            System.out.println("Error: Can't build URL to Rachota Analytics server.");
+            e.printStackTrace();
+        }
+        String url_string = "http://rachota.sourceforge.net/reportActivity.php?rid=" + RID + "&wut=" + WUT;
+        try {
             URL url = new URL(url_string);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.getResponseMessage();
             connection.disconnect();
-          */
         }
         catch (Exception e) {
             System.out.println("Error: Can't connect to Rachota Analytics server.");
-            e.printStackTrace();
         }
         Settings.getDefault().setSetting("rachota.reported.week", "" + currentWeek);
     }
