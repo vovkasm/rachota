@@ -44,7 +44,7 @@ import org.cesilko.rachota.core.filters.AbstractTaskFilter;
  * @author Jiri Kovalsky
  */
 public class HistoryChart extends JPanel implements PropertyChangeListener {
-    
+
     /** Days whose data should be drawn. */
     private Vector days;
     /** Filter for highlighting tasks. */
