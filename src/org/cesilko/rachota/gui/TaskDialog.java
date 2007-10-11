@@ -118,6 +118,7 @@ public class TaskDialog extends javax.swing.JDialog {
         initComponents();
         chbRegular.setEnabled(false);
         cmbRepetition.setEnabled(false);
+        chbStartTask.setEnabled(Plan.getDefault().isToday(day));
     }
     
     /** Creates new dialog for editing existing regular task.
@@ -175,6 +176,7 @@ public class TaskDialog extends javax.swing.JDialog {
         chbRegular = new javax.swing.JCheckBox();
         cmbRepetition = new javax.swing.JComboBox();
         chbPrivate = new javax.swing.JCheckBox();
+        chbStartTask = new javax.swing.JCheckBox();
         pnButtons = new javax.swing.JPanel();
         btOK = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
@@ -436,6 +438,23 @@ public class TaskDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(chbPrivate, gridBagConstraints);
 
+        chbStartTask.setFont(getFont());
+        chbStartTask.setMnemonic(Translator.getMnemonic("TASKDIALOG.CHB_START_TASK"));
+        chbStartTask.setText(Translator.getTranslation("TASKDIALOG.CHB_START_TASK"));
+        chbStartTask.setToolTipText(Translator.getTranslation("TASKDIALOG.CHB_START_TASK_TOOLTIP"));
+        chbStartTask.setEnabled(false);
+        chbStartTask.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbStartTaskKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        getContentPane().add(chbStartTask, gridBagConstraints);
+
         btOK.setFont(getFont());
         btOK.setMnemonic(Translator.getMnemonic("TASKDIALOG.BT_OK_NAME"));
         btOK.setText(Translator.getTranslation("TASKDIALOG.BT_OK_NAME"));
@@ -459,69 +478,91 @@ public class TaskDialog extends javax.swing.JDialog {
         pnButtons.add(btCancel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(pnButtons, gridBagConstraints);
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-400)/2, (screenSize.height-364)/2, 400, 364);
+        setBounds((screenSize.width-400)/2, (screenSize.height-385)/2, 400, 385);
     }// </editor-fold>//GEN-END:initComponents
 
 private void chbPrivateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbPrivateKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbPrivateKeyPressed
 
 private void cmbRepetitionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbRepetitionKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_cmbRepetitionKeyPressed
 
 private void chbRegularKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbRegularKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbRegularKeyPressed
 
 private void chbAutoStartKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbAutoStartKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbAutoStartKeyPressed
 
 private void spMinutesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spMinutesKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_spMinutesKeyPressed
 
 private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spHoursKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_spHoursKeyPressed
 
 private void chbNotificationKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbNotificationKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_chbNotificationKeyPressed
 
 private void cmbPriorityKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbPriorityKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_cmbPriorityKeyPressed
 
 private void taNotesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taNotesKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.isControlDown())
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_taNotesKeyPressed
 
 private void txtCategoryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCategoryKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_txtCategoryKeyPressed
 
 private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER)
         btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
 }//GEN-LAST:event_txtDescriptionKeyPressed
 
     private void txtCategoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCategoryFocusLost
@@ -599,6 +640,7 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 task = regularTask;
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
+                System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
                 day.addTask(task);
             }
             firePropertyChange("task_created", null, task);
@@ -649,6 +691,13 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
         setVisible(false);
     }//GEN-LAST:event_closeDialog
+
+    private void chbStartTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbStartTaskKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
+}//GEN-LAST:event_chbStartTaskKeyPressed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
@@ -657,6 +706,7 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     private javax.swing.JCheckBox chbNotification;
     private javax.swing.JCheckBox chbPrivate;
     private javax.swing.JCheckBox chbRegular;
+    private javax.swing.JCheckBox chbStartTask;
     private javax.swing.JComboBox cmbPriority;
     private javax.swing.JComboBox cmbRepetition;
     private javax.swing.JLabel lblCategory;
