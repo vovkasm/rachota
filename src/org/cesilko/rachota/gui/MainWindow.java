@@ -442,13 +442,13 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     /** Name and version of application. */
     protected static final String title = "Rachota 2.1";
     /** Build number. */
-    protected static final String build = "#070822";
+    protected static final String build = "#071011";
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
     private static final int TAB_HISTORY_VIEW = 1;
     /** Index of analytics view tab. */
-    private static final int TAB_ANALYTICS_VIEW = 2;
+    // private static final int TAB_ANALYTICS_VIEW = 2;
     
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
