@@ -44,10 +44,15 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Settings;
+import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 import org.cesilko.rachota.core.filters.*;
 
@@ -59,6 +64,65 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     /** Creates new HistoryView panel charts and table. */
     public HistoryView() {
         initComponents();
+        txtName.setFont(txtName.getFont().deriveFont(java.awt.Font.BOLD));
+        java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        PieChart pieChart = new PieChart(0);
+        pnShare.add(pieChart, gridBagConstraints);
+        addPropertyChangeListener(pieChart);
+        final ProjectsTreeModel model = new ProjectsTreeModel(getDays());
+        jtProjects.setModel(model);
+        jtProjects.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        jtProjects.addTreeSelectionListener(new ProjectsTreeModel.ProjectsTreeListener() {
+            public void valueChanged(TreeSelectionEvent event) {
+                TreePath treePath = event.getPath();
+                int nodeType = model.getSelectedNodeType(treePath);
+                switch(nodeType) {
+                case ProjectsTreeModel.NODE_TYPE_TASK:
+                    DefaultMutableTreeNode selectedTaskNode = (DefaultMutableTreeNode) treePath.getLastPathComponent();
+                    ProjectsTreeModel.TaskNode taskNode = (ProjectsTreeModel.TaskNode) selectedTaskNode.getUserObject();
+                    txtName.setText(taskNode.getDescription());
+                    txtName.setCaretPosition(0);
+                    txtName.setFont(txtName.getFont().deriveFont(java.awt.Font.BOLD));
+                    txtTime.setText(Tools.getTime(taskNode.getTotalTime()));
+                    txtTasks.setText("" + taskNode.getTasks().size());
+                    DefaultMutableTreeNode selectedCategoryNode = (DefaultMutableTreeNode) selectedTaskNode.getParent();
+                    ProjectsTreeModel.CategoryNode category = (ProjectsTreeModel.CategoryNode) selectedCategoryNode.getUserObject();
+                    float shareTask = Math.round(((float) taskNode.getTotalTime()/(float) category.getTotalTime())*100);
+                    txtPercentage.setText("" + shareTask + "%");
+                    txtPriority.setText(Task.getPriority(taskNode.getAverageValue(ProjectsTreeModel.TaskNode.PROPERTY_PRIORITY)));
+                    txtState.setText(Task.getState(taskNode.getAverageValue(ProjectsTreeModel.TaskNode.PROPERTY_STATE)));
+                    PieChart taskPieChart = (PieChart) pnShare.getComponent(0);
+                    taskPieChart.setShare(shareTask);
+                    break;
+                case ProjectsTreeModel.NODE_TYPE_CATEGORY:
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treePath.getLastPathComponent();
+                    ProjectsTreeModel.CategoryNode categoryNode = (ProjectsTreeModel.CategoryNode) selectedNode.getUserObject();
+                    txtName.setText(categoryNode.getName());
+                    txtTime.setText(Tools.getTime(categoryNode.getTotalTime()));
+                    txtTasks.setText("" + categoryNode.getTaskNodes().size());
+                    float shareCategory = Math.round(((float) categoryNode.getTotalTime()/(float) getTotalTime())*100);
+                    txtPercentage.setText("" + shareCategory + "%");
+                    txtPriority.setText(Task.getPriority(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY)));
+                    txtState.setText(Task.getState(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE)));
+                    PieChart categoryPieChart = (PieChart) pnShare.getComponent(0);
+                    categoryPieChart.setShare(shareCategory);
+                    break;
+                default:
+                    txtName.setText("");
+                    txtTime.setText("");
+                    txtTasks.setText("");
+                    txtPercentage.setText("");
+                    txtPriority.setText("");
+                    txtState.setText("");
+                    PieChart emptyPieChart = (PieChart) pnShare.getComponent(0);
+                    emptyPieChart.setShare(0);
+                }
+            }
+        });
         tbFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbTasks.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_DAY));
@@ -66,7 +130,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_MONTH));
         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_YEAR));
         historyChart = new HistoryChart(getDays(), null, HistoryChart.TYPE_TOTAL);
-        java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -137,13 +201,25 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     public java.awt.Font getFont() {
         return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     }
+
+    private long getTotalTime() {
+        long totalTime = 0;
+        Iterator iterator = getDays().iterator();
+        while (iterator.hasNext()) {
+            Day day = (Day) iterator.next();
+            totalTime = totalTime + day.getTotalTime();
+            Task idleTask = day.getIdleTask();
+            if (idleTask != null) totalTime = totalTime + idleTask.getDuration();
+        }
+        return totalTime;
+    }
     
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -184,6 +260,23 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnTotalTime = new javax.swing.JPanel();
         lblFilteredTime = new javax.swing.JLabel();
         txtFilteredTime = new javax.swing.JTextField();
+        pnProjects = new javax.swing.JPanel();
+        spProjects = new javax.swing.JScrollPane();
+        jtProjects = new javax.swing.JTree();
+        pnDetails = new javax.swing.JPanel();
+        lblName = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        lblTime = new javax.swing.JLabel();
+        txtTime = new javax.swing.JTextField();
+        lblPercentage = new javax.swing.JLabel();
+        txtPercentage = new javax.swing.JTextField();
+        lbTasks = new javax.swing.JLabel();
+        txtTasks = new javax.swing.JTextField();
+        lblPriority = new javax.swing.JLabel();
+        txtPriority = new javax.swing.JTextField();
+        lblState = new javax.swing.JLabel();
+        txtState = new javax.swing.JTextField();
+        pnShare = new javax.swing.JPanel();
 
         setName(Translator.getTranslation("HISTORYVIEW.TB_NAME"));
         setLayout(new java.awt.GridBagLayout());
@@ -598,6 +691,157 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TASKS_TAB_NAME"), pnTasks);
 
+        pnProjects.setFont(getFont());
+        pnProjects.setLayout(new java.awt.GridBagLayout());
+
+        spProjects.setPreferredSize(new java.awt.Dimension(81, 100));
+        spProjects.setViewportView(jtProjects);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnProjects.add(spProjects, gridBagConstraints);
+
+        pnDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(null, Translator.getTranslation("HISTORYVIEW.PN_DETAILS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
+        pnDetails.setLayout(new java.awt.GridBagLayout());
+
+        lblName.setFont(getFont());
+        lblName.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_NAME"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(lblName, gridBagConstraints);
+
+        txtName.setEditable(false);
+        txtName.setFont(getFont());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(txtName, gridBagConstraints);
+
+        lblTime.setFont(getFont());
+        lblTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_TIME"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(lblTime, gridBagConstraints);
+
+        txtTime.setEditable(false);
+        txtTime.setFont(getFont());
+        txtTime.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTime.setMinimumSize(new java.awt.Dimension(70, 20));
+        txtTime.setPreferredSize(new java.awt.Dimension(70, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(txtTime, gridBagConstraints);
+
+        lblPercentage.setFont(getFont());
+        lblPercentage.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_PERCENTAGE"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(lblPercentage, gridBagConstraints);
+
+        txtPercentage.setEditable(false);
+        txtPercentage.setFont(getFont());
+        txtPercentage.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPercentage.setMinimumSize(new java.awt.Dimension(80, 20));
+        txtPercentage.setPreferredSize(new java.awt.Dimension(80, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(txtPercentage, gridBagConstraints);
+
+        lbTasks.setFont(getFont());
+        lbTasks.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_TASKS"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(lbTasks, gridBagConstraints);
+
+        txtTasks.setEditable(false);
+        txtTasks.setFont(getFont());
+        txtTasks.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(txtTasks, gridBagConstraints);
+
+        lblPriority.setFont(getFont());
+        lblPriority.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_PRIORITY"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(lblPriority, gridBagConstraints);
+
+        txtPriority.setEditable(false);
+        txtPriority.setFont(getFont());
+        txtPriority.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(txtPriority, gridBagConstraints);
+
+        lblState.setFont(getFont());
+        lblState.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_STATE"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(lblState, gridBagConstraints);
+
+        txtState.setEditable(false);
+        txtState.setFont(getFont());
+        txtState.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(txtState, gridBagConstraints);
+
+        pnShare.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnShare.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 2.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnDetails.add(pnShare, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnProjects.add(pnDetails, gridBagConstraints);
+
+        tpViews.addTab(Translator.getTranslation("HISTORYVIEW.PROJECTS_TAB_NAME"), pnProjects);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
@@ -778,6 +1022,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         if (historyChart != null) historyChart.setDays(getDays());
         filterTasks();
         updateTotalTime();
+        ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
+        model.setDays(getDays());
+        jtProjects.setSelectionRow(0);
     }//GEN-LAST:event_cmbPeriodItemStateChanged
     
     /** Method called when forward button was pressed.
@@ -787,6 +1034,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         period = shiftPeriod(1);
         cmbPeriodItemStateChanged(null);
         updateTotalTime();
+        ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
+        model.setDays(getDays());
+        jtProjects.setSelectionRow(0);
     }//GEN-LAST:event_btForwardActionPerformed
     
     /** Method called when backward button was pressed.
@@ -796,6 +1046,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         period = shiftPeriod(-1);
         cmbPeriodItemStateChanged(null);
         updateTotalTime();
+        ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
+        model.setDays(getDays());
+        jtProjects.setSelectionRow(0);
     }//GEN-LAST:event_btBackwardActionPerformed
     
     /** Method called when plus spinner was pressed.
@@ -809,6 +1062,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         historyChart.setDays(getDays());
         filterTasks();
         updateTotalTime();
+        ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
+        model.setDays(getDays());
+        jtProjects.setSelectionRow(0);
     }//GEN-LAST:event_spPlusStateChanged
     
     /** Method called when minus spinner was pressed.
@@ -822,6 +1078,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         historyChart.setDays(getDays());
         filterTasks();
         updateTotalTime();
+        ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
+        model.setDays(getDays());
+        jtProjects.setSelectionRow(0);
     }//GEN-LAST:event_spMinusStateChanged
     
     
@@ -838,14 +1097,24 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     private javax.swing.JComboBox cmbContentRule;
     private javax.swing.JComboBox cmbFilterName;
     private javax.swing.JComboBox cmbPeriod;
+    private javax.swing.JTree jtProjects;
+    private javax.swing.JLabel lbTasks;
     private javax.swing.JLabel lblChartType;
     private javax.swing.JLabel lblFilteredTime;
     private javax.swing.JLabel lblFilters;
+    private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblPercentage;
     private javax.swing.JLabel lblPeriod;
+    private javax.swing.JLabel lblPriority;
+    private javax.swing.JLabel lblState;
     private javax.swing.JLabel lblTasks;
+    private javax.swing.JLabel lblTime;
     private javax.swing.JLabel lblTotalTime;
     private javax.swing.JPanel pnButtons;
+    private javax.swing.JPanel pnDetails;
     private javax.swing.JPanel pnPeriod;
+    private javax.swing.JPanel pnProjects;
+    private javax.swing.JPanel pnShare;
     private javax.swing.JPanel pnTasks;
     private javax.swing.JPanel pnTimes;
     private javax.swing.JPanel pnTotalTime;
@@ -855,6 +1124,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     private javax.swing.JScrollPane spFilters;
     private javax.swing.JSpinner spMinus;
     private javax.swing.JSpinner spPlus;
+    private javax.swing.JScrollPane spProjects;
     private javax.swing.JScrollPane spTasks;
     private javax.swing.JTable tbFilters;
     private javax.swing.JTable tbTasks;
@@ -862,6 +1132,12 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     private javax.swing.JTextField txtContent;
     private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtFilteredTime;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtPercentage;
+    private javax.swing.JTextField txtPriority;
+    private javax.swing.JTextField txtState;
+    private javax.swing.JTextField txtTasks;
+    private javax.swing.JTextField txtTime;
     private javax.swing.JTextField txtTotalTime;
     // End of variables declaration//GEN-END:variables
     
@@ -1294,9 +1570,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             writer.write("\n");
             writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_FILTERED_TIME") + "</u> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "<br/>");
             writer.write("\n");
-            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(updateTotalTime()) + "</b><br/><br/>");
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(getTotalTime()) + "</b><br/><br/>");
             writer.write("\n");
-            writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + MainWindow.title + "</a> " + "(build " + MainWindow.build + ")<br/>");
+            writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + Tools.title + "</a> " + "(build " + Tools.build + ")<br/>");
             writer.write("\n");
             writer.write("    " + new Date());
             writer.write("\n");
@@ -1316,18 +1592,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
     }
     
-    /** Updates information about total time and returns the time.
-     * @return Total time spent on all tasks in selected period.
-     */
-    private long updateTotalTime() {
-        long totalTime = 0;
-        Iterator iterator = getDays().iterator();
-        while (iterator.hasNext()) {
-            Day day = (Day) iterator.next();
-            totalTime = totalTime + day.getTotalTime();
-        }
+    /** Updates information about total time and returns the time. */
+    private void updateTotalTime() {
+        long totalTime = getTotalTime();
         txtTotalTime.setText(Tools.getTime(totalTime));
-        return totalTime;
     }
     
     /** Saves setup customized by user e.g. time scale, highlighted tasks etc. */
