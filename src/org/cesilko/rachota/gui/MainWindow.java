@@ -42,7 +42,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
@@ -88,7 +87,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             Settings.getDefault().setSetting("userDir", fileChooser.getSelectedFile().getAbsolutePath());
         }
         System.out.println("----------------------------------------------------------------------------------");
-        System.out.println("»» " + title + " «« (build " + build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
+        System.out.println("»» " + Tools.title + " «« (build " + Tools.build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
         System.out.println("   http://rachota.sourceforge.net");
         System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
         System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
@@ -126,10 +125,10 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         dayView.addPropertyChangeListener(historyView);
         historyView.addPropertyChangeListener(dayView);
         tpViews.add(historyView, TAB_HISTORY_VIEW);
-        // AnalyticsView analyticsView = new AnalyticsView();
-        // tpViews.add(analyticsView, TAB_ANALYTICS_VIEW);
+        AnalyticsView analyticsView = new AnalyticsView();
+        tpViews.add(analyticsView, TAB_ANALYTICS_VIEW);
         pack();
-        setTitle(title + " " + dayView.getTitleSuffix());
+        setTitle(Tools.title + " " + dayView.getTitleSuffix());
         String size = (String) Settings.getDefault().getSetting("size");
         String location = (String) Settings.getDefault().getSetting("location");
         if (size != null) {
@@ -346,8 +345,11 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
      */
     private void mnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSettingsActionPerformed
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        AnalyticsView analyticsView = (AnalyticsView) tpViews.getComponentAt(TAB_ANALYTICS_VIEW);
         SettingsDialog dialog = new SettingsDialog(this);
         dialog.addPropertyChangeListener(dayView);
+        dialog.addPropertyChangeListener(analyticsView);
+        dialog.addPropertyChangeListener(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_mnSettingsActionPerformed
     
@@ -362,7 +364,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
      * @param evt Event that invoked the action.
      */
     private void mnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAboutActionPerformed
-        String text = title + " (build " + build + ")\n";
+        String text = Tools.title + " (build " + Tools.build + ")\n";
         text = text + Translator.getTranslation("INFORMATION.PROGRAM");
         text = text + "\n<html><body><a href=\"http://rachota.sourceforge.net\">http://rachota.sourceforge.net</a></body";
         text = text + "\n\njiri.kovalsky@centrum.cz\n2007 ©";
@@ -439,25 +441,29 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private javax.swing.JTabbedPane tpViews;
     // End of variables declaration//GEN-END:variables
     
-    /** Name and version of application. */
-    protected static final String title = "Rachota 2.1";
-    /** Build number. */
-    protected static final String build = "#071011";
+    /** Flag to prevent multiple reporting of activity. */
+    private boolean reportingActivity;
     /** Index of day view tab. */
     private static final int TAB_DAY_VIEW = 0;
     /** Index of history view tab. */
     private static final int TAB_HISTORY_VIEW = 1;
     /** Index of analytics view tab. */
-    // private static final int TAB_ANALYTICS_VIEW = 2;
+    private static final int TAB_ANALYTICS_VIEW = 2;
     
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
      */
     public void propertyChange(PropertyChangeEvent evt) {
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-        setTitle(title + " " + dayView.getTitleSuffix());
+        setTitle(Tools.title + " " + dayView.getTitleSuffix());
         if (evt.getPropertyName().equals("day"))
             tpViews.setSelectedIndex(0);
+        if (evt.getPropertyName().equals("settings")) {
+            String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
+            if (reportedWeek != null)
+                if (reportedWeek.equals("-1"))
+                    Settings.getDefault().setSetting("rachota.reported.week", null);
+        }
         updateSystemTray(dayView);
     }
     
@@ -467,7 +473,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         try { trayIcons = SystemTray.getSystemTray().getTrayIcons(); } catch (UnsupportedOperationException e) { return; }
         for (int i = 0; i < trayIcons.length; i++) {
             TrayIcon trayIcon = trayIcons[i];
-            if (trayIcon.getToolTip().startsWith(title)) {
+            if (trayIcon.getToolTip().startsWith(Tools.title)) {
                 Task task = dayView.getTask();
                 String currentRachotaTrayColor = System.getProperty("rachotaTrayColor");
                 String neededRachotaTrayColor = "red";
@@ -478,7 +484,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     System.setProperty("rachotaTrayColor", neededRachotaTrayColor);
                 }
                 trayIcon.setPopupMenu(getTrayPopupMenu());
-                trayIcon.setToolTip(title + " " + dayView.getTitleSuffix());
+                trayIcon.setToolTip(Tools.title + " " + dayView.getTitleSuffix());
                 break;
             }
         }
@@ -538,7 +544,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     TrayIcon[] trayIcons = systemTray.getTrayIcons();
                     for (int i = 0; i < trayIcons.length; i++) {
                         TrayIcon trayIcon = trayIcons[i];
-                        if (trayIcon.getToolTip().startsWith(title)) {
+                        if (trayIcon.getToolTip().startsWith(Tools.title)) {
                             trayIcon.setImage(image);
                             break;
                         }
@@ -563,7 +569,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 TrayIcon[] trayIcons = systemTray.getTrayIcons();
                 for (int i = 0; i < trayIcons.length; i++) {
                     TrayIcon trayIcon = trayIcons[i];
-                    if (trayIcon.getToolTip().startsWith(title)) {
+                    if (trayIcon.getToolTip().startsWith(Tools.title)) {
                         trayIcon.setImage(image);
                         break;
                     }
@@ -579,7 +585,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 TrayIcon[] trayIcons = systemTray.getTrayIcons();
                 for (int i = 0; i < trayIcons.length; i++) {
                     TrayIcon trayIcon = trayIcons[i];
-                    if (trayIcon.getToolTip().startsWith(title)) {
+                    if (trayIcon.getToolTip().startsWith(Tools.title)) {
                         trayIcon.setImage(image);
                         break;
                     }
@@ -618,7 +624,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
                     System.setProperty("rachotaTrayColor", "red");
                 }
-            final TrayIcon trayIcon = new TrayIcon(image, title, getTrayPopupMenu());
+            final TrayIcon trayIcon = new TrayIcon(image, Tools.title, getTrayPopupMenu());
             ActionListener actionListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     setVisible(true);
@@ -637,19 +643,15 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         Boolean reportActivity = (Boolean) Settings.getDefault().getSetting("reportActivity");
         if (!reportActivity.booleanValue()) return;
         Calendar calendar = Calendar.getInstance();
-        int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        final int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
         if (reportedWeek != null) {
             int week = Integer.parseInt(reportedWeek);
             if (week == currentWeek) return;
+            if (week == -1) return;
         }
-        String RID = System.getProperty("os.name") + "|" +
-              System.getProperty("os.arch") + "|" +
-              System.getProperty("os.version") + "|" +
-              System.getProperty("java.version") + "|" +
-              Locale.getDefault().getDisplayCountry(Locale.US) + "|" +
-              System.getProperty("user.name") + "|" +
-              System.getProperty("user.dir"); // Rachota Identification
+        Clock.getDefault().removeListener(this);
+        String RID = Tools.getRID();
         Plan plan = Plan.getDefault();
         calendar.set(Calendar.WEEK_OF_YEAR, currentWeek - 1);
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
@@ -677,16 +679,37 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             System.out.println("Error: Can't build URL to Rachota Analytics server.");
             e.printStackTrace();
         }
-        String url_string = "http://rachota.sourceforge.net/reportActivity.php?rid=" + RID + "&wut=" + WUT;
-        try {
-            URL url = new URL(url_string);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.getResponseMessage();
-            connection.disconnect();
-        }
-        catch (Exception e) {
-            System.out.println("Error: Can't connect to Rachota Analytics server.");
-        }
-        Settings.getDefault().setSetting("rachota.reported.week", "" + currentWeek);
+        final String url_string = "http://rachota.sourceforge.net/reportActivity.php?rid=" + RID + "&wut=" + WUT;
+        final AnalyticsView analyticsView = (AnalyticsView) tpViews.getComponentAt(TAB_ANALYTICS_VIEW);
+        final Thread connectionThread = new Thread("Rachota Analytics Reporter") {
+            public void run() {
+                try {
+                    if (reportingActivity) return;
+                    reportingActivity = true;
+                    URL url = new URL(url_string);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.getResponseMessage();
+                    connection.disconnect();
+                    Settings.getDefault().setSetting("rachota.reported.week", "" + currentWeek);
+                    analyticsView.updateChart();
+                    reportingActivity = false;
+                }
+                catch (Exception e) {
+                    System.out.println("Error: Can't connect to Rachota Analytics server.");
+                    Settings.getDefault().setSetting("rachota.reported.week", "-1");
+                    reportingActivity = false;
+                }
+            }};
+        connectionThread.start();
+        new Thread("Rachota Analytics Reporter killer") {
+            public void run() {
+                try { sleep(30000); } catch (InterruptedException e) {}
+                if (connectionThread.isAlive()) {
+                    System.out.println("Error: Giving up...");
+                    connectionThread.interrupt();
+                }
+            }
+        }.start();
+        Clock.getDefault().addListener(this);
     }
 }

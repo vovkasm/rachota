@@ -26,6 +26,7 @@ import java.awt.Toolkit;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import org.cesilko.rachota.core.Translator;
 
 /** Helper class providing support for time conversion between
@@ -34,6 +35,10 @@ import org.cesilko.rachota.core.Translator;
  */
 public class Tools {
     
+    /** Name and version of application. */
+    public static final String title = "Rachota 2.2";
+    /** Build number. */
+    public static final String build = "#071025";
     /** Warning type of beep. */
     public static final int BEEP_WARNING = 0;
     /** Notification type of beep. */
@@ -140,5 +145,19 @@ public class Tools {
             Toolkit.getDefaultToolkit().beep();
             try { Thread.currentThread().sleep(delays[i]); } catch (InterruptedException ex) {}
         }
+    }
+
+    /** Returns unique Rachota identification string.
+     * @return Rachota identification string.
+     */
+    public static String getRID() {
+        return title + "|" + build + "|" +
+              System.getProperty("os.name") + "|" +
+              System.getProperty("os.arch") + "|" +
+              System.getProperty("os.version") + "|" +
+              System.getProperty("java.version") + "|" +
+              Locale.getDefault().getDisplayCountry(Locale.US) + "|" +
+              System.getProperty("user.name") + "|" +
+              System.getProperty("user.dir");
     }
 }

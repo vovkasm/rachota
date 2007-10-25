@@ -36,9 +36,9 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitor;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.cesilko.rachota.gui.AnalyticsView;
 import org.cesilko.rachota.gui.StartupWindow;
 import org.xml.sax.SAXParseException;
 
@@ -101,6 +101,27 @@ public class Plan {
      **/
     public Day getDayAfter(Day day) {
         return getDay(day.getDate(), 1);
+    }
+
+    /** Returns iterator of days according to given period scale.
+     * @param scale Period whose days to return. Either week or all time.
+     * @return Iterator of days from previous week or all days.
+     */
+    public Iterator getDays(int scale) {
+        Vector requiredDays = new Vector();
+        if (scale == AnalyticsView.SCALE_PAST_WEEK) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - 1);
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            Day day = getDay(calendar.getTime());
+            for (int i=0; i<7; i++) {
+                requiredDays.add(day);
+                calendar.add(Calendar.DAY_OF_WEEK, 1);
+                day = getDay(calendar.getTime());
+            }
+            return requiredDays.iterator();
+        }
+        return days.values().iterator();
     }
     
     /** Returns day by given date and offset.
