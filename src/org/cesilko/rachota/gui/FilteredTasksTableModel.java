@@ -148,7 +148,6 @@ public class FilteredTasksTableModel extends AbstractTableModel {
      * @return Total time spent on all displayed tasks in miliseconds.
      */
     public double getTotalTime() {
-        Vector uniqueTasks = new Vector();
         Iterator iterator = tasks.iterator();
         double duration = 0;
         while (iterator.hasNext()) {
