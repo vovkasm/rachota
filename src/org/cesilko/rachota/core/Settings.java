@@ -67,6 +67,8 @@ public class Settings {
         settingsMap.put("displayFinishedTasks", new Boolean(false));
         settingsMap.put("countPrivateTasks", new Boolean(false));
         settingsMap.put("reportActivity", new Boolean(true));
+        settingsMap.put("proxyHost", "");
+        settingsMap.put("proxyPort", "");
         settingsMap.put("runningTask", null);
         settingsMap.put("savingPeriod", "30");
         settingsMap.put("dictionary", "Dictionary_" + Locale.getDefault().getLanguage() + "_" + Locale.getDefault().getCountry() + ".properties");
@@ -186,6 +188,12 @@ public class Settings {
                     settings.setSetting(key, new Boolean(value));
                 else settings.setSetting(key, value);
             }
+            String proxyHost = (String) settings.getSetting("proxyHost");
+            String proxyPort = (String) settings.getSetting("proxyPort");
+            if ((proxyHost != null) && (proxyHost.length() > 0)) System.setProperty("http.proxyHost", proxyHost);
+            else System.clearProperty("http.proxyHost");
+            if ((proxyPort != null) && (proxyPort.length() > 0)) System.setProperty("http.proxyPort", proxyPort);
+            else System.clearProperty("http.proxyPort");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
