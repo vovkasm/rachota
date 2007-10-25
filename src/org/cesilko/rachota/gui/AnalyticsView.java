@@ -144,7 +144,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                         if (character == -1) break;
                         usageTimesAll = usageTimesAll + (char) character;
                     }
-                    if (usageTimesAll.indexOf("Not authorized.") != -1) {
+                    if (usageTimesAll.indexOf("Access denied.") != -1) {
                         usageTimesAll = null;
                     } else {
                         String start = "data: <b>";
