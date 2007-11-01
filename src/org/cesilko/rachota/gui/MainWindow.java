@@ -28,6 +28,7 @@ import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -135,6 +136,10 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             try {
                 int width = Integer.parseInt(size.substring(1, size.indexOf(",")));
                 int height = Integer.parseInt(size.substring(size.indexOf(",") + 1, size.length() - 1));
+                if ((width < 0) || (height < 0)) {
+                    width = 511;
+                    height = 646;
+                }
                 setSize(width, height);
             } catch (Exception e) {
                 System.out.println("Error: Unable to load size of main window: " + size);
@@ -145,7 +150,15 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             try {
                 int x = Integer.parseInt(location.substring(1, location.indexOf(",")));
                 int y = Integer.parseInt(location.substring(location.indexOf(",") + 1, location.length() - 1));
-                setLocation(x, y);
+                if ((x < 0) || (y < 0)) setLocationRelativeTo(null);
+                else {
+                    Toolkit toolkit = Toolkit.getDefaultToolkit();
+                    int screenWidth = toolkit.getScreenSize().width;
+                    int screenHeight = toolkit.getScreenSize().height;
+                    if ((x + getWidth() > screenWidth) || (y + getHeight() > screenHeight))
+                        setLocationRelativeTo(null);
+                    else setLocation(x, y);
+                }
             } catch (Exception e) {
                 System.out.println("Error: Unable to load location of main window: " + location);
                 e.printStackTrace();
