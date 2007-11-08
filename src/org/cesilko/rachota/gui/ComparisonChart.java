@@ -24,6 +24,10 @@ package org.cesilko.rachota.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.cesilko.rachota.core.Translator;
 
@@ -61,7 +65,13 @@ public class ComparisonChart extends JPanel {
     /** Creates a new comparison chart. */
     public ComparisonChart() {
         super();
-        setTimes(0, 0, 0, 0, 0, 0);
+        addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() != 2) return;
+                if (message == null) return;
+                JOptionPane.showMessageDialog(ComparisonChart.this, "<html><body><font color=\"red\">" + message + "</font><br><h4>" + hint + "</h4></body></html>", Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            }
+        });
     }
 
     /** Draws the pie chart given set share.
@@ -71,30 +81,8 @@ public class ComparisonChart extends JPanel {
         int width = getBounds().width;
         int height = getBounds().height;
         graphics.clearRect(0, 0, width, height);
-        graphics.setColor(Color.RED);
-        int positionY = height/3;
-        if (width < graphics.getFontMetrics().stringWidth(message)) {
-            int index = message.substring(message.length()/2).indexOf(" ") + message.length()/2;
-            String partOne = message.substring(0, index);
-            String partTwo = message.substring(index);
-            graphics.drawString(partOne, width/2 - graphics.getFontMetrics().stringWidth(partOne)/2, positionY);
-            positionY = positionY + 15;
-            graphics.drawString(partTwo, width/2 - graphics.getFontMetrics().stringWidth(partTwo)/2, positionY);
-        } else graphics.drawString(message, width/2 - graphics.getFontMetrics().stringWidth(message)/2, positionY);
-        positionY = positionY + 15;
-        graphics.setColor(Color.BLACK);
-        if (width < graphics.getFontMetrics().stringWidth(hint)) {
-            int index = hint.substring(hint.length()/2).indexOf(" ") + hint.length()/2;
-            String partOne = hint.substring(0, index);
-            String partTwo = hint.substring(index);
-            graphics.drawString(partOne, width/2 - graphics.getFontMetrics().stringWidth(partOne)/2, positionY);
-            positionY = positionY + 15;
-            graphics.drawString(partTwo, width/2 - graphics.getFontMetrics().stringWidth(partTwo)/2, positionY);
-        } else graphics.drawString(hint, width/2 - graphics.getFontMetrics().stringWidth(hint)/2, positionY);
-        long times = totalTimeAll + totalTimeUser + privateTimeAll + privateTimeUser + idleTimeAll + idleTimeUser;
-        if (times == 0) return;
-        graphics.clearRect(0, 0, width, height);
         long maxTimeValue = Math.max(totalTimeUser, Math.max(totalTimeAll, Math.max(privateTimeUser, Math.max(privateTimeAll, Math.max(idleTimeUser, idleTimeAll)))));
+        if (maxTimeValue == 0) return;
         int columnWidth = (width - INSET_RIGHT - INSET_LEFT - width / 6) / 6;
         String you = Translator.getTranslation("ANALYTICSVIEW.YOU");
         String others = Translator.getTranslation("ANALYTICSVIEW.OTHERS");
@@ -157,13 +145,17 @@ public class ComparisonChart extends JPanel {
         this.idleTimeUser = idleTimeUser;
         this.privateTimeAll = privateTimeAll;
         this.privateTimeUser = privateTimeUser;
+        if (totalTimeAll + privateTimeAll + idleTimeAll != 0) {
+            setMessage(null, null);
+        }
         repaint();
     }
 
     void setMessage(String message, String hint) {
+        String tooltip = message == null ? null : message + " " + Translator.getTranslation("ANALYTICSVIEW.HINT_TOOLTIP");
+        setToolTipText(tooltip);
         this.message = message;
         this.hint = hint;
-        setTimes(0, 0, 0, 0, 0, 0);
     }
 
     private void drawColumn(int x, int y, int columnWidth, int columnHeight, Color color, String textBelow, String textAbove, Graphics graphics) {
@@ -173,5 +165,10 @@ public class ComparisonChart extends JPanel {
         graphics.drawRect(x, y, columnWidth, columnHeight);
         graphics.drawString(textBelow, x + columnWidth / 2 - graphics.getFontMetrics().stringWidth(textBelow) / 2, y + columnHeight + INSET_BOTTOM);
         graphics.drawString(textAbove, x + columnWidth / 2 - graphics.getFontMetrics().stringWidth(textAbove) / 2, y - 10);
+        long times = totalTimeAll + privateTimeAll + idleTimeAll;
+        if (times != 0) return;
+        if (!textAbove.equals("00:00")) return;
+        ImageIcon warning = new ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/warning.png"));
+        graphics.drawImage(warning.getImage(), x + columnWidth / 2 + graphics.getFontMetrics().stringWidth(textAbove) / 2 + 5, y - 10 - warning.getIconHeight()/2 - graphics.getFontMetrics().getHeight()/2, null);
     }
 }
