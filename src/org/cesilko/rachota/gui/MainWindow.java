@@ -377,11 +377,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
      * @param evt Event that invoked the action.
      */
     private void mnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAboutActionPerformed
-        String text = Tools.title + " (build " + Tools.build + ")\n";
-        text = text + Translator.getTranslation("INFORMATION.PROGRAM");
-        text = text + "\n<html><body><a href=\"http://rachota.sourceforge.net\">http://rachota.sourceforge.net</a></body";
-        text = text + "\n\njiri.kovalsky@centrum.cz\n2007 ©";
-        JOptionPane.showMessageDialog(this, text, Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE, new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_name_48.png")));
+        new AboutDialog(this, true).setVisible(true);
     }//GEN-LAST:event_mnAboutActionPerformed
     
     /** Method called when application should be exited.
