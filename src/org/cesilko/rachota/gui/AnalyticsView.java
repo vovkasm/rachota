@@ -75,6 +75,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         float idleTime = getIdleTimeUser();
         effectivity = Math.round(totalTime * 5 / (idleTime + privateTime + totalTime));
         lbEffectivityResult.setIcon(getIcon(effectivity));
+        lbEffectivityResult.setToolTipText("" + totalTime * 5 / (idleTime + privateTime + totalTime));
     }
 
     private void updateCategorization() {
@@ -94,10 +95,9 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             }
         }
         float categorizationRatio = numberOfCategories / numberOfTasks;
-        System.out.println("Ratio: " + categorizationRatio);
         categorization = (int) (categorizationRatio * 10 / 2);
-        System.out.println("Categorization: " + categorization);
         lbCategorizationResult.setIcon(getIcon(categorization));
+        lbCategorizationResult.setToolTipText("" + (categorizationRatio * 10 / 2));
     }
 
     private void updateGranularity() {
@@ -188,8 +188,8 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 }
                 catch (Exception e) {
                     System.out.println("Error: Can't connect to Rachota Analytics server.");
-                    // usageTimesAll = null;
-                    usageTimesAll = "72443470|31442794|5487976";
+                    usageTimesAll = null;
+                    // usageTimesAll = "72443470|31442794|5487976";
                 }
             }};
         connectionThread.start();
