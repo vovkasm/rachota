@@ -30,9 +30,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Vector;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
+import org.cesilko.rachota.core.RegularTask;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
@@ -73,11 +77,14 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         float totalTime = getTotalTimeUser();
         float privateTime = getPrivateTimeUser();
         float idleTime = getIdleTimeUser();
-        effectivity = Math.round(totalTime * 5 / (idleTime + privateTime + totalTime));
-        lbEffectivityResult.setIcon(getIcon(effectivity));
-        lbEffectivityResult.setToolTipText("" + totalTime * 5 / (idleTime + privateTime + totalTime));
+        effectivity = totalTime * 5 / (idleTime + privateTime + totalTime);
+        lbEffectivityResult.setIcon(getIcon(Math.round(effectivity)));
+        lbEffectivityResult.setToolTipText("" + effectivity);
     }
 
+    /** Counts usage of categories across tasks.
+     * Does user specify categories for tasks enough?
+     */
     private void updateCategorization() {
         Iterator days = Plan.getDefault().getDays(scale);
         float numberOfTasks = 0;
@@ -95,29 +102,181 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             }
         }
         float categorizationRatio = numberOfCategories / numberOfTasks;
-        categorization = (int) (categorizationRatio * 10 / 2);
-        lbCategorizationResult.setIcon(getIcon(categorization));
-        lbCategorizationResult.setToolTipText("" + (categorizationRatio * 10 / 2));
+        categorization = categorizationRatio * 10 / 2;
+        lbCategorizationResult.setIcon(getIcon(Math.round(categorization)));
+        lbCategorizationResult.setToolTipText("" + categorization);
     }
 
+    /** Counts distribution of tasks durations in selected shares intervals.
+     * Does user create too many or too little tasks?
+     */
     private void updateGranularity() {
-        granularity = 0;
-        lbGranularityResult.setIcon(getIcon(granularity));
+        int tasks_80 = 0;
+        int tasks_40 = 0;
+        int tasks_20 = 0;
+        int tasks_10 = 0;
+        int tasks_4 = 0;
+        int tasks_2 = 0;
+        int tasks_1 = 0;
+        int allTasks = 0;
+        Iterator days = Plan.getDefault().getDays(scale);
+        while (days.hasNext()) {
+            Day day = (Day) days.next();
+            long totalDayTime = day.getTotalTime(false);
+            if (totalDayTime == 0) continue;
+            Iterator tasks = day.getTasks().iterator();
+            while (tasks.hasNext()) {
+                Task task = (Task) tasks.next();
+                if (task.isIdleTask()) continue;
+                int timeShare = (int) (task.getDuration() * 100 / totalDayTime);
+                if (timeShare >= 80) tasks_80++;
+                else if (timeShare >= 40) tasks_40++;
+                else if (timeShare >= 20) tasks_20++;
+                else if (timeShare >= 10) tasks_10++;
+                else if (timeShare >= 4) tasks_4++;
+                else if (timeShare >= 2) tasks_2++;
+                else tasks_1++;
+                allTasks++;
+            }
+        }
+        tasks_80 = tasks_80 * 100 / allTasks;
+        tasks_40 = tasks_40 * 100 / allTasks;
+        tasks_20 = tasks_20 * 100 / allTasks;
+        tasks_10 = tasks_10 * 100 / allTasks;
+        tasks_4 = tasks_4 * 100 / allTasks;
+        tasks_2 = tasks_2 * 100 / allTasks;
+        tasks_1 = tasks_1 * 100 / allTasks;
+        
+        int totalError = Math.abs(tasks_80 - 1);
+        totalError = totalError + Math.abs(tasks_40 - 5);
+        totalError = totalError + Math.abs(tasks_20 - 16);
+        totalError = totalError + Math.abs(tasks_10 - 26);
+        totalError = totalError + Math.abs(tasks_4 - 30);
+        totalError = totalError + Math.abs(tasks_2 - 17);
+        totalError = totalError + Math.abs(tasks_1 - 5);
+        
+        granularity = (100f - totalError) / 20;
+        lbGranularityResult.setToolTipText("" + granularity);
+        lbGranularityResult.setIcon(getIcon(Math.round(granularity)));
     }
 
     private void updatePrioritization() {
-        prioritization = 0;
-        lbPrioritizationResult.setIcon(getIcon(prioritization));
+        int highPriority = 0;
+        int middlePriority = 0;
+        int lowPriority = 0;
+        int allTasks = 0;
+        Iterator days = Plan.getDefault().getDays(scale);
+        while (days.hasNext()) {
+            Day day = (Day) days.next();
+            Iterator tasks = day.getTasks().iterator();
+            while (tasks.hasNext()) {
+                Task task = (Task) tasks.next();
+                if (task.isIdleTask()) continue;
+                int taskPriority = task.getPriority();
+                if (taskPriority == Task.PRIORITY_HIGH) highPriority++;
+                else if (taskPriority == Task.PRIORITY_MEDIUM) middlePriority++;
+                else lowPriority++;
+                allTasks++;
+            }
+        }
+        highPriority = highPriority * 100 / allTasks;
+        middlePriority = middlePriority * 100 / allTasks;
+        lowPriority = lowPriority * 100 / allTasks;
+        
+        int totalError = Math.abs(highPriority - 30);
+        totalError = totalError + Math.abs(middlePriority - 50);
+        totalError = totalError + Math.abs(lowPriority - 20);
+        
+        prioritization = (100f - totalError) / 20;
+        lbPrioritizationResult.setToolTipText("" + prioritization);
+        lbPrioritizationResult.setIcon(getIcon(Math.round(prioritization)));
     }
 
     private void updateRepetition() {
-        repetition = 0;
-        lbRepetitionResult.setIcon(getIcon(repetition));
+        int allDays = 0;
+        int allTasks = 0;
+        Hashtable taskCounts = new Hashtable();
+        Iterator days = Plan.getDefault().getDays(scale);
+        while (days.hasNext()) {
+            Day day = (Day) days.next();
+            Iterator tasks = day.getTasks().iterator();
+            while (tasks.hasNext()) {
+                Task task = (Task) tasks.next();
+                if (task.isIdleTask()) continue;
+                allTasks++;
+                String description = task.getDescription();
+                if (taskCounts.containsKey(description)) {
+                    Integer count = (Integer) taskCounts.get(description);
+                    taskCounts.put(description, new Integer(count.intValue() + 1));
+                } else taskCounts.put(description, new Integer(1));
+            }
+            if (day.getTotalTime(true) != 0) allDays++;
+        }
+        int missingRegularTasks = 0;
+        Enumeration enumeration = taskCounts.keys();
+        Vector regularTasks = Plan.getDefault().getRegularTasks();
+        while (enumeration.hasMoreElements()) {
+            String description = (String) enumeration.nextElement();
+            Integer count = (Integer) taskCounts.get(description);
+            int taskRepetition = count * 100 / allDays;
+            if (taskRepetition > 50) {
+                boolean isRegular = false;
+                Iterator iterator = regularTasks.iterator();
+                while (iterator.hasNext()) {
+                    RegularTask regularTask = (RegularTask) iterator.next();
+                    if (regularTask.getDescription().equals(description)) {
+                        isRegular = true;
+                        break;
+                    }
+                }
+                if (!isRegular) missingRegularTasks++;
+            }
+        }
+        int uselessRegularTasks = 0;
+        Iterator iterator = regularTasks.iterator();
+        while (iterator.hasNext()) {
+            RegularTask regularTask = (RegularTask) iterator.next();
+            if (!taskCounts.containsKey(regularTask.getDescription())) uselessRegularTasks++;
+            else {
+                Integer count = (Integer) taskCounts.get(regularTask.getDescription());
+                int taskRepetition = count * 100 / allDays;
+                if (regularTask.getFrequency() == RegularTask.FREQUENCY_DAILY)
+                    if (taskRepetition < 60) uselessRegularTasks++;
+                if (regularTask.getFrequency() == RegularTask.FREQUENCY_WORKDAY)
+                    if (taskRepetition < 40) uselessRegularTasks++;
+            }
+        }
+        int totalError = (missingRegularTasks * 100 / (allTasks / allDays) + (uselessRegularTasks * 100 / regularTasks.size())) / 2;
+        repetition = (100f - totalError) / 20;
+        lbRepetitionResult.setToolTipText("" + repetition);
+        lbRepetitionResult.setIcon(getIcon(Math.round(repetition)));
     }
 
     private void updateStatusing() {
-        statusing = 0;
-        lbStatusingResult.setIcon(getIcon(statusing));
+        int doneStatus = 0;
+        int startedStatus = 0;
+        int allTasks = 0;
+        Iterator days = Plan.getDefault().getDays(scale);
+        while (days.hasNext()) {
+            Day day = (Day) days.next();
+            Iterator tasks = day.getTasks().iterator();
+            while (tasks.hasNext()) {
+                Task task = (Task) tasks.next();
+                if (task.isIdleTask()) continue;
+                int taskState = task.getState();
+                if (taskState == Task.STATE_DONE) doneStatus++;
+                else startedStatus++;
+                allTasks++;
+            }
+        }
+        doneStatus = doneStatus * 100 / allTasks;
+        startedStatus = startedStatus * 100 / allTasks;
+        int totalError = Math.abs(doneStatus - 40);
+        totalError = totalError + Math.abs(startedStatus - 60);
+        
+        statusing = (100f - totalError) / 20;
+        lbStatusingResult.setToolTipText("" + statusing);
+        lbStatusingResult.setIcon(getIcon(Math.round(statusing)));
     }
 
     private long getIdleTimeAll() {
@@ -176,7 +335,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                         usageTimesAll = usageTimesAll + (char) character;
                     }
                     if (usageTimesAll.indexOf("Access denied.") != -1) {
-                        usageTimesAll = null;
+                        usageTimesAll = "";
                     } else {
                         String start = "data: <b>";
                         String end = "</b><br>Records: ";
@@ -189,7 +348,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 catch (Exception e) {
                     System.out.println("Error: Can't connect to Rachota Analytics server.");
                     usageTimesAll = null;
-                    // usageTimesAll = "72443470|31442794|5487976";
+                    // usageTimesAll = "81670875|51336579|2496951"; // Based on 141 usage reports
                 }
             }};
         connectionThread.start();
@@ -483,17 +642,17 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
     /** Comparison chart showing average weekly usage times */
     private ComparisonChart comparisonChart;
     /** How much user is effective in using his working hours. More idle time means less effectivity. */
-    private int effectivity;
+    private float effectivity;
     /** How much time an average task take. Does user create too many or too little tasks? */
-    private int granularity;
+    private float granularity;
     /** Distribution of priorities across tasks. Does user utilize task priorities enough? */
-    private int prioritization;
+    private float prioritization;
     /** Usage of categories across tasks. Does user specify categories for tasks enough? */
-    private int categorization;
+    private float categorization;
     /** Usage of all statuses. Does user close tasks or leaves them open forever? */
-    private int statusing;
+    private float statusing;
     /** Clever usage of regular tasks. How many irregular tasks do actually repeat often? */
-    private int repetition;
+    private float repetition;
     
     public void updateChart() {
         countUserTimes();
@@ -509,6 +668,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             return;
         }
         comparisonChart.setMessage(Translator.getTranslation("ANALYTICSVIEW.NO_REPORT_THIS_WEEK"), Translator.getTranslation("ANALYTICSVIEW.NO_REPORT_THIS_WEEK_HINT"));
+        if (usageTimesAll.equals("")) return;
         int currentWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
         String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
         if (reportedWeek == null) return;
