@@ -89,21 +89,21 @@ public class ComparisonChart extends JPanel {
 
         // Drawing total times columns
         int columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP - 15) * totalTimeUser / maxTimeValue);
-        drawColumn(INSET_LEFT, height - INSET_BOTTOM - columnHeight, columnWidth, columnHeight, Color.LIGHT_GRAY, you, Tools.getTimeShort(totalTimeUser), graphics);
+        drawColumn(INSET_LEFT, height - INSET_BOTTOM - columnHeight - 5, columnWidth, columnHeight, Color.LIGHT_GRAY, you, Tools.getTimeShort(totalTimeUser), graphics);
         columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP - 15) * totalTimeAll / maxTimeValue);
-        drawColumn(INSET_LEFT + columnWidth + 2, height - INSET_BOTTOM - columnHeight, columnWidth, columnHeight, Color.GRAY, others, Tools.getTimeShort(totalTimeAll), graphics);
+        drawColumn(INSET_LEFT + columnWidth + 2, height - INSET_BOTTOM - columnHeight - 5, columnWidth, columnHeight, Color.GRAY, others, Tools.getTimeShort(totalTimeAll), graphics);
 
         // Drawing idle times columns
         columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP - 15) * idleTimeUser / maxTimeValue);
-        drawColumn(INSET_LEFT + columnWidth * 2 + width / 12, height - INSET_BOTTOM - columnHeight, columnWidth, columnHeight, Color.CYAN, you, Tools.getTimeShort(idleTimeUser), graphics);
+        drawColumn(INSET_LEFT + columnWidth * 2 + width / 12, height - INSET_BOTTOM - columnHeight - 5, columnWidth, columnHeight, Color.CYAN, you, Tools.getTimeShort(idleTimeUser), graphics);
         columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP - 15) * idleTimeAll / maxTimeValue);
-        drawColumn(INSET_LEFT + columnWidth * 3 + 2 + width / 12, height - INSET_BOTTOM - columnHeight, columnWidth, columnHeight, Color.GRAY, others, Tools.getTimeShort(idleTimeAll), graphics);
+        drawColumn(INSET_LEFT + columnWidth * 3 + 2 + width / 12, height - INSET_BOTTOM - columnHeight - 5, columnWidth, columnHeight, Color.GRAY, others, Tools.getTimeShort(idleTimeAll), graphics);
 
         // Drawing private times columns
         columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP - 15) * privateTimeUser / maxTimeValue);
-        drawColumn(INSET_LEFT + columnWidth * 4 + width / 6, height - INSET_BOTTOM - columnHeight, columnWidth, columnHeight, Color.BLUE, you, Tools.getTimeShort(privateTimeUser), graphics);
+        drawColumn(INSET_LEFT + columnWidth * 4 + width / 6, height - INSET_BOTTOM - columnHeight - 5, columnWidth, columnHeight, Color.BLUE, you, Tools.getTimeShort(privateTimeUser), graphics);
         columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP - 15) * privateTimeAll / maxTimeValue);
-        drawColumn(INSET_LEFT + columnWidth * 5 + 2 + width / 6, height - INSET_BOTTOM - columnHeight, columnWidth, columnHeight, Color.GRAY, others, Tools.getTimeShort(privateTimeAll), graphics);
+        drawColumn(INSET_LEFT + columnWidth * 5 + 2 + width / 6, height - INSET_BOTTOM - columnHeight - 5, columnWidth, columnHeight, Color.GRAY, others, Tools.getTimeShort(privateTimeAll), graphics);
 
         graphics.setColor(Color.BLACK);
         String working_Time = Translator.getTranslation("HISTORYCHART.WORKING_TIME");
@@ -118,24 +118,24 @@ public class ComparisonChart extends JPanel {
         if (correction > maxCorrection)
             maxCorrection = correction;
         graphics.setColor(Color.WHITE);
-        graphics.fillRect(width - maxCorrection - 25, 5, maxCorrection + 20, 50);
+        graphics.fillRect(width - maxCorrection - 25, 0, maxCorrection + 20, 50);
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawRect(width - maxCorrection - 25, 5, maxCorrection + 20, 50);
-        graphics.drawString(working_Time, width - maxCorrection - 6, 20);
-        graphics.drawString(idle_Time, width - maxCorrection - 6, 35);
-        graphics.drawString(private_Time, width - maxCorrection - 6, 50);
+        graphics.drawRect(width - maxCorrection - 25, 0, maxCorrection + 20, 50);
+        graphics.drawString(working_Time, width - maxCorrection - 6, 15);
+        graphics.drawString(idle_Time, width - maxCorrection - 6, 30);
+        graphics.drawString(private_Time, width - maxCorrection - 6, 45);
         graphics.setColor(Color.LIGHT_GRAY);
-        graphics.fillRect(width - 20 - maxCorrection, 10, 10, 10);
+        graphics.fillRect(width - 20 - maxCorrection, 5, 10, 10);
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawRect(width - 20 - maxCorrection, 10, 10, 10);
+        graphics.drawRect(width - 20 - maxCorrection, 5, 10, 10);
         graphics.setColor(Color.CYAN);
-        graphics.fillRect(width - 20 - maxCorrection, 25, 10, 10);
+        graphics.fillRect(width - 20 - maxCorrection, 20, 10, 10);
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawRect(width - 20 - maxCorrection, 25, 10, 10);
+        graphics.drawRect(width - 20 - maxCorrection, 20, 10, 10);
         graphics.setColor(Color.BLUE);
-        graphics.fillRect(width - 20 - maxCorrection, 40, 10, 10);
+        graphics.fillRect(width - 20 - maxCorrection, 35, 10, 10);
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawRect(width - 20 - maxCorrection, 40, 10, 10);
+        graphics.drawRect(width - 20 - maxCorrection, 35, 10, 10);
     }
 
     public void setTimes(long totalTimeUser, long totalTimeAll, long idleTimeUser, long idleTimeAll, long privateTimeUser, long privateTimeAll) {
