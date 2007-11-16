@@ -35,6 +35,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -388,7 +389,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         if (warnHoursNotReaced) {
             double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
             Day today = Plan.getDefault().getDay(new Date());
-            double totalTime = (double) today.getTotalTime()/(60 * 60 * 1000);
+            double totalTime = (double) today.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
             if (totalTime < dayWorkHours) {
                 String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
                 int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("WARNING.HOURS_NOT_REACHED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
@@ -679,7 +680,14 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             calendar.add(Calendar.DAY_OF_WEEK, 1);
             day = plan.getDay(calendar.getTime());
         }
-        String WUT = "" + totalTime + "|" + idleTime + "|" + privateTime; // Week Usage Times
+        String userDir = (String) Settings.getDefault().getSetting("userDir");
+        File[] diaries = new File(userDir).listFiles(new FileFilter() {
+            public boolean accept(File file) {
+                String name = file.getName();
+                return (name.startsWith("diary_") && (name.endsWith(".xml")));
+            }
+        });
+        String WUT = "" + totalTime + "|" + idleTime + "|" + privateTime + "|" + diaries.length; // Week Usage Times
         try {
             RID = URLEncoder.encode(RID, "UTF-8");
             WUT = URLEncoder.encode(WUT, "UTF-8");
