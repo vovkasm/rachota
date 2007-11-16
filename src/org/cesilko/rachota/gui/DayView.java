@@ -722,10 +722,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         Settings.saveSettings();
         txtTask.setText("");
         double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
-        double totalTime = (double) day.getTotalTime()/(60 * 60 * 1000);
+        double totalTime = (double) day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
         int progress = (int) (totalTime * 100 / dayWorkHours);
         pbProgress.setValue(progress);
-        pbProgress.setString(Tools.getTime(day.getTotalTime()));
+        pbProgress.setString(Tools.getTime(day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())));
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         dayTableModel.fireTableDataChanged();
         firePropertyChange("task_done", task, null);
@@ -877,10 +877,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             txtStart.setText(Tools.getTime(startTime));
             txtEnd.setText(Tools.getTime(day.getFinishTime()));
             double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
-            double totalTime = (double) day.getTotalTime()/(60 * 60 * 1000);
+            double totalTime = (double) day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
             int progress = (int) (totalTime * 100 / dayWorkHours);
             pbProgress.setValue(progress);
-            pbProgress.setString(Tools.getTime(day.getTotalTime()));
+            pbProgress.setString(Tools.getTime(day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())));
         } else {
             txtStart.setText("");
             txtEnd.setText("");
@@ -902,7 +902,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             boolean warnHoursExceeded = ((Boolean) Settings.getDefault().getSetting("warnHoursExceeded")).booleanValue();
             if (warnHoursExceeded && !warningConfirmed) {
                 double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
-                double totalTime = (double) Plan.getDefault().getDay(new Date()).getTotalTime()/(60 * 60 * 1000);
+                double totalTime = (double) Plan.getDefault().getDay(new Date()).getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
                 if (totalTime > dayWorkHours) {
                     warningConfirmed = true;
                     new Thread() {
@@ -1025,7 +1025,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         boolean usableTask = (task != null) && !task.isIdleTask();
         String taskDescription = usableTask ? task.getDescription() + " " : "";
         String taskTime = usableTask ? Tools.getTimeShort(task.getDuration()) : "";
-        String totalTime = Tools.getTimeShort(Plan.getDefault().getDay(new Date()).getTotalTime());
+        String totalTime = Tools.getTimeShort(Plan.getDefault().getDay(new Date()).getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()));
         if (showTime.equals("both")) {
             // Rachota 2.1 - Discussion [00:13 / 05:12]
             // Rachota 2.1 - [05:12]

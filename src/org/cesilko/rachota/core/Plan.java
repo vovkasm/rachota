@@ -384,7 +384,7 @@ public class Plan {
         Day today = getDay(new Date());
         if (!existsDayBefore(today)) return;
         Day previousWorkingDay = getDayBefore(today);
-        while (previousWorkingDay.getTotalTime() == 0) {
+        while (previousWorkingDay.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()) == 0) {
             if (!existsDayBefore(previousWorkingDay)) return;
             previousWorkingDay = getDayBefore(previousWorkingDay);
         }

@@ -236,17 +236,17 @@ public class Day implements PropertyChangeListener {
         return modified;
     }
     
-    /** Get total time spent on tasks.
+    /** Get total time spent on tasks without idle time.
+     * @param includePrivateTasks If true, also time spent on private tasks will be calculated.
      * @return Total time spent on tasks in milliseconds.
      */
-    public long getTotalTime() {
-        Boolean countPrivateTasks = (Boolean) Settings.getDefault().getSetting("countPrivateTasks");
+    public long getTotalTime(boolean includePrivateTasks) {
         Iterator iterator = tasks.iterator();
         long totalTime = 0;
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
             if (task.isIdleTask()) continue;
-            if (!task.privateTask() || countPrivateTasks.booleanValue()) totalTime = totalTime + task.getDuration();
+            if (!task.privateTask() || includePrivateTasks) totalTime = totalTime + task.getDuration();
         }
         return totalTime;
     }

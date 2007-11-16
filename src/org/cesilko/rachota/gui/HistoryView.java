@@ -207,7 +207,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         Iterator iterator = getDays().iterator();
         while (iterator.hasNext()) {
             Day day = (Day) iterator.next();
-            totalTime = totalTime + day.getTotalTime();
+            totalTime = totalTime + day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
             Task idleTask = day.getIdleTask();
             if (idleTask != null) totalTime = totalTime + idleTask.getDuration();
         }
@@ -1505,7 +1505,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             Iterator iterator = days.iterator();
             while(iterator.hasNext()) {
                 Day day = (Day) iterator.next();
-                if (day.getTotalTime() != 0) numberOfWorkingDays++;
+                if (day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()) != 0) numberOfWorkingDays++;
             }
             writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.PERIOD") + "</u></td><td width=\"20\"/><td>" + df.format(firstDay.getDate()) + " - " + df.format(lastDay.getDate()) + "</td></tr>");
             writer.write("\n");

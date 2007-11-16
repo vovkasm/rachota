@@ -141,7 +141,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
         while (iterator.hasNext()) {
             Day day = (Day) iterator.next();
             if (chartType == TYPE_TOTAL) {
-                int hours = (int) day.getTotalTime()/(1000*60*60);
+                int hours = (int) day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(1000*60*60);
                 if (hours > maxValueY) maxValueY = hours;
             }
             if (chartType == TYPE_TIME_USAGE) {
@@ -239,7 +239,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
         for (int i=0; i<count; i++) {
             Day day = (Day) days.get(i);
             if (chartType == TYPE_TOTAL) {
-                double hours = day.getTotalTime() / (double) (1000*60*60);
+                double hours = day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()) / (double) (1000*60*60);
                 int columnHeight = (int) ((height - INSET_BOTTOM - INSET_TOP) * (hours / maxValueY));
                 int x = INSET_LEFT + (int) (xStep * i) + (xStep > 4 ? 2 : 0);
                 if (columnHeight != 0) {
@@ -267,7 +267,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                     }
                     graphics.setColor(Color.DARK_GRAY);
                     graphics.drawRect(x, height - INSET_BOTTOM - columnHeight, (int) (xStep > 4 ? xStep - 3 : xStep), columnHeight);
-                    String value = Tools.getTime(day.getTotalTime());
+                    String value = Tools.getTime(day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()));
                     value = value.substring(0, value.lastIndexOf(":"));
                     if (hours < 10) value = value.substring(1);
                     int correction = graphics.getFontMetrics().stringWidth(value);
@@ -321,7 +321,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                 if (idleTask.getDuration() == 0) {
                     java.util.Date finishTime = day.getFinishTime();
                     if (finishTime != null) {
-                        idleTime = day.getFinishTime().getTime() - day.getStartTime().getTime() - day.getTotalTime();
+                        idleTime = day.getFinishTime().getTime() - day.getStartTime().getTime() - day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
                         idleTime = idleTime / (double) (1000*60*60);
                     }
                 } else idleTime = idleTask.getDuration() / (double) (1000*60*60);
@@ -400,8 +400,8 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
         int workDays = 0;
         while (iterator.hasNext()) {
             Day day = (Day) iterator.next();
-            totalHours = totalHours + day.getTotalTime() / (double) (1000*60*60);
-            if (day.getTotalTime() != 0) workDays++;
+            totalHours = totalHours + day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()) / (double) (1000*60*60);
+            if (day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()) != 0) workDays++;
         }
         double averageAll = totalHours / days.size();
         double averageWork = (workDays == 0 ? 0 : totalHours / workDays);
