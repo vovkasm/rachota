@@ -60,6 +60,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         pnChart.add(comparisonChart, gridBagConstraints);
         updateChart();
         updateAnalysis();
+        updateSuggestions();
     }
 
     /** Returns font that should be used for all widgets in this component
@@ -77,7 +78,8 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         float totalTime = getTotalTimeUser();
         float privateTime = getPrivateTimeUser();
         float idleTime = getIdleTimeUser();
-        effectivity = totalTime * 5 / (idleTime + privateTime + totalTime);
+        if (totalTime != 0) effectivity = totalTime * 5 / (idleTime + privateTime + totalTime);
+        else effectivity = 0;
         lbEffectivityResult.setIcon(getIcon(Math.round(effectivity)));
         lbEffectivityResult.setToolTipText("" + effectivity);
     }
@@ -94,6 +96,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             Iterator tasks = day.getTasks().iterator();
             while (tasks.hasNext()) {
                 Task task = (Task) tasks.next();
+                if (task.isIdleTask()) continue;
                 numberOfTasks++;
                 String keyword = task.getKeyword();
                 if (keyword != null)
@@ -101,8 +104,10 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                         numberOfCategories++;
             }
         }
-        float categorizationRatio = numberOfCategories / numberOfTasks;
-        categorization = categorizationRatio * 10 / 2;
+        if (numberOfTasks != 0) {
+            float categorizationRatio = numberOfCategories / numberOfTasks;
+            categorization = categorizationRatio * 10 / 2;
+        } else categorization = 0;
         lbCategorizationResult.setIcon(getIcon(Math.round(categorization)));
         lbCategorizationResult.setToolTipText("" + categorization);
     }
@@ -139,23 +144,26 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 allTasks++;
             }
         }
-        tasks_80 = tasks_80 * 100 / allTasks;
-        tasks_40 = tasks_40 * 100 / allTasks;
-        tasks_20 = tasks_20 * 100 / allTasks;
-        tasks_10 = tasks_10 * 100 / allTasks;
-        tasks_4 = tasks_4 * 100 / allTasks;
-        tasks_2 = tasks_2 * 100 / allTasks;
-        tasks_1 = tasks_1 * 100 / allTasks;
+        if (allTasks != 0) {
+            tasks_80 = tasks_80 * 100 / allTasks;
+            tasks_40 = tasks_40 * 100 / allTasks;
+            tasks_20 = tasks_20 * 100 / allTasks;
+            tasks_10 = tasks_10 * 100 / allTasks;
+            tasks_4 = tasks_4 * 100 / allTasks;
+            tasks_2 = tasks_2 * 100 / allTasks;
+            tasks_1 = tasks_1 * 100 / allTasks;
+
+            int totalError = Math.abs(tasks_80 - 1);
+            totalError = totalError + Math.abs(tasks_40 - 5);
+            totalError = totalError + Math.abs(tasks_20 - 16);
+            totalError = totalError + Math.abs(tasks_10 - 26);
+            totalError = totalError + Math.abs(tasks_4 - 30);
+            totalError = totalError + Math.abs(tasks_2 - 17);
+            totalError = totalError + Math.abs(tasks_1 - 5);
+
+            granularity = (100f - totalError) / 20;
+        } else granularity = 0;
         
-        int totalError = Math.abs(tasks_80 - 1);
-        totalError = totalError + Math.abs(tasks_40 - 5);
-        totalError = totalError + Math.abs(tasks_20 - 16);
-        totalError = totalError + Math.abs(tasks_10 - 26);
-        totalError = totalError + Math.abs(tasks_4 - 30);
-        totalError = totalError + Math.abs(tasks_2 - 17);
-        totalError = totalError + Math.abs(tasks_1 - 5);
-        
-        granularity = (100f - totalError) / 20;
         lbGranularityResult.setToolTipText("" + granularity);
         lbGranularityResult.setIcon(getIcon(Math.round(granularity)));
     }
@@ -179,15 +187,17 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 allTasks++;
             }
         }
-        highPriority = highPriority * 100 / allTasks;
-        middlePriority = middlePriority * 100 / allTasks;
-        lowPriority = lowPriority * 100 / allTasks;
-        
-        int totalError = Math.abs(highPriority - 30);
-        totalError = totalError + Math.abs(middlePriority - 50);
-        totalError = totalError + Math.abs(lowPriority - 20);
-        
-        prioritization = (100f - totalError) / 20;
+        if (allTasks != 0) {
+            highPriority = highPriority * 100 / allTasks;
+            middlePriority = middlePriority * 100 / allTasks;
+            lowPriority = lowPriority * 100 / allTasks;
+
+            int totalError = Math.abs(highPriority - 30);
+            totalError = totalError + Math.abs(middlePriority - 50);
+            totalError = totalError + Math.abs(lowPriority - 20);
+
+            prioritization = (100f - totalError) / 20;
+        } else prioritization = 0;
         lbPrioritizationResult.setToolTipText("" + prioritization);
         lbPrioritizationResult.setIcon(getIcon(Math.round(prioritization)));
     }
@@ -246,8 +256,12 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                     if (taskRepetition < 40) uselessRegularTasks++;
             }
         }
-        int totalError = (missingRegularTasks * 100 / (allTasks / allDays) + (uselessRegularTasks * 100 / regularTasks.size())) / 2;
-        repetition = (100f - totalError) / 20;
+        int totalError = 0;
+        if (allTasks != 0) totalError = missingRegularTasks * 100 / (allTasks / allDays);
+        int allRegularTasks = regularTasks.size();
+        if (allRegularTasks != 0) totalError = (totalError + uselessRegularTasks * 100 / allRegularTasks) / 2;
+        if (totalError != 0) repetition = (100f - totalError) / 20;
+        else repetition = 0;
         lbRepetitionResult.setToolTipText("" + repetition);
         lbRepetitionResult.setIcon(getIcon(Math.round(repetition)));
     }
@@ -269,18 +283,21 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 allTasks++;
             }
         }
-        doneStatus = doneStatus * 100 / allTasks;
-        startedStatus = startedStatus * 100 / allTasks;
-        int totalError = Math.abs(doneStatus - 40);
-        totalError = totalError + Math.abs(startedStatus - 60);
-        
-        statusing = (100f - totalError) / 20;
+        if (allTasks != 0) {
+            doneStatus = doneStatus * 100 / allTasks;
+            startedStatus = startedStatus * 100 / allTasks;
+            int totalError = Math.abs(doneStatus - 40);
+            totalError = totalError + Math.abs(startedStatus - 60);
+
+            statusing = (100f - totalError) / 20;
+        } else statusing = 0;
         lbStatusingResult.setToolTipText("" + statusing);
         lbStatusingResult.setIcon(getIcon(Math.round(statusing)));
     }
 
     private long getIdleTimeAll() {
         if (usageTimesAll == null) return 0;
+        if (usageTimesAll.equals("")) return 0;
         int firstIndex = usageTimesAll.indexOf("|");
         int lastIndex = usageTimesAll.lastIndexOf("|");
         return Long.parseLong(usageTimesAll.substring(firstIndex + 1, lastIndex));
@@ -288,12 +305,14 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
 
     private long getPrivateTimeAll() {
         if (usageTimesAll == null) return 0;
+        if (usageTimesAll.equals("")) return 0;
         int lastIndex = usageTimesAll.lastIndexOf("|");
         return Long.parseLong(usageTimesAll.substring(lastIndex + 1));
     }
 
     private long getTotalTimeAll() {
         if (usageTimesAll == null) return 0;
+        if (usageTimesAll.equals("")) return 0;
         int index = usageTimesAll.indexOf("|");
         return Long.parseLong(usageTimesAll.substring(0, index));
     }
@@ -348,7 +367,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 catch (Exception e) {
                     System.out.println("Error: Can't connect to Rachota Analytics server.");
                     usageTimesAll = null;
-                    // usageTimesAll = "81670875|51336579|2496951"; // Based on 141 usage reports
+                    // usageTimesAll = "80903403|59269685|2210448"; // Based on 250 usage reports
                 }
             }};
         connectionThread.start();
@@ -384,12 +403,12 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 else totalTimeUser = totalTimeUser + task.getDuration();
             }
         }
-        if (scale == SCALE_WHOLE_TIME) {
-            int numberOfWeeks = numberOfDays / 7;
-            if (numberOfWeeks != 0) {
-                totalTimeUser = totalTimeUser / numberOfWeeks;
-                idleTimeUser = idleTimeUser / numberOfWeeks;
-                privateTimeUser = privateTimeUser / numberOfWeeks;
+        if (scale != SCALE_PAST_WEEK) {
+            float numberOfWeeks = numberOfDays / 7f;
+            if (numberOfWeeks > 1) {
+                totalTimeUser = (int) (totalTimeUser / numberOfWeeks);
+                idleTimeUser = (int) (idleTimeUser / numberOfWeeks);
+                privateTimeUser = (int) (privateTimeUser / numberOfWeeks);
             }
         }
         usageTimesUser = "" + totalTimeUser + "|" + idleTimeUser + "|" + privateTimeUser;
@@ -406,6 +425,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         pnTimeUsage = new javax.swing.JPanel();
         pnChart = new javax.swing.JPanel();
         rbWeek = new javax.swing.JRadioButton();
+        rbMonth = new javax.swing.JRadioButton();
         rbAllTime = new javax.swing.JRadioButton();
         pnAnalysis = new javax.swing.JPanel();
         lbEffectivity = new javax.swing.JLabel();
@@ -432,7 +452,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
 
         pnChart.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -453,6 +473,21 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnTimeUsage.add(rbWeek, gridBagConstraints);
+
+        rbMonth.setFont(getFont());
+        rbMonth.setMnemonic(Translator.getMnemonic("ANALYTICSVIEW.RB_MONTH"));
+        rbMonth.setText(Translator.getTranslation("ANALYTICSVIEW.RB_MONTH"));
+        rbMonth.setToolTipText(Translator.getTranslation("ANALYTICSVIEW.RB_MONTH_TOOLTIP"));
+        rbMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbMonthActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnTimeUsage.add(rbMonth, gridBagConstraints);
 
         rbAllTime.setFont(getFont());
         rbAllTime.setMnemonic(Translator.getMnemonic("ANALYTICSVIEW.RB_ALLTIME"));
@@ -591,20 +626,35 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
     private void rbAllTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAllTimeActionPerformed
         rbAllTime.setSelected(true);
         rbWeek.setSelected(false);
+        rbMonth.setSelected(false);
         scale = SCALE_WHOLE_TIME;
         countUserTimes();
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
         updateAnalysis();
+        updateSuggestions();
     }//GEN-LAST:event_rbAllTimeActionPerformed
 
     private void rbWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbWeekActionPerformed
         rbAllTime.setSelected(false);
         rbWeek.setSelected(true);
+        rbMonth.setSelected(false);
         scale = SCALE_PAST_WEEK;
         countUserTimes();
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
         updateAnalysis();
+        updateSuggestions();
     }//GEN-LAST:event_rbWeekActionPerformed
+
+    private void rbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMonthActionPerformed
+        rbAllTime.setSelected(false);
+        rbWeek.setSelected(false);
+        rbMonth.setSelected(true);
+        scale = SCALE_PAST_MONTH;
+        countUserTimes();
+        comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
+        updateAnalysis();
+        updateSuggestions();
+}//GEN-LAST:event_rbMonthActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbCategorization;
@@ -624,6 +674,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
     private javax.swing.JPanel pnSuggestions;
     private javax.swing.JPanel pnTimeUsage;
     private javax.swing.JRadioButton rbAllTime;
+    private javax.swing.JRadioButton rbMonth;
     private javax.swing.JRadioButton rbWeek;
     private javax.swing.JScrollPane spSuggestions;
     private javax.swing.JTextPane tpSuggestions;
@@ -631,8 +682,10 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
 
     /** Index of past week scale */
     public static final int SCALE_PAST_WEEK = 0;
+    /** Index of past month scale */
+    public static final int SCALE_PAST_MONTH = 1;
     /** Index of whole time scale */
-    public static final int SCALE_WHOLE_TIME = 1;
+    public static final int SCALE_WHOLE_TIME = 2;
     /** Selected time scale */
     private int scale = SCALE_PAST_WEEK;
     /** Usage times downloaded from Rachota Analytics server in format: totalTime|idleTime|privateTime */
@@ -654,6 +707,9 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
     /** Clever usage of regular tasks. How many irregular tasks do actually repeat often? */
     private float repetition;
     
+    /** Counts user working times, downloads working times of other users
+     * and updates comparison chart.
+     */
     public void updateChart() {
         countUserTimes();
         comparisonChart.setTimes(getTotalTimeUser(), 0, getIdleTimeUser(), 0, getPrivateTimeUser(), 0);
@@ -677,11 +733,15 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
     }
 
+    /** Method called when some setting was changed.
+     * @param evt Event describing what was changed.
+     */
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("settings")) updateChart();
         repaint();
     }
 
+    /** Updates all efficiency factors. */
     private void updateAnalysis() {
         updateCategorization();
         updateEffectivity();
@@ -691,7 +751,33 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         updateStatusing();
     }
     
+    /** Prepares suggestions and displays them. */
+    private void updateSuggestions() {
+        String suggestions = getSuggestions();
+        tpSuggestions.setText(suggestions);
+    }
+    
+    /** Returns image with appropriate number of highlighted stars based on given ranking.
+     * @param ranking Number (0-5) specifying required ranking.
+     * @return Image with appropriate number of highlighted stars.
+     */
     private javax.swing.ImageIcon getIcon(int ranking) {
         return new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/ranking_" + ranking + ".png"));
+    }
+
+    /** Returns compiled summary of all suitable suggestions.
+     * @return Summary of all suitable suggestions based on effectivity of user.
+     */
+    private String getSuggestions() {
+        String suggestions = "";
+        if (categorization + effectivity + granularity + prioritization + repetition + statusing == 0) return Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_NO_DATA");
+        if (categorization < 3) suggestions = suggestions + "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_CATEGORIZATION") + "\n";
+        if (effectivity < 3) suggestions = suggestions + "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_EFFECTIVITY") + "\n";
+        if (granularity < 3) suggestions = suggestions + "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_GRANULARITY") + "\n";
+        if (prioritization < 3) suggestions = suggestions + "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_PRIORITIZATION") + "\n";
+        if (repetition < 3) suggestions = suggestions + "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_REPETITION") + "\n";
+        if (statusing < 3) suggestions = suggestions + "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_STATUSING");
+        if (suggestions.equals("")) suggestions = "* " + Translator.getTranslation("ANALYTICSVIEW.SUGGESTION_NONE");
+        return suggestions;
     }
 }
