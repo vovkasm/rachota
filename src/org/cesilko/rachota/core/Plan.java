@@ -111,12 +111,25 @@ public class Plan {
         Vector requiredDays = new Vector();
         if (scale == AnalyticsView.SCALE_PAST_WEEK) {
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - 1);
+            calendar.add(Calendar.WEEK_OF_YEAR, -1);
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             Day day = getDay(calendar.getTime());
             for (int i=0; i<7; i++) {
                 requiredDays.add(day);
                 calendar.add(Calendar.DAY_OF_WEEK, 1);
+                day = getDay(calendar.getTime());
+            }
+            return requiredDays.iterator();
+        }
+        if (scale == AnalyticsView.SCALE_PAST_MONTH) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, -1);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            int numberOfDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            Day day = getDay(calendar.getTime());
+            for (int i=0; i<numberOfDays; i++) {
+                requiredDays.add(day);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
                 day = getDay(calendar.getTime());
             }
             return requiredDays.iterator();
