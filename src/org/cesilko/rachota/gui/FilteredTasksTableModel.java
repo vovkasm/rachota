@@ -164,6 +164,8 @@ public class FilteredTasksTableModel extends AbstractTableModel {
      * tasks with the description and number of days the tasks were planned for.
      */
     private Vector getRow(int row) {
+        Vector uniqueTaskDescriptions = getUniqueTaskDescriptions();
+        if (row >= uniqueTaskDescriptions.size()) return null;
         String description = (String) getUniqueTaskDescriptions().get(row);
         Iterator iterator = tasks.iterator();
         int days = 0;
