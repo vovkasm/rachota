@@ -762,6 +762,8 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
      * @return Image with appropriate number of highlighted stars.
      */
     private javax.swing.ImageIcon getIcon(int ranking) {
+        if (ranking > 5) ranking = 5;
+        if (ranking < 0) ranking = 0;
         return new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/ranking_" + ranking + ".png"));
     }
 
