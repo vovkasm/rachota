@@ -321,7 +321,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                 if (idleTask.getDuration() == 0) {
                     java.util.Date finishTime = day.getFinishTime();
                     if (finishTime != null) {
-                        idleTime = day.getFinishTime().getTime() - day.getStartTime().getTime() - day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
+                        idleTime = day.getFinishTime().getTime() - day.getStartTime().getTime() - day.getTotalTime(true);
                         idleTime = idleTime / (double) (1000*60*60);
                     }
                 } else idleTime = idleTask.getDuration() / (double) (1000*60*60);
