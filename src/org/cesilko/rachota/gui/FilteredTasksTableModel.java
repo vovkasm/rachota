@@ -165,7 +165,13 @@ public class FilteredTasksTableModel extends AbstractTableModel {
      */
     private Vector getRow(int row) {
         Vector uniqueTaskDescriptions = getUniqueTaskDescriptions();
-        if (row >= uniqueTaskDescriptions.size()) return null;
+        if (row >= uniqueTaskDescriptions.size()) {
+            Vector rowData = new Vector();
+            rowData.add("N/A");
+            rowData.add(Tools.getTime(0));
+            rowData.add("0");
+            return rowData; // Nasty hack. Ideal is to get rid of "Group tasks..." checkbox
+        }
         String description = (String) getUniqueTaskDescriptions().get(row);
         Iterator iterator = tasks.iterator();
         int days = 0;
