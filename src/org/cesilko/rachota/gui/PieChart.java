@@ -45,8 +45,8 @@ public class PieChart extends JPanel implements PropertyChangeListener {
         setShare(share);
     }
     
-    /** Sets which days should be used to draw history chart.
-     * @param days Days that should be used to draw history chart.
+    /** Sets share that should be highlighted in the pie chart.
+     * @param share Percentage that should be highlighted in the pie chart.
      */
     public void setShare(float share) {
         this.share = share;

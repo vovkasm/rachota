@@ -26,10 +26,8 @@ package org.cesilko.rachota.gui;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.net.URI;
 import javax.swing.ImageIcon;
-import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
 /** About dialog displaying basic information about Rachota.
@@ -52,7 +50,7 @@ public class AboutDialog extends javax.swing.JDialog {
      * @return Font to be used in this component.
      */
     public java.awt.Font getFont() {
-        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+        return Tools.getFont();
     }
     
     /** This method is called from within the constructor to

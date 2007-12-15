@@ -199,9 +199,12 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      * @return Font to be used in this component.
      */
     public java.awt.Font getFont() {
-        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+        return Tools.getFont();
     }
 
+    /** Returns total time measured in selected period.
+     * @return Total time measured in selected period including idle time and private time if desired.
+     */
     private long getTotalTime() {
         long totalTime = 0;
         Iterator iterator = getDays().iterator();
@@ -1434,8 +1437,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         return taskFilter;
     }
     
-    /** Generates HTML file with work statistics for selected period.
-     */
+    /** Generates HTML file with work statistics for selected period. */
     private void createReport() {
         String location = (String) Settings.getDefault().getSetting("reportDir");
         if (location == null) location = (String) Settings.getDefault().getSetting("userDir");

@@ -183,7 +183,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
      * @return Font to be used in this component.
      */
     public java.awt.Font getFont() {
-        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+        return Tools.getFont();
     }
     
     /** This method is called from within the constructor to
@@ -685,7 +685,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 return (name.startsWith("diary_") && (name.endsWith(".xml")));
             }
         });
-        String WUT = "" + totalTime + "|" + idleTime + "|" + privateTime + "|" + diaries.length; // Week Usage Times
+        final AnalyticsView analyticsView = (AnalyticsView) tpViews.getComponentAt(TAB_ANALYTICS_VIEW);
+        String WUT = "" + totalTime + "|" + idleTime + "|" + privateTime + "|" + diaries.length + "|" + analyticsView.getWeeklyAnalysis(); // Week Usage Times
         try {
             RID = URLEncoder.encode(RID, "UTF-8");
             WUT = URLEncoder.encode(WUT, "UTF-8");
@@ -695,7 +696,6 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             e.printStackTrace();
         }
         final String url_string = "http://rachota.sourceforge.net/reportActivity.php?rid=" + RID + "&wut=" + WUT;
-        final AnalyticsView analyticsView = (AnalyticsView) tpViews.getComponentAt(TAB_ANALYTICS_VIEW);
         final Thread connectionThread = new Thread("Rachota Analytics Reporter") {
             public void run() {
                 try {

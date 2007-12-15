@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.Iterator;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
-import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
@@ -66,7 +65,7 @@ public class MoveTimeDialog extends javax.swing.JDialog {
      * @return Font to be used in this component.
      */
     public java.awt.Font getFont() {
-        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+        return Tools.getFont();
     }
     
     /** This method is called from within the constructor to

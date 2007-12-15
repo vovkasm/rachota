@@ -22,11 +22,13 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
 /** Helper class providing support for time conversion between
@@ -38,11 +40,13 @@ public class Tools {
     /** Name and version of application. */
     public static final String title = "Rachota 2.2";
     /** Build number. */
-    public static final String build = "#071129";
+    public static final String build = "#071216";
     /** Warning type of beep. */
     public static final int BEEP_WARNING = 0;
     /** Notification type of beep. */
     public static final int BEEP_NOTIFICATION = 1;
+    /** Font that should be used for all UI elements. */
+    public static final Font font = new Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
     
     /** Transforms time in milliseconds to text string.
      * @param time Time in milliseconds.
@@ -143,7 +147,7 @@ public class Tools {
         }
         for (int i = 0; i < delays.length; i++) {
             Toolkit.getDefaultToolkit().beep();
-            try { Thread.currentThread().sleep(delays[i]); } catch (InterruptedException ex) {}
+            try { Thread.sleep(delays[i]); } catch (InterruptedException ex) {}
         }
     }
 
@@ -159,5 +163,13 @@ public class Tools {
               Locale.getDefault().getDisplayCountry(Locale.US) + "|" +
               System.getProperty("user.name") + "|" +
               System.getProperty("user.dir");
+    }
+    
+    /** Returns font that should be used for all UI components
+     * based on the language preferences or specified by user.
+     * @return Font to be used across Rachota UI components.
+     */
+    public static Font getFont() {
+        return font;
     }
 }
