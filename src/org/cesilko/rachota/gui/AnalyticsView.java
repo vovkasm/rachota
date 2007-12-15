@@ -58,8 +58,9 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         comparisonChart = new ComparisonChart();
         pnChart.add(comparisonChart, gridBagConstraints);
+        countUserTimes(SCALE_PAST_WEEK);
         updateChart();
-        updateAnalysis();
+        updateAnalysis(SCALE_PAST_WEEK);
         updateSuggestions();
     }
 
@@ -68,26 +69,39 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
      * @return Font to be used in this component.
      */
     public java.awt.Font getFont() {
-        return new java.awt.Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+        return Tools.getFont();
     }
 
-    /** Counts how much user is effective in using his working hours.
-     * More idle time means less effectivity.
+    /** Counts how much user is effective in using his/her working hours in given
+     * period. More idle time means less effectivity.
+     * @param scale One of three possible time scales.
+     * @return Computed effectivity factor.
      */
-    private void updateEffectivity() {
+    private float countEffectivity(int scale) {
+        countUserTimes(scale);
         float totalTime = getTotalTimeUser();
         float privateTime = getPrivateTimeUser();
         float idleTime = getIdleTimeUser();
         if (totalTime != 0) effectivity = totalTime * 5 / (idleTime + privateTime + totalTime);
         else effectivity = 0;
+        return Math.round(effectivity*10)/10f;
+    }
+    
+    /** Counts effectivity factor in given period and updates users star ranking.
+     * @param scale One of three possible time scales.
+     */
+    private void updateEffectivity(int scale) {
+        countEffectivity(scale);
         lbEffectivityResult.setIcon(getIcon(Math.round(effectivity)));
         lbEffectivityResult.setToolTipText("" + effectivity);
     }
 
-    /** Counts usage of categories across tasks.
+    /** Counts usage of categories across tasks in given period.
      * Does user specify categories for tasks enough?
+     * @param scale One of three possible time scales.
+     * @return Computed categorization factor.
      */
-    private void updateCategorization() {
+    private float countCategorization(int scale) {
         Iterator days = Plan.getDefault().getDays(scale);
         float numberOfTasks = 0;
         float numberOfCategories = 0;
@@ -108,14 +122,25 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             float categorizationRatio = numberOfCategories / numberOfTasks;
             categorization = categorizationRatio * 10 / 2;
         } else categorization = 0;
+        return Math.round(categorization*10)/10f;
+    }
+
+    /** Counts categorization factor in given period and updates users star ranking.
+     * @param scale One of three possible time scales.
+     */
+    private void updateCategorization(int scale) {
+        countCategorization(scale);
         lbCategorizationResult.setIcon(getIcon(Math.round(categorization)));
         lbCategorizationResult.setToolTipText("" + categorization);
     }
-
-    /** Counts distribution of tasks durations in selected shares intervals.
-     * Does user create too many or too little tasks?
+    
+    /** In given period counts distribution of tasks durations in selected shares
+     * intervals and compares it to normal distribution. Does user create too many
+     * or too little tasks?
+     * @param scale One of three possible time scales.
+     * @return Computed granularity factor.
      */
-    private void updateGranularity() {
+    private float countGranularity(int scale) {
         int tasks_80 = 0;
         int tasks_40 = 0;
         int tasks_20 = 0;
@@ -163,12 +188,24 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
 
             granularity = (100f - totalError) / 20;
         } else granularity = 0;
+        return Math.round(granularity*10)/10f;
+    }
         
+    /** Counts granularity factor in given period and updates users star ranking.
+     * @param scale One of three possible time scales.
+     */
+    private void updateGranularity(int scale) {
+        countGranularity(scale);
         lbGranularityResult.setToolTipText("" + granularity);
         lbGranularityResult.setIcon(getIcon(Math.round(granularity)));
     }
 
-    private void updatePrioritization() {
+    /** Counts distribution of priorities across tasks in given period. Does user
+     * utilize task priorities enough?
+     * @param scale One of three possible time scales.
+     * @return Computed prioritization factor.
+     */
+    private float countPrioritization(int scale) {
         int highPriority = 0;
         int middlePriority = 0;
         int lowPriority = 0;
@@ -198,11 +235,24 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
 
             prioritization = (100f - totalError) / 20;
         } else prioritization = 0;
+        return Math.round(prioritization*10)/10f;
+    }
+    
+    /** Counts prioritization factor in given period and updates users star ranking.
+     * @param scale One of three possible time scales.
+     */
+    private void updatePrioritization(int scale) {
+        countPrioritization(scale);
         lbPrioritizationResult.setToolTipText("" + prioritization);
         lbPrioritizationResult.setIcon(getIcon(Math.round(prioritization)));
     }
 
-    private void updateRepetition() {
+    /** Verifies clever usage of regular tasks in given period. How many irregular
+     * tasks do actually repeat often? And how many regular tasks are useless?
+     * @param scale One of three possible time scales.
+     * @return Computed repetition factor.
+     */
+    private float countRepetition(int scale) {
         int allDays = 0;
         int allTasks = 0;
         Hashtable taskCounts = new Hashtable();
@@ -223,50 +273,65 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             if (day.getTotalTime(true) != 0) allDays++;
         }
         int missingRegularTasks = 0;
-        Enumeration enumeration = taskCounts.keys();
-        Vector regularTasks = Plan.getDefault().getRegularTasks();
-        while (enumeration.hasMoreElements()) {
-            String description = (String) enumeration.nextElement();
-            Integer count = (Integer) taskCounts.get(description);
-            int taskRepetition = count * 100 / allDays;
-            if (taskRepetition > 50) {
-                boolean isRegular = false;
-                Iterator iterator = regularTasks.iterator();
-                while (iterator.hasNext()) {
-                    RegularTask regularTask = (RegularTask) iterator.next();
-                    if (regularTask.getDescription().equals(description)) {
-                        isRegular = true;
-                        break;
-                    }
-                }
-                if (!isRegular) missingRegularTasks++;
-            }
-        }
         int uselessRegularTasks = 0;
-        Iterator iterator = regularTasks.iterator();
-        while (iterator.hasNext()) {
-            RegularTask regularTask = (RegularTask) iterator.next();
-            if (!taskCounts.containsKey(regularTask.getDescription())) uselessRegularTasks++;
-            else {
-                Integer count = (Integer) taskCounts.get(regularTask.getDescription());
-                int taskRepetition = count * 100 / allDays;
-                if (regularTask.getFrequency() == RegularTask.FREQUENCY_DAILY)
-                    if (taskRepetition < 60) uselessRegularTasks++;
-                if (regularTask.getFrequency() == RegularTask.FREQUENCY_WORKDAY)
-                    if (taskRepetition < 40) uselessRegularTasks++;
-            }
-        }
         int totalError = 0;
-        if (allTasks != 0) totalError = missingRegularTasks * 100 / (allTasks / allDays);
+        Vector regularTasks = Plan.getDefault().getRegularTasks();
+        if (allDays != 0) {
+            Enumeration enumeration = taskCounts.keys();
+            while (enumeration.hasMoreElements()) {
+                String description = (String) enumeration.nextElement();
+                Integer count = (Integer) taskCounts.get(description);
+                int taskRepetition = count * 100 / allDays;
+                if (taskRepetition > 50) {
+                    boolean isRegular = false;
+                    Iterator iterator = regularTasks.iterator();
+                    while (iterator.hasNext()) {
+                        RegularTask regularTask = (RegularTask) iterator.next();
+                        if (regularTask.getDescription().equals(description)) {
+                            isRegular = true;
+                            break;
+                        }
+                    }
+                    if (!isRegular) missingRegularTasks++;
+                }
+            }
+            Iterator iterator = regularTasks.iterator();
+            while (iterator.hasNext()) {
+                RegularTask regularTask = (RegularTask) iterator.next();
+                if (!taskCounts.containsKey(regularTask.getDescription())) uselessRegularTasks++;
+                else {
+                    Integer count = (Integer) taskCounts.get(regularTask.getDescription());
+                    int taskRepetition = count * 100 / allDays;
+                    if (regularTask.getFrequency() == RegularTask.FREQUENCY_DAILY)
+                        if (taskRepetition < 60) uselessRegularTasks++;
+                    if (regularTask.getFrequency() == RegularTask.FREQUENCY_WORKDAY)
+                        if (taskRepetition < 40) uselessRegularTasks++;
+                }
+            }
+            if (allTasks != 0) totalError = missingRegularTasks * 100 / (allTasks / allDays);
+        }
         int allRegularTasks = regularTasks.size();
         if (allRegularTasks != 0) totalError = (totalError + uselessRegularTasks * 100 / allRegularTasks) / 2;
         if (totalError != 0) repetition = (100f - totalError) / 20;
         else repetition = 0;
+        return Math.round(repetition*10)/10f;
+    }
+    
+    /** Counts repetition factor in given period and updates users star ranking.
+     * @param scale One of three possible time scales.
+     */
+    private void updateRepetition(int scale) {
+        countRepetition(scale);
         lbRepetitionResult.setToolTipText("" + repetition);
         lbRepetitionResult.setIcon(getIcon(Math.round(repetition)));
     }
 
-    private void updateStatusing() {
+    /** Counts usage of DONE status in given period. Does user close tasks or
+     * leaves them open forever?
+     * @param scale One of three possible time scales.
+     * @return Computed statusing factor.
+     */
+    private float countStatusing(int scale) {
         int doneStatus = 0;
         int startedStatus = 0;
         int allTasks = 0;
@@ -291,10 +356,21 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
 
             statusing = (100f - totalError) / 20;
         } else statusing = 0;
+        return Math.round(statusing*10)/10f;
+    }
+        
+    /** Counts statusing factor in given period and updates users star ranking.
+     * @param scale One of three possible time scales.
+     */
+    private void updateStatusing(int scale) {
+        countStatusing(scale);
         lbStatusingResult.setToolTipText("" + statusing);
         lbStatusingResult.setIcon(getIcon(Math.round(statusing)));
     }
 
+    /** Returns idle time of all Rachota users worldwide in milliseconds.
+     * @return Time of all Rachota users worldwide spent in idle mode in milliseconds.
+     */
     private long getIdleTimeAll() {
         if (usageTimesAll == null) return 0;
         if (usageTimesAll.equals("")) return 0;
@@ -303,6 +379,9 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         return Long.parseLong(usageTimesAll.substring(firstIndex + 1, lastIndex));
     }
 
+    /** Returns private time of all Rachota users worldwide in milliseconds.
+     * @return Time spent on private tasks of all Rachota users worldwide in milliseconds.
+     */
     private long getPrivateTimeAll() {
         if (usageTimesAll == null) return 0;
         if (usageTimesAll.equals("")) return 0;
@@ -310,6 +389,9 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         return Long.parseLong(usageTimesAll.substring(lastIndex + 1));
     }
 
+    /** Returns total working time of all Rachota users worldwide in milliseconds.
+     * @return Time spent on non-private and non-idle tasks of all Rachota users worldwide in milliseconds.
+     */
     private long getTotalTimeAll() {
         if (usageTimesAll == null) return 0;
         if (usageTimesAll.equals("")) return 0;
@@ -317,22 +399,37 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         return Long.parseLong(usageTimesAll.substring(0, index));
     }
 
+    /** Returns idle time of current Rachota user in milliseconds.
+     * @return Time of current Rachota user spent in idle mode in milliseconds.
+     */
     private long getIdleTimeUser() {
         int firstIndex = usageTimesUser.indexOf("|");
         int lastIndex = usageTimesUser.lastIndexOf("|");
         return Long.parseLong(usageTimesUser.substring(firstIndex + 1, lastIndex));
     }
 
+    /** Returns private time of current Rachota user in milliseconds.
+     * @return Time of current Rachota user spent on private tasks in milliseconds.
+     */
     private long getPrivateTimeUser() {
         int lastIndex = usageTimesUser.lastIndexOf("|");
         return Long.parseLong(usageTimesUser.substring(lastIndex + 1));
     }
 
+    /** Returns total working time of current Rachota user in milliseconds.
+     * @return Time of current Rachota user spent on working in milliseconds.
+     */
     private long getTotalTimeUser() {
         int index = usageTimesUser.indexOf("|");
         return Long.parseLong(usageTimesUser.substring(0, index));
     }
 
+    /** Tries to download usage times from Rachota Analytics server and reports
+     * success or failure.
+     * @return Returns true if usage times were successfully downloaded. If server
+     * didn't provide the number due to missing activity report or it couldn't be
+     * even contacted false is returned.
+     */
     private boolean downloadTimesAll() {
         String RID = Tools.getRID();
         try { RID = URLEncoder.encode(RID, "UTF-8"); }
@@ -340,7 +437,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             System.out.println("Error: Can't build URL to Rachota Analytics server.");
             e.printStackTrace();
         }
-        final String url_string = "http://rachota.sourceforge.net/getUsageTimes.php?scale=" + scale + "&rid=" + RID;
+        final String url_string = "http://rachota.sourceforge.net/getUsageTimes.php?rid=" + RID;
         usageTimesAll = "";
         final Thread connectionThread = new Thread("Rachota Analytics Download Times") {
             public void run() {
@@ -386,7 +483,10 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         return (usageTimesAll != null);
     }
 
-    private void countUserTimes() {
+    /** Computes total, idle and private times of current user in given time scale.
+     * @param scale One of three possible time scales: past week, past month or whole time.
+     */
+    private void countUserTimes(int scale) {
         long totalTimeUser = 0;
         long idleTimeUser = 0;
         long privateTimeUser = 0;
@@ -623,36 +723,42 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         add(pnSuggestions, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    /** Method called when All time radio button was clicked.
+     * @param evt Event that invoked the action.
+     */
     private void rbAllTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAllTimeActionPerformed
         rbAllTime.setSelected(true);
         rbWeek.setSelected(false);
         rbMonth.setSelected(false);
-        scale = SCALE_WHOLE_TIME;
-        countUserTimes();
+        countUserTimes(SCALE_WHOLE_TIME);
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
-        updateAnalysis();
+        updateAnalysis(SCALE_WHOLE_TIME);
         updateSuggestions();
     }//GEN-LAST:event_rbAllTimeActionPerformed
 
+    /** Method called when Last week radio button was clicked.
+     * @param evt Event that invoked the action.
+     */
     private void rbWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbWeekActionPerformed
         rbAllTime.setSelected(false);
         rbWeek.setSelected(true);
         rbMonth.setSelected(false);
-        scale = SCALE_PAST_WEEK;
-        countUserTimes();
+        countUserTimes(SCALE_PAST_WEEK);
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
-        updateAnalysis();
+        updateAnalysis(SCALE_PAST_WEEK);
         updateSuggestions();
     }//GEN-LAST:event_rbWeekActionPerformed
 
+    /** Method called when Last month radio button was clicked.
+     * @param evt Event that invoked the action.
+     */
     private void rbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMonthActionPerformed
         rbAllTime.setSelected(false);
         rbWeek.setSelected(false);
         rbMonth.setSelected(true);
-        scale = SCALE_PAST_MONTH;
-        countUserTimes();
+        countUserTimes(SCALE_PAST_MONTH);
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
-        updateAnalysis();
+        updateAnalysis(SCALE_PAST_MONTH);
         updateSuggestions();
 }//GEN-LAST:event_rbMonthActionPerformed
 
@@ -686,8 +792,6 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
     public static final int SCALE_PAST_MONTH = 1;
     /** Index of whole time scale */
     public static final int SCALE_WHOLE_TIME = 2;
-    /** Selected time scale */
-    private int scale = SCALE_PAST_WEEK;
     /** Usage times downloaded from Rachota Analytics server in format: totalTime|idleTime|privateTime */
     private String usageTimesAll;
     /** Usage times calculated for user in format: totalTime|idleTime|privateTime */
@@ -707,11 +811,8 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
     /** Clever usage of regular tasks. How many irregular tasks do actually repeat often? */
     private float repetition;
     
-    /** Counts user working times, downloads working times of other users
-     * and updates comparison chart.
-     */
+    /** Downloads working times of other users and updates comparison chart. */
     public void updateChart() {
-        countUserTimes();
         comparisonChart.setTimes(getTotalTimeUser(), 0, getIdleTimeUser(), 0, getPrivateTimeUser(), 0);
         Boolean reportActivity = (Boolean) Settings.getDefault().getSetting("reportActivity");
         if (!reportActivity.booleanValue()) {
@@ -733,7 +834,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         comparisonChart.setTimes(getTotalTimeUser(), getTotalTimeAll(), getIdleTimeUser(), getIdleTimeAll(), getPrivateTimeUser(), getPrivateTimeAll());
     }
 
-    /** Method called when some setting was changed.
+    /** Method called when some setting has changed.
      * @param evt Event describing what was changed.
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -741,14 +842,29 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         repaint();
     }
 
-    /** Updates all efficiency factors. */
-    private void updateAnalysis() {
-        updateCategorization();
-        updateEffectivity();
-        updateGranularity();
-        updatePrioritization();
-        updateRepetition();
-        updateStatusing();
+    /** Updates all efficiency factors in selected time scale.
+     * @param scale One of three possible time scales: past week, past month or whole time.
+     */
+    private void updateAnalysis(int scale) {
+        updateCategorization(scale);
+        updateEffectivity(scale);
+        updateGranularity(scale);
+        updatePrioritization(scale);
+        updateRepetition(scale);
+        updateStatusing(scale);
+    }
+
+    /** Returns all efficiency factors as a text separated by | character.
+     * @return All efficiency factors as a text separated by | character.
+     */
+    public String getWeeklyAnalysis() {
+        return "" +
+            countCategorization(SCALE_PAST_WEEK) + "|" +
+            countEffectivity(SCALE_PAST_WEEK) + "|" +
+            countGranularity(SCALE_PAST_WEEK) + "|" +
+            countPrioritization(SCALE_PAST_WEEK) + "|" +
+            countRepetition(SCALE_PAST_WEEK) + "|" +
+            countStatusing(SCALE_PAST_WEEK);
     }
     
     /** Prepares suggestions and displays them. */
