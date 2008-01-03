@@ -78,6 +78,7 @@ public class Settings {
         settingsMap.put("automaticStart", new Boolean(true));
         settingsMap.put("showTime", "both");
         settingsMap.put("backupAge", "10");
+        settingsMap.put("startTask", new Boolean(false));
         System.setProperty("backupCreated", "" + new Date().getTime());
         
         java.net.URL url = Settings.class.getResource("Settings.class");

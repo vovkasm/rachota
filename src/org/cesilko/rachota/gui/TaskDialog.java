@@ -34,6 +34,7 @@ import javax.swing.ToolTipManager;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.RegularTask;
+import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
@@ -118,6 +119,7 @@ public class TaskDialog extends javax.swing.JDialog {
         chbRegular.setEnabled(false);
         cmbRepetition.setEnabled(false);
         chbStartTask.setEnabled(Plan.getDefault().isToday(day));
+        chbStartTask.setSelected(((Boolean) Settings.getDefault().getSetting("startTask")).booleanValue());
     }
     
     /** Creates new dialog for editing existing regular task.
@@ -639,7 +641,8 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 task = regularTask;
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
-                System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
+		System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
+               	Settings.getDefault().setSetting("startTask", Boolean.valueOf(chbStartTask.isSelected()));
                 day.addTask(task);
             }
             firePropertyChange("task_created", null, task);
