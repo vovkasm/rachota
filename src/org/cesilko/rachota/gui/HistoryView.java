@@ -419,7 +419,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
         pnTimes.add(rbFromTo, gridBagConstraints);
@@ -435,7 +435,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
         pnTimes.add(rbTimeUsage, gridBagConstraints);
@@ -496,7 +496,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -530,7 +530,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         txtTotalTime.setFont(getFont());
         txtTotalTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_TOTAL_TIME_TOOLTIP"));
-        txtTotalTime.setPreferredSize(new java.awt.Dimension(80, 19));
+        txtTotalTime.setMinimumSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
