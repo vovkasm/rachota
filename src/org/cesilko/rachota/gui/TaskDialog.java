@@ -28,7 +28,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import org.cesilko.rachota.core.Day;
@@ -50,10 +49,6 @@ public class TaskDialog extends javax.swing.JDialog {
     private Day day;
     /** Flag determining if task can be edited or not. */
     private boolean readOnly;
-    /** Cache for all found categories completion items. */
-    private Vector completionItems;
-    /** Completion window ready to offer categories. */
-    private CompletionWindow completionWindow;
     
     /** Creates new dialog for editing of given task.
      * @param task Task which is going to be edited.
@@ -641,7 +636,7 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 task = regularTask;
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
-		System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
+                System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
                	Settings.getDefault().setSetting("startTask", Boolean.valueOf(chbStartTask.isSelected()));
                 day.addTask(task);
             }
