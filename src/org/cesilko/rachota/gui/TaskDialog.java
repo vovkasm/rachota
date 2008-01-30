@@ -636,8 +636,10 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 task = regularTask;
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
-                System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
-               	Settings.getDefault().setSetting("startTask", Boolean.valueOf(chbStartTask.isSelected()));
+                if (Plan.getDefault().isToday(day)) {
+                    System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
+                    Settings.getDefault().setSetting("startTask", Boolean.valueOf(chbStartTask.isSelected()));
+                }
                 day.addTask(task);
             }
             firePropertyChange("task_created", null, task);
