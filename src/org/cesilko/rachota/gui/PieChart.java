@@ -27,30 +27,23 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Vector;
 import javax.swing.JPanel;
+import org.cesilko.rachota.core.Translator;
 
 /** Pie chart showing a circle with a highlighted arc representing preset share.
  * @author Jiri Kovalsky
  */
 public class PieChart extends JPanel implements PropertyChangeListener {
 
-    /** Percentage that should be highlighted. */
-    private float share;
+    /** Names of portions that should be highlighted. */
+    private Vector names = new Vector();
+    /** Shares of portions that should be highlighted. */
+    private Vector shares = new Vector();
 
-    /** Creates a new pie chart.
-     * @param share Percentage that should be highlighted.
-     */
-    public PieChart(float share) {
+    /** Creates a new pie chart. */
+    public PieChart() {
         super();
-        setShare(share);
-    }
-    
-    /** Sets share that should be highlighted in the pie chart.
-     * @param share Percentage that should be highlighted in the pie chart.
-     */
-    public void setShare(float share) {
-        this.share = share;
-        repaint();
     }
     
     /** Draws the pie chart given set share.
@@ -60,23 +53,37 @@ public class PieChart extends JPanel implements PropertyChangeListener {
         int width = getWidth();
         int height = getHeight();
         graphics.clearRect(0, 0, width, height);
-        if (share == 0) return;
-        int min = Math.min(width, height);
+        int count = names.size();
+        if (count == 0) return;
+        int min = Math.min(width - 15, height - names.size()*15 - 5);
         int dia = (int) (min - min/4)/2;
         graphics.setColor(Color.LIGHT_GRAY);
-        graphics.fillOval(width/2 - dia, height/2 - dia*3/4, dia*2, dia*2);
-        graphics.setColor(Color.CYAN);
-        graphics.fillArc(width/2 - dia, height/2 - dia*3/4, dia*2, dia*2, 90, (int) (-3.6*share));
-        graphics.setColor(Color.DARK_GRAY);
-        graphics.drawOval(width/2 - dia, height/2 - dia*3/4, dia*2, dia*2);
-        int shareWidth = graphics.getFontMetrics().stringWidth("" + share + "%");
-        int x = width/2 - (shareWidth + 15)/2;
-        int y = (height - dia)/6 - 5;
-        graphics.setColor(Color.CYAN);
+        graphics.fillOval(width/2 - dia, 20 + count*15, dia*2, dia*2);
+        Color color = Color.CYAN;
+        float previousAngle = 0;
+        for (int i = 0; i < count; i++) {
+            String name = (String) names.get(i);
+            Float share = (Float) shares.get(i);
+            graphics.setColor(color);
+            graphics.fillArc(getWidth()/2 - dia, 20 + count*15, dia*2, dia*2, 90 - (int) (3.6*previousAngle), (int) (-3.6*share));
+            graphics.setColor(Color.DARK_GRAY);
+            graphics.drawOval(width/2 - dia, 20 + count*15, dia*2, dia*2);
+            int y = 5 + i*15;
+            graphics.setColor(color);
+            graphics.fillRect(5, y, 10, 10);
+            graphics.setColor(Color.DARK_GRAY);
+            graphics.drawRect(5, y, 10, 10);
+            graphics.drawString(name + " " + share + "%", 20, y + 10);
+            color = changeColor(color);
+            previousAngle = share.floatValue() + previousAngle;
+        }
+        int x = 5;
+        int y = 5 + count*15;
+        graphics.setColor(Color.LIGHT_GRAY);
         graphics.fillRect(x, y, 10, 10);
         graphics.setColor(Color.DARK_GRAY);
         graphics.drawRect(x, y, 10, 10);
-        graphics.drawString("" + share + "%", x + 15, y + 10);
+        graphics.drawString(Translator.getTranslation("HISTORYVIEW.PROJECTS_OTHERS"), x + 15, y + 10);
     }
     
     
@@ -85,5 +92,29 @@ public class PieChart extends JPanel implements PropertyChangeListener {
      */
     public void propertyChange(PropertyChangeEvent evt) {
         repaint();
+    }
+
+    /** Sets names and shares that should be highlighted in the pie chart.
+     * @param names Descriptions of portions to be highlighted in the pie chart.
+     * @param shares Percentages of portions to be highlighted in the pie chart.
+     */
+    public void setShares(Vector names, Vector shares) {
+        this.names = names;
+        this.shares = shares;
+        repaint();
+    }
+
+    /** Returns new color visibly different from the given one.
+     * @param color Color to be derivated.
+     * @return New color with R+50, G-50 and B+100;
+     */
+    private Color changeColor(Color color) {
+        int red = color.getRed() + 50;
+        if (red > 255) red = red - 255;
+        int green = color.getGreen() - 50;
+        if (green < 0) green = green + 255;
+        int blue = color.getBlue() + 100;
+        if (blue > 255) blue = blue - 255;
+        return new Color(red, green, blue);
     }
 }

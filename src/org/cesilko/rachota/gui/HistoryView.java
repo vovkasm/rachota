@@ -38,6 +38,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
@@ -70,7 +71,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        PieChart pieChart = new PieChart(0);
+        PieChart pieChart = new PieChart();
         pnShare.add(pieChart, gridBagConstraints);
         addPropertyChangeListener(pieChart);
         final ProjectsTreeModel model = new ProjectsTreeModel(getDays());
@@ -80,6 +81,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             public void valueChanged(TreeSelectionEvent event) {
                 TreePath treePath = event.getPath();
                 int nodeType = model.getSelectedNodeType(treePath);
+                Vector names = new Vector();
+                Vector shares = new Vector();
                 switch(nodeType) {
                 case ProjectsTreeModel.NODE_TYPE_TASK:
                     DefaultMutableTreeNode selectedTaskNode = (DefaultMutableTreeNode) treePath.getLastPathComponent();
@@ -96,11 +99,20 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                     txtPriority.setText(Task.getPriority(taskNode.getAverageValue(ProjectsTreeModel.TaskNode.PROPERTY_PRIORITY)));
                     txtState.setText(Task.getState(taskNode.getAverageValue(ProjectsTreeModel.TaskNode.PROPERTY_STATE)));
                     PieChart taskPieChart = (PieChart) pnShare.getComponent(0);
-                    taskPieChart.setShare(shareTask);
+                    names.add(taskNode.getDescription());
+                    shares.add(new Float(shareTask));
+                    taskPieChart.setShares(names, shares);
                     break;
                 case ProjectsTreeModel.NODE_TYPE_CATEGORY:
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treePath.getLastPathComponent();
                     ProjectsTreeModel.CategoryNode categoryNode = (ProjectsTreeModel.CategoryNode) selectedNode.getUserObject();
+                    LimitedCapacityStack categoryStack = new LimitedCapacityStack(3);
+                    Iterator iterator = categoryNode.getTaskNodes().iterator();
+                    while (iterator.hasNext()) {
+                        ProjectsTreeModel.TaskNode node = (ProjectsTreeModel.TaskNode) iterator.next();
+                        float share = Math.round(((float) node.getTotalTime()/(float) categoryNode.getTotalTime())*100);
+                        categoryStack.put(new Float(share), node.getDescription());
+                    }
                     txtName.setText(categoryNode.getName());
                     txtTime.setText(Tools.getTime(categoryNode.getTotalTime()));
                     txtTasks.setText("" + categoryNode.getTaskNodes().size());
@@ -109,17 +121,45 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                     txtPriority.setText(Task.getPriority(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY)));
                     txtState.setText(Task.getState(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE)));
                     PieChart categoryPieChart = (PieChart) pnShare.getComponent(0);
-                    categoryPieChart.setShare(shareCategory);
+                    categoryPieChart.setShares(categoryStack.getObjects(), categoryStack.getKeys());
                     break;
                 default:
-                    txtName.setText("");
-                    txtTime.setText("");
-                    txtTasks.setText("");
-                    txtPercentage.setText("");
-                    txtPriority.setText("");
-                    txtState.setText("");
+                    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) treePath.getLastPathComponent();
+                    long totalTime = 0;
+                    int priority = 0;
+                    int state = 0;
+                    int tasks = 0;
+                    int count = rootNode.getChildCount();
+                    LimitedCapacityStack rootStack = new LimitedCapacityStack(3);
+                    if (count != 1) {
+                        Enumeration children = rootNode.children();
+                        while(children.hasMoreElements()) {
+                            DefaultMutableTreeNode subNode = (DefaultMutableTreeNode) children.nextElement();
+                            ProjectsTreeModel.CategoryNode node = (ProjectsTreeModel.CategoryNode) subNode.getUserObject();
+                            totalTime = totalTime + node.getTotalTime();
+                            priority = priority + node.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY);
+                            state = state + node.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE);
+                            tasks = tasks + node.getTaskNodes().size();
+                            float share = Math.round(((float) node.getTotalTime()/(float) getTotalTime())*100);
+                            rootStack.put(new Float(share), node.getName());
+                        }
+                        priority = priority / count;
+                        state = state / count;
+                    }
+                    txtName.setText(rootNode.getUserObject().toString());
+                    txtTime.setText(Tools.getTime(totalTime));
+                    txtPercentage.setText("100%");
+                    if (count != 1) {
+                        txtTasks.setText("" + tasks);
+                        txtPriority.setText(Task.getPriority(priority));
+                        txtState.setText(Task.getState(state));
+                    } else {
+                        txtTasks.setText("0");
+                        txtPriority.setText("");
+                        txtState.setText("");
+                    }
                     PieChart emptyPieChart = (PieChart) pnShare.getComponent(0);
-                    emptyPieChart.setShare(0);
+                    emptyPieChart.setShares(rootStack.getObjects(), rootStack.getKeys());
                 }
             }
         });
