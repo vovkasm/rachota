@@ -325,7 +325,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     }// </editor-fold>//GEN-END:initComponents
 
 private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowIconified
-    if (!System.getProperty("java.version").startsWith("1.6")) return;
+    if (!enableSystemTray()) return;
     try { SystemTray.getSystemTray().getTrayIcons(); }
     catch (UnsupportedOperationException e) { return; }
     setVisible(false);
@@ -476,7 +476,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     }
     
     private void updateSystemTray(DayView dayView) {
-        if (!System.getProperty("java.version").startsWith("1.6")) return;
+        if (!enableSystemTray()) return;
         TrayIcon[] trayIcons;
         try { trayIcons = SystemTray.getSystemTray().getTrayIcons(); } catch (UnsupportedOperationException e) { return; }
         for (int i = 0; i < trayIcons.length; i++) {
@@ -614,7 +614,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     }
 
     private void createSystemTray() {
-        if (!System.getProperty("java.version").startsWith("1.6")) return;
+        if (!enableSystemTray()) return;
         if (SystemTray.isSupported()) {
             final SystemTray systemTray = SystemTray.getSystemTray();
             DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
@@ -726,5 +726,9 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             }
         }.start();
         Clock.getDefault().addListener(this);
+    }
+    
+    private boolean enableSystemTray() {
+        return  (System.getProperty("os.name").toLowerCase().indexOf("vista") < 0) && (System.getProperty("java.version").startsWith("1.6"));
     }
 }
