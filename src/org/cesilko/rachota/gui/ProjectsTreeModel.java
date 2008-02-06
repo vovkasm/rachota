@@ -34,6 +34,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Task;
+import org.cesilko.rachota.core.Translator;
 
 /** Model representing tree view on Rachota projects i.e. groups of
  * tasks with same category.
@@ -53,7 +54,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
     private Vector days;
 
     public ProjectsTreeModel(Vector days) {
-        super(new DefaultMutableTreeNode("All projects"));
+        super(new DefaultMutableTreeNode(Translator.getTranslation("HISTORYVIEW.PROJECTS_TREE_ALL")));
         setDays(days);
     }
     
@@ -83,7 +84,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
     }
 
     private Vector getCategoryNodes() {
-        CategoryNode categoryNode = new CategoryNode("Uncategorized");
+        CategoryNode categoryNode = new CategoryNode(Translator.getTranslation("HISTORYVIEW.PROJECTS_TREE_UNCATEGORIZED"));
         Vector categories = new Vector();
         categories.add(categoryNode);
         Iterator iterator = days.iterator();
@@ -110,7 +111,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
                         }
                     }
                 } else {
-                    categoryNode = getCategoryNode(categories, "Uncategorized");
+                    categoryNode = getCategoryNode(categories, Translator.getTranslation("HISTORYVIEW.PROJECTS_TREE_UNCATEGORIZED"));
                     if (task.getDuration() != 0) {
                         categoryNode.addTask(task);
                     }
