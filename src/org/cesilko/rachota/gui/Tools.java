@@ -32,7 +32,7 @@ import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
 /** Helper class providing support for time conversion between
- * long, Date and String formats.
+ * long, Date and String formats and other static functions.
  * @author Jiri Kovalsky
  */
 public class Tools {
@@ -40,13 +40,13 @@ public class Tools {
     /** Name and version of application. */
     public static final String title = "Rachota 2.2";
     /** Build number. */
-    public static final String build = "#080206";
+    public static final String build = "#080208";
     /** Warning type of beep. */
     public static final int BEEP_WARNING = 0;
     /** Notification type of beep. */
     public static final int BEEP_NOTIFICATION = 1;
     /** Font that should be used for all UI elements. */
-    public static final Font font = new Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
+    private static Font font = null;
     
     /** Transforms time in milliseconds to text string.
      * @param time Time in milliseconds.
@@ -170,6 +170,8 @@ public class Tools {
      * @return Font to be used across Rachota UI components.
      */
     public static Font getFont() {
+        if (font == null)
+            font = new Font((String) Settings.getDefault().getSetting("fontName"), java.awt.Font.PLAIN, Integer.parseInt((String) Settings.getDefault().getSetting("fontSize")));
         return font;
     }
 }

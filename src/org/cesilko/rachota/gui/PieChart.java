@@ -50,6 +50,7 @@ public class PieChart extends JPanel implements PropertyChangeListener {
      * @param graphics Graphics area where the chart should be drawn.
      */
     public void paint(Graphics graphics) {
+        graphics.setFont(Tools.getFont());
         int width = getWidth();
         int height = getHeight();
         graphics.clearRect(0, 0, width, height);

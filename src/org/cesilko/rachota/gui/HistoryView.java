@@ -720,6 +720,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         txtFilteredTime.setFont(getFont());
         txtFilteredTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtFilteredTime.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_FILTERED_TIME_TOOLTIP"));
+        txtFilteredTime.setMinimumSize(new java.awt.Dimension(80, 19));
         txtFilteredTime.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -738,6 +739,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnProjects.setLayout(new java.awt.GridBagLayout());
 
         spProjects.setPreferredSize(new java.awt.Dimension(81, 100));
+
+        jtProjects.setFont(getFont());
         spProjects.setViewportView(jtProjects);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

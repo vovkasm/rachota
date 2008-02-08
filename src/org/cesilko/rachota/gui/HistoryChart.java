@@ -118,6 +118,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
      * @param graphics Graphics area where the chart should be drawn.
      */
     public void paint(Graphics graphics) {
+        setFont(Tools.getFont());
         graphics.setColor(new Color(240, 240, 240));
         graphics.fillRect(0, 0, getBounds().width, getBounds().height);
         computeSteps();
@@ -409,7 +410,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
         int width = getBounds().width;
         int height = getBounds().height;
         Font originalFont = getFont();
-        graphics.setFont(new Font("Monospaced", Font.PLAIN, 10));
+        graphics.setFont(new Font("Monospaced", Font.PLAIN, originalFont.getSize()));
         if (drawAverageHours) {
             graphics.setColor(Color.BLUE);
             int y = (int) (height - INSET_BOTTOM - yStep * averageWork);

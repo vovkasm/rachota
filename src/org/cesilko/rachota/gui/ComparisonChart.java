@@ -78,6 +78,7 @@ public class ComparisonChart extends JPanel {
      * @param graphics Graphics area where the chart should be drawn.
      */
     public void paint(Graphics graphics) {
+        graphics.setFont(Tools.getFont());
         int width = getBounds().width;
         int height = getBounds().height;
         graphics.clearRect(0, 0, width, height);
