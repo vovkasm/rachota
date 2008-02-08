@@ -313,6 +313,9 @@
             <Component class="javax.swing.JTextPane" name="tpSuggestions">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="Form" name="getFont" type="method"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>

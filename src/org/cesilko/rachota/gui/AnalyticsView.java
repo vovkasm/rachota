@@ -705,6 +705,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         pnSuggestions.setLayout(new java.awt.GridBagLayout());
 
         tpSuggestions.setEditable(false);
+        tpSuggestions.setFont(getFont());
         spSuggestions.setViewportView(tpSuggestions);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
