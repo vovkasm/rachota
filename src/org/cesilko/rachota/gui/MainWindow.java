@@ -36,6 +36,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -101,6 +102,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US");
             System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
+        checkAnotherInstance();
         StartupWindow startupWindow = StartupWindow.getInstance();
         Settings.loadSettings();
         new MainWindow().setVisible(true);
@@ -728,7 +730,35 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         Clock.getDefault().addListener(this);
     }
     
+    /** Returns whether system tray icon should be created or not.
+     * @return False if Rachota is not running on Java 6 or if Rachota is running on
+     * Windows Vista. On all other operating system with Java 6 true is returned.
+     */
     private boolean enableSystemTray() {
-        return  (System.getProperty("os.name").toLowerCase().indexOf("vista") < 0) && (System.getProperty("java.version").startsWith("1.6"));
+        return (System.getProperty("os.name").toLowerCase().indexOf("vista") < 0) && (System.getProperty("java.version").startsWith("1.6"));
+    }
+    
+    /** Checks whether another instance of Rachota is running or Rachota was not
+     * exited normally i.e. if this instance could be launched. If there is not
+     * a lock file in userdir, startup is approved. If there is the lock file,
+     * user is asked to confirm if he really wants to share selected userdir with
+     * another instance of Rachota. If s/he agrees, the startup goes on.
+     */
+    private static void checkAnotherInstance() {
+        String userdir = (String) Settings.getDefault().getSetting("userDir");
+        File lockFile = new File(userdir + File.separator + "lock.tmp");
+        if (!lockFile.exists()) {
+            try {
+                lockFile.createNewFile();
+                lockFile.deleteOnExit();
+                return;
+            } catch (IOException e) {
+                System.out.println("Error: Can't create new " + lockFile + " file.");
+            }
+        }
+        String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+        int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.ANOTHER_INSTANCE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+        if (decision == JOptionPane.NO_OPTION) System.exit(-1);
+        lockFile.deleteOnExit();
     }
 }
