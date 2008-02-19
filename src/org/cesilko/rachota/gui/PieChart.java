@@ -66,7 +66,7 @@ public class PieChart extends JPanel implements PropertyChangeListener {
             String name = (String) names.get(i);
             Float share = (Float) shares.get(i);
             graphics.setColor(color);
-            graphics.fillArc(getWidth()/2 - dia, 20 + count*15, dia*2, dia*2, 90 - (int) (3.6*previousAngle), (int) (-3.6*share));
+            graphics.fillArc(getWidth()/2 - dia, 20 + count*15, dia*2, dia*2, 90 - (int) (3.6*previousAngle), (int) (-3.6*share.floatValue()));
             graphics.setColor(Color.DARK_GRAY);
             graphics.drawOval(width/2 - dia, 20 + count*15, dia*2, dia*2);
             int y = 5 + i*15;

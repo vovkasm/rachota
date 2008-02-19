@@ -281,7 +281,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             while (enumeration.hasMoreElements()) {
                 String description = (String) enumeration.nextElement();
                 Integer count = (Integer) taskCounts.get(description);
-                int taskRepetition = count * 100 / allDays;
+                int taskRepetition = count.intValue() * 100 / allDays;
                 if (taskRepetition > 50) {
                     boolean isRegular = false;
                     Iterator iterator = regularTasks.iterator();
@@ -301,7 +301,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
                 if (!taskCounts.containsKey(regularTask.getDescription())) uselessRegularTasks++;
                 else {
                     Integer count = (Integer) taskCounts.get(regularTask.getDescription());
-                    int taskRepetition = count * 100 / allDays;
+                    int taskRepetition = count.intValue() * 100 / allDays;
                     if (regularTask.getFrequency() == RegularTask.FREQUENCY_DAILY)
                         if (taskRepetition < 60) uselessRegularTasks++;
                     if (regularTask.getFrequency() == RegularTask.FREQUENCY_WORKDAY)
