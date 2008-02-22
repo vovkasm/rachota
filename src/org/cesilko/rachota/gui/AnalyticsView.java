@@ -152,7 +152,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         Iterator days = Plan.getDefault().getDays(scale);
         while (days.hasNext()) {
             Day day = (Day) days.next();
-            long totalDayTime = day.getTotalTime(false);
+            long totalDayTime = day.getTotalTime(true);
             if (totalDayTime == 0) continue;
             Iterator tasks = day.getTasks().iterator();
             while (tasks.hasNext()) {
@@ -185,6 +185,7 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
             totalError = totalError + Math.abs(tasks_4 - 30);
             totalError = totalError + Math.abs(tasks_2 - 17);
             totalError = totalError + Math.abs(tasks_1 - 5);
+            if (totalError > 100) totalError = 100;
 
             granularity = (100f - totalError) / 20;
         } else granularity = 0;
