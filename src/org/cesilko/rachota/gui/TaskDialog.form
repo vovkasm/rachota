@@ -233,10 +233,10 @@
           <Connection code="Translator.getTranslation(&quot;TASKDIALOG.JSP_HOURS_TOOLTIP&quot;)" type="code"/>
         </Property>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[35, 18]"/>
+          <Dimension value="[40, 20]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[35, 18]"/>
+          <Dimension value="[40, 20]"/>
         </Property>
       </Properties>
       <Events>
@@ -268,10 +268,10 @@
           <Connection code="Translator.getTranslation(&quot;TASKDIALOG.JSP_MINUTES_TOOLTIP&quot;)" type="code"/>
         </Property>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[35, 18]"/>
+          <Dimension value="[40, 20]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[35, 18]"/>
+          <Dimension value="[40, 20]"/>
         </Property>
       </Properties>
       <Events>
