@@ -117,7 +117,7 @@ public class AboutDialog extends javax.swing.JDialog {
         pnInfo.add(lbEmail, gridBagConstraints);
 
         lbCopyright.setFont(getFont());
-        lbCopyright.setText("2008 ©");
+        lbCopyright.setText("2008 Â©");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
