@@ -116,7 +116,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                     txtName.setText(categoryNode.getName());
                     txtTime.setText(Tools.getTime(categoryNode.getTotalTime()));
                     txtTasks.setText("" + categoryNode.getTaskNodes().size());
-                    float shareCategory = Math.round(((float) categoryNode.getTotalTime()/(float) getTotalTime())*100);
+                    boolean includePrivateTime = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
+                    float shareCategory = Math.round(((float) categoryNode.getTotalTime()/(float) getTotalTime(true, includePrivateTime))*100);
                     txtPercentage.setText("" + shareCategory + "%");
                     txtPriority.setText(Task.getPriority(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY)));
                     txtState.setText(Task.getState(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE)));
@@ -140,7 +141,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                             priority = priority + node.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY);
                             state = state + node.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE);
                             tasks = tasks + node.getTaskNodes().size();
-                            float share = Math.round(((float) node.getTotalTime()/(float) getTotalTime())*100);
+                            float share = Math.round(((float) node.getTotalTime()/(float) getTotalTime(true, true))*100);
                             rootStack.put(new Float(share), node.getName());
                         }
                         priority = priority / count;
@@ -245,14 +246,16 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
     /** Returns total time measured in selected period.
      * @return Total time measured in selected period including idle time and private time if desired.
      */
-    private long getTotalTime() {
+    private long getTotalTime(boolean includeIdleTime, boolean includePrivateTime) {
         long totalTime = 0;
         Iterator iterator = getDays().iterator();
         while (iterator.hasNext()) {
             Day day = (Day) iterator.next();
-            totalTime = totalTime + day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
-            Task idleTask = day.getIdleTask();
-            if (idleTask != null) totalTime = totalTime + idleTask.getDuration();
+            totalTime = totalTime + day.getTotalTime(includePrivateTime);
+            if (includeIdleTime) {
+                Task idleTask = day.getIdleTask();
+                if (idleTask != null) totalTime = totalTime + idleTask.getDuration();
+            }
         }
         return totalTime;
     }
@@ -1615,7 +1618,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             writer.write("\n");
             writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_FILTERED_TIME") + "</u> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "<br/>");
             writer.write("\n");
-            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(getTotalTime()) + "</b><br/><br/>");
+            boolean includePrivateTime = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
+            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(getTotalTime(false, includePrivateTime)) + "</b><br/><br/>");
             writer.write("\n");
             writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + Tools.title + "</a> " + "(build " + Tools.build + ")<br/>");
             writer.write("\n");
@@ -1637,9 +1641,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
     }
     
-    /** Updates information about total time and returns the time. */
+    /** Updates information about total time. */
     private void updateTotalTime() {
-        long totalTime = getTotalTime();
+        boolean includePrivateTime = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
+        long totalTime = getTotalTime(false,includePrivateTime);
         txtTotalTime.setText(Tools.getTime(totalTime));
     }
     
