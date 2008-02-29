@@ -90,7 +90,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             Settings.getDefault().setSetting("userDir", fileChooser.getSelectedFile().getAbsolutePath());
         }
         System.out.println("----------------------------------------------------------------------------------");
-        System.out.println("»» " + Tools.title + " «« (build " + Tools.build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
+        System.out.println("ï¿½ï¿½ " + Tools.title + " ï¿½ï¿½ (build " + Tools.build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
         System.out.println("   http://rachota.sourceforge.net");
         System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
         System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
@@ -220,6 +220,11 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 formWindowIconified(evt);
             }
         });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
         getContentPane().setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -327,10 +332,16 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
     }// </editor-fold>//GEN-END:initComponents
 
 private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowIconified
-    if (!enableSystemTray()) return;
-    try { SystemTray.getSystemTray().getTrayIcons(); }
-    catch (UnsupportedOperationException e) { return; }
-    setVisible(false);
+        if (!enableSystemTray()) return;
+        try { SystemTray.getSystemTray().getTrayIcons(); }
+        catch (UnsupportedOperationException e) { return; }
+        try {
+            long now = new Date().getTime();
+            long rachotaShownTime = Long.parseLong(System.getProperty("rachota.shownTime"));
+            if (now - rachotaShownTime < 1000)
+                return; // Unix systems call this method twice sometimes -> ignore
+        } catch (NumberFormatException e) { e.printStackTrace(); return; }
+        setVisible(false); // User called this method -> hide window
 }//GEN-LAST:event_formWindowIconified
     
     private void mnSwitchDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSwitchDateActionPerformed
@@ -435,6 +446,10 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         }
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        System.setProperty("rachota.shownTime", "" + new Date().getTime());
+    }//GEN-LAST:event_formComponentShown
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar mbMenu;
@@ -504,9 +519,13 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         final SystemTray systemTray = SystemTray.getSystemTray();
         ActionListener maximizeListener = new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                setVisible(true);
-                setState(java.awt.Frame.NORMAL);
-                requestFocus();
+                    setVisible(true);
+                    try { Thread.sleep(100); }
+                    catch(InterruptedException exception) {}
+                    setExtendedState(java.awt.Frame.NORMAL);
+                    try { Thread.sleep(100); }
+                    catch(InterruptedException exception) {}
+                    requestFocus();
             }
         };
         PopupMenu popup = new PopupMenu();
@@ -638,7 +657,11 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             ActionListener actionListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     setVisible(true);
-                    setState(java.awt.Frame.NORMAL);
+                    try { Thread.sleep(100); }
+                    catch(InterruptedException exception) {}
+                    setExtendedState(java.awt.Frame.NORMAL);
+                    try { Thread.sleep(100); }
+                    catch(InterruptedException exception) {}
                     requestFocus();
                 }
             };
