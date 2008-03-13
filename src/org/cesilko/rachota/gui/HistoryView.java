@@ -757,6 +757,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnDetails.setLayout(new java.awt.GridBagLayout());
 
         lblName.setFont(getFont());
+        lblName.setLabelFor(txtName);
         lblName.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_NAME"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -768,11 +769,12 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.8;
+        gridBagConstraints.weightx = 0.7;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDetails.add(txtName, gridBagConstraints);
 
         lblTime.setFont(getFont());
+        lblTime.setLabelFor(txtTime);
         lblTime.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_TIME"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -792,6 +794,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnDetails.add(txtTime, gridBagConstraints);
 
         lblPercentage.setFont(getFont());
+        lblPercentage.setLabelFor(txtPercentage);
         lblPercentage.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_PERCENTAGE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -807,11 +810,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDetails.add(txtPercentage, gridBagConstraints);
 
         lbTasks.setFont(getFont());
+        lbTasks.setLabelFor(txtTasks);
         lbTasks.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_TASKS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
@@ -830,6 +833,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnDetails.add(txtTasks, gridBagConstraints);
 
         lblPriority.setFont(getFont());
+        lblPriority.setLabelFor(txtPriority);
         lblPriority.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_PRIORITY"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
@@ -846,11 +850,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDetails.add(txtPriority, gridBagConstraints);
 
         lblState.setFont(getFont());
+        lblState.setLabelFor(txtState);
         lblState.setText(Translator.getTranslation("HISTORYVIEW.LBL_DETAILS_STATE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
@@ -867,17 +871,17 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDetails.add(txtState, gridBagConstraints);
 
         pnShare.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnShare.setMinimumSize(new java.awt.Dimension(100, 100));
+        pnShare.setPreferredSize(new java.awt.Dimension(100, 100));
         pnShare.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridheight = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 2.0;
-        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.weightx = 0.3;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnDetails.add(pnShare, gridBagConstraints);
 
