@@ -96,7 +96,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
         System.out.println("   " + Translator.getTranslation("INFORMATION.USERDIR") + ": " + userDir);
         if (printHelp) {
-            System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar Rachota.jar [-userdir=<diary_folder>] where:");
+            System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar rachota_22.jar [-userdir=<diary_folder>] where:");
             System.out.println("      <diary_folder> is directory with settings and diary files e.g. C:\\rachota\\diaries");
             System.out.println("      <language_id> is Java language code e.g. cs, de, en, es, hu, it, ja, pt, ro or ru");
             System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US");
