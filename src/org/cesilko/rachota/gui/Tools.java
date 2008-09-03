@@ -40,7 +40,7 @@ public class Tools {
     /** Name and version of application. */
     public static final String title = "Rachota 2.2";
     /** Build number. */
-    public static final String build = "#080412";
+    public static final String build = "#080903";
     /** Warning type of beep. */
     public static final int BEEP_WARNING = 0;
     /** Notification type of beep. */
