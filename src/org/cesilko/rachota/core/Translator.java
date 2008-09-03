@@ -61,7 +61,7 @@ public class Translator {
                 JarFile jarFile;
                 if (location.indexOf("rachota.sourceforge.net") != -1) {
                     String fileName = location.substring(0, location.indexOf("!/") + 2);
-                    url = new URL("jar:http://rachota.sourceforge.net/rachota_21.jar!/");
+                    url = new URL("jar:http://rachota.sourceforge.net/rachota_22.jar!/");
                     JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
                     jarFile = jarConnection.getJarFile();
                 } else {
