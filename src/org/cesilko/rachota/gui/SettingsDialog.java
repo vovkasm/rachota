@@ -64,6 +64,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         txtProxyPort.setText("" + Settings.getDefault().getSetting("proxyPort"));
         txtProxyHost.setEnabled(chbReportActivity.isSelected());
         txtProxyPort.setEnabled(chbReportActivity.isSelected());
+        chbLogEvents.setSelected(((Boolean) Settings.getDefault().getSetting("logTaskEvents")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbRegularTasks.getColumnModel().getColumn(1).setPreferredWidth(250);
         tbRegularTasks.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -122,6 +123,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         txtProxyHost = new javax.swing.JTextField();
         lblProxyPort = new javax.swing.JLabel();
         txtProxyPort = new javax.swing.JTextField();
+        chbLogEvents = new javax.swing.JCheckBox();
         pnRegularTasks = new javax.swing.JPanel();
         spRegularTasks = new javax.swing.JScrollPane();
         tbRegularTasks = new javax.swing.JTable();
@@ -357,6 +359,22 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.gridy = 8;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(txtProxyPort, gridBagConstraints);
+
+        chbLogEvents.setFont(getFont());
+        chbLogEvents.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_LOG_EVENTS"));
+        chbLogEvents.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_LOG_EVENTS"));
+        chbLogEvents.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_LOG_EVENTS_TOOLTIP"));
+        chbLogEvents.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbLogEventsKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(chbLogEvents, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
@@ -618,6 +636,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         Settings.getDefault().setSetting("checkPriority", new Boolean(chbCheckPriority.isSelected()));
         Settings.getDefault().setSetting("countPrivateTasks", new Boolean(chbCountPrivate.isSelected()));
         Settings.getDefault().setSetting("reportActivity", new Boolean(chbReportActivity.isSelected()));
+        Settings.getDefault().setSetting("logTaskEvents", new Boolean(chbLogEvents.isSelected()));
         String proxyHost = txtProxyHost.getText();
         String proxyPort = txtProxyPort.getText();
         Settings.getDefault().setSetting("proxyHost", proxyHost);
@@ -669,6 +688,13 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         txtProxyHost.setEnabled(chbReportActivity.isSelected());
         txtProxyPort.setEnabled(chbReportActivity.isSelected());
     }//GEN-LAST:event_chbReportActivityActionPerformed
+
+    private void chbLogEventsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbLogEventsKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        btOKActionPerformed(null);
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+        btCancelActionPerformed(null);
+    }//GEN-LAST:event_chbLogEventsKeyPressed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
@@ -681,6 +707,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JCheckBox chbCountPrivate;
     private javax.swing.JCheckBox chbHoursExceeded;
     private javax.swing.JCheckBox chbHoursNotReached;
+    private javax.swing.JCheckBox chbLogEvents;
     private javax.swing.JCheckBox chbMoveUnfinished;
     private javax.swing.JCheckBox chbReportActivity;
     private javax.swing.JLabel lblHours;
