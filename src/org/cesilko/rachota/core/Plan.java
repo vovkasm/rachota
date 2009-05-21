@@ -273,6 +273,7 @@ public class Plan {
      */
     private boolean saveWeek(int week, boolean isBackup) {
         Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek() + 6);
         int year = calendar.get(Calendar.YEAR);
         String location = (String) Settings.getDefault().getSetting("userDir");
         if (isBackup) location = location + File.separator + "backup_diary.xml";
