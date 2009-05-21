@@ -62,7 +62,7 @@ public class LimitedCapacityStack {
         Iterator iterator = keys.iterator();
         while (iterator.hasNext()) {
             Comparable storedKey = (Comparable) iterator.next();
-            if (key.compareTo(storedKey) > 0) keys.indexOf(storedKey);
+            if (key.compareTo(storedKey) > 0) smallestKeyIndex = keys.indexOf(storedKey);
         }
         if (smallestKeyIndex != -1) {
             keys.set(smallestKeyIndex, key);
