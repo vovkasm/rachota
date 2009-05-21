@@ -207,8 +207,10 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask = new javax.swing.JMenu();
         mnCopyTask = new javax.swing.JMenuItem();
         mnMoveTime = new javax.swing.JMenuItem();
+        mnAddNote = new javax.swing.JMenuItem();
         mnTools = new javax.swing.JMenu();
         mnSwitchDate = new javax.swing.JMenuItem();
+        mnAdjustStart = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_small.png")).getImage());
@@ -308,6 +310,18 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         });
         mnTask.add(mnMoveTime);
 
+        mnAddNote.setFont(getFont());
+        mnAddNote.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/note.png"))); // NOI18N
+        mnAddNote.setMnemonic(Translator.getMnemonic("MAINWINDOW.ADD_NOTE"));
+        mnAddNote.setText(Translator.getTranslation("MAINWINDOW.ADD_NOTE"));
+        mnAddNote.setToolTipText(Translator.getTranslation("MAINWINDOW.ADD_NOTE_TOOLTIP"));
+        mnAddNote.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnAddNoteActionPerformed(evt);
+            }
+        });
+        mnTask.add(mnAddNote);
+
         mbMenu.add(mnTask);
 
         mnTools.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_TOOLS"));
@@ -325,6 +339,17 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             }
         });
         mnTools.add(mnSwitchDate);
+
+        mnAdjustStart.setFont(getFont());
+        mnAdjustStart.setMnemonic(Translator.getMnemonic("MAINWINDOW.ADJUST_START"));
+        mnAdjustStart.setText(Translator.getTranslation("MAINWINDOW.ADJUST_START"));
+        mnAdjustStart.setToolTipText(Translator.getTranslation("MAINWINDOW.ADJUST_START_TOOLTIP"));
+        mnAdjustStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnAdjustStartActionPerformed(evt);
+            }
+        });
+        mnTools.add(mnAdjustStart);
 
         mbMenu.add(mnTools);
 
@@ -417,9 +442,10 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         String task = (String) Settings.getDefault().getSetting("runningTask");
         if ((task != null) && !task.equals("null")) {
             task = task.substring(0, task.indexOf("["));
-            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-            int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-            if (decision != JOptionPane.YES_OPTION) Settings.getDefault().setSetting("runningTask", null);
+            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO"), Translator.getTranslation("MOVETIMEDIALOG.BT_CANCEL")};
+            int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+            if ((decision == JOptionPane.CANCEL_OPTION) || (decision == -1)) return;
+            if (decision == JOptionPane.NO_OPTION) Settings.getDefault().setSetting("runningTask", null);
             Settings.saveSettings();
         }
         int attempts = 0;
@@ -450,10 +476,22 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         System.setProperty("rachota.shownTime", "" + new Date().getTime());
     }//GEN-LAST:event_formComponentShown
+
+    private void mnAddNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAddNoteActionPerformed
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        dayView.addNote(this);
+}//GEN-LAST:event_mnAddNoteActionPerformed
+
+    private void mnAdjustStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAdjustStartActionPerformed
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        dayView.adjustStartTime(this);
+}//GEN-LAST:event_mnAdjustStartActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar mbMenu;
     private javax.swing.JMenuItem mnAbout;
+    private javax.swing.JMenuItem mnAddNote;
+    private javax.swing.JMenuItem mnAdjustStart;
     private javax.swing.JMenuItem mnCopyTask;
     private javax.swing.JMenuItem mnExit;
     private javax.swing.JMenuItem mnMoveTime;
@@ -754,11 +792,10 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     }
     
     /** Returns whether system tray icon should be created or not.
-     * @return False if Rachota is not running on Java 6 or if Rachota is running on
-     * Windows Vista. On all other operating system with Java 6 true is returned.
+     * @return False if Rachota is not running on Java 6 or 7. True otherwise.
      */
     private boolean enableSystemTray() {
-        return (System.getProperty("os.name").toLowerCase().indexOf("vista") < 0) && (System.getProperty("java.version").startsWith("1.6"));
+        return System.getProperty("java.version").startsWith("1.6") || System.getProperty("java.version").startsWith("1.7");
     }
     
     /** Checks whether another instance of Rachota is running or Rachota was not
