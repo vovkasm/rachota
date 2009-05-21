@@ -147,6 +147,17 @@ public class Task implements ClockListener {
         return notes;
     }
     
+    /**
+     * Appends a timestamp and given note to notes of this task.
+     * @param note Note to be appended.
+     * @param recordTime If true, timestamp will be inserted before the note.
+     */
+    public void addNote(String note, boolean recordTime) {
+        if (recordTime) note = "[" + Tools.getTime(new Date()) + "] " + note;
+        if (notes.isEmpty()) notes = note;
+        else notes = notes + "\n" + note;
+    }
+
     /** Sets priority of this task.
      * @param priority Priority of task.
      */
@@ -322,6 +333,11 @@ public class Task implements ClockListener {
     public void startWork() {
         Clock.getDefault().addListener(this);
         timeStamp = new Date();
+        Boolean logTaskEvents = (Boolean) Settings.getDefault().getSetting("logTaskEvents");
+        if (logTaskEvents.booleanValue()) {
+            if (getState() == STATE_NEW) addNote("started", true);
+            else addNote("resumed", true);
+        }
         setState(STATE_STARTED);
     }
     
@@ -332,6 +348,8 @@ public class Task implements ClockListener {
         Date now = new Date();
         addDuration(now.getTime() - timeStamp.getTime());
         timeStamp = null;
+        Boolean logTaskEvents = (Boolean) Settings.getDefault().getSetting("logTaskEvents");
+        if (logTaskEvents.booleanValue()) addNote("suspended", true);
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
     
@@ -344,6 +362,8 @@ public class Task implements ClockListener {
             addDuration(now.getTime() - timeStamp.getTime());
             timeStamp = null;
         }
+        Boolean logTaskEvents = (Boolean) Settings.getDefault().getSetting("logTaskEvents");
+        if (logTaskEvents.booleanValue()) addNote("ended", true);
         setState(STATE_DONE);
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, new Long(duration)));
     }
