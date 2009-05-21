@@ -1238,9 +1238,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         return calendar.getTime();
     }
     
-    /** Identification of the first date within selected preiod. */
+    /** Identification of the first date within selected period. */
     private static final boolean FIRST_DATE = true;
-    /** Identification of the last date within selected preiod. */
+    /** Identification of the last date within selected period. */
     private static final boolean LAST_DATE = false;
     
     /** Returns either first or last date of selected period interval
