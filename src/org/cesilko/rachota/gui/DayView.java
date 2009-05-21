@@ -24,6 +24,7 @@
 package org.cesilko.rachota.gui;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -158,7 +159,13 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     public java.awt.Font getFont() {
         return Tools.getFont();
     }
-    
+
+    void adjustStartTime(Frame parent) {
+        AdjustTimeDialog adjustTimeDialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.START_TIME"));
+        adjustTimeDialog.addPropertyChangeListener(this);
+        adjustTimeDialog.setVisible(true);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -999,8 +1006,6 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
-        Task selectedTask = dayTableModel.getTask(row);
         Plan plan = Plan.getDefault();
         boolean futureDay = plan.isFuture(plan.getDayAfter(day));
         DateDialog dateDialog = new DateDialog(parent, futureDay ? plan.getDayAfter(day).getDate() : plan.getDay(new Date()).getDate(), DateDialog.TYPE_COPY_TASK);
@@ -1008,6 +1013,24 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         dateDialog.setVisible(true);
     }
     
+    /** Method called when add note to task action is required.
+     */
+    void addNote(java.awt.Frame parent) {
+        int row = tbPlan.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+        Task selectedTask = dayTableModel.getTask(row);
+        if (selectedTask.isIdleTask()) {
+            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String note = JOptionPane.showInputDialog(parent, Translator.getTranslation("MAINWINDOW.NEW_NOTE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
+        selectedTask.addNote(note, true);
+    }
+
     /** Set whether finished tasks should be displayed or not.
      * @param visibility Should be finished tasks displayed or not ?
      */
@@ -1263,6 +1286,28 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             Plan.getDefault().addDay(day);
             DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
             dayTableModel.resortRows();
+        }
+        if (evt.getPropertyName().equals("time_adjusted")) {
+            Date startTime = (Date) evt.getOldValue();
+            if (day.getFinishTime().before(startTime)) {
+                JOptionPane.showMessageDialog(null, Translator.getTranslation("WARNING.START_AFTER_END"));
+                return;
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startTime);
+            int hours = calendar.get(Calendar.HOUR_OF_DAY);
+            int minutes = calendar.get(Calendar.MINUTE);
+            long difference = day.getStartTime().getTime() - (hours-1)*3600*1000 - minutes*60*1000;
+            if ((difference < 0) && (Math.abs(difference) > day.getTotalTime(true))) {
+                String message = Translator.getTranslation("QUESTION.NEGATIVE_TIME");
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+                int decision = JOptionPane.showOptionDialog(null, message, Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+                if (decision == JOptionPane.YES_OPTION) day.setStartTime(startTime);
+            } else {
+                day.setStartTime(startTime);
+                Task task = new Task(Translator.getTranslation("TASK.STARTTASK"), null, null, Task.PRIORITY_LOW, Task.STATE_STARTED, difference, null, false, false);
+                day.addTask(task);
+            }
         }
         updateInformation(taskDurationChanged);
     }
