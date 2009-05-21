@@ -636,6 +636,8 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 task = regularTask;
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
+                Boolean logTaskEvents = (Boolean) Settings.getDefault().getSetting("logTaskEvents");
+                if (logTaskEvents.booleanValue()) task.addNote("created", true);
                 if (Plan.getDefault().isToday(day)) {
                     System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
                     Settings.getDefault().setSetting("startTask", Boolean.valueOf(chbStartTask.isSelected()));
