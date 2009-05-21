@@ -79,6 +79,7 @@ public class Settings {
         settingsMap.put("showTime", "both");
         settingsMap.put("backupAge", "10");
         settingsMap.put("startTask", new Boolean(false));
+        settingsMap.put("logTaskEvents", new Boolean(false));
         System.setProperty("backupCreated", "" + new Date().getTime());
         
         java.net.URL url = Settings.class.getResource("Settings.class");
