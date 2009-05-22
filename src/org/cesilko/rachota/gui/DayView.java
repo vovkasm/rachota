@@ -1293,20 +1293,14 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                 JOptionPane.showMessageDialog(null, Translator.getTranslation("WARNING.START_AFTER_END"));
                 return;
             }
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(startTime);
-            int hours = calendar.get(Calendar.HOUR_OF_DAY);
-            int minutes = calendar.get(Calendar.MINUTE);
-            long difference = day.getStartTime().getTime() - (hours-1)*3600*1000 - minutes*60*1000;
-            if ((difference < 0) && (Math.abs(difference) > day.getTotalTime(true))) {
-                String message = Translator.getTranslation("QUESTION.NEGATIVE_TIME");
-                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-                int decision = JOptionPane.showOptionDialog(null, message, Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-                if (decision == JOptionPane.YES_OPTION) day.setStartTime(startTime);
-            } else {
-                day.setStartTime(startTime);
-                Task task = new Task(Translator.getTranslation("TASK.STARTTASK"), null, null, Task.PRIORITY_LOW, Task.STATE_STARTED, difference, null, false, false);
-                day.addTask(task);
+            long difference = day.getStartTime().getTime() - startTime.getTime();
+            day.setStartTime(startTime);
+            if (difference > 0) {
+                Task startTask = day.getTask(Translator.getTranslation("TASK.STARTTASK"));
+                if (startTask == null) {
+                    startTask = new Task(Translator.getTranslation("TASK.STARTTASK"), null, null, Task.PRIORITY_LOW, Task.STATE_STARTED, difference, null, false, false);
+                    day.addTask(startTask);
+                } else startTask.addDuration(difference);
             }
         }
         updateInformation(taskDurationChanged);
