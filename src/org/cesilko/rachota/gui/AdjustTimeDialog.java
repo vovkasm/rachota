@@ -27,8 +27,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.util.Calendar;
-import java.util.Date;
-import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
 /** Dialog for user friendly setting up start/end day time.
