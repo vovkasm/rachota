@@ -330,6 +330,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools.setFont(getFont());
 
         mnSwitchDate.setFont(getFont());
+        mnSwitchDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/calendar.png"))); // NOI18N
         mnSwitchDate.setMnemonic(Translator.getMnemonic("MAINWINDOW.SWITCH_DATE"));
         mnSwitchDate.setText(Translator.getTranslation("MAINWINDOW.SWITCH_DATE"));
         mnSwitchDate.setToolTipText(Translator.getTranslation("MAINWINDOW.SWITCH_DATE_TOOLTIP"));
@@ -341,6 +342,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools.add(mnSwitchDate);
 
         mnAdjustStart.setFont(getFont());
+        mnAdjustStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/clock.png"))); // NOI18N
         mnAdjustStart.setMnemonic(Translator.getMnemonic("MAINWINDOW.ADJUST_START"));
         mnAdjustStart.setText(Translator.getTranslation("MAINWINDOW.ADJUST_START"));
         mnAdjustStart.setToolTipText(Translator.getTranslation("MAINWINDOW.ADJUST_START_TOOLTIP"));
