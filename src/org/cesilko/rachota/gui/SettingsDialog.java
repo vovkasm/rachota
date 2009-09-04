@@ -3,11 +3,11 @@
  * and Distribution License (the License). You may not use this file except in
  * compliance with the License.
  *
- * You can obtain a copy of the License at http://www.netbeans.org/cddl.html
- * or http://www.netbeans.org/cddl.txt.
+ * You can obtain a copy of the License at http://rachota.sourceforge.net/license.txt.
+ * 
  *
  * When distributing Covered Code, include this CDDL Header Notice in each file
- * and include the License file at http://www.netbeans.org/cddl.txt.
+ * and include the License file at http://rachota.sourceforge.net/license.txt.
  * If applicable, add the following below the CDDL Header, with the fields
  * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
@@ -136,6 +136,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(Translator.getTranslation("SETTINGSDIALOG.TITLE"));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -695,6 +700,10 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
         btCancelActionPerformed(null);
     }//GEN-LAST:event_chbLogEventsKeyPressed
+
+    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+        Tools.recordActivity();
+    }//GEN-LAST:event_formMouseEntered
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;

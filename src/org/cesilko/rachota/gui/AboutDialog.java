@@ -3,11 +3,11 @@
  * and Distribution License (the License). You may not use this file except in
  * compliance with the License.
  *
- * You can obtain a copy of the License at http://www.netbeans.org/cddl.html
- * or http://www.netbeans.org/cddl.txt.
+ * You can obtain a copy of the License at http://rachota.sourceforge.net/license.txt.
+ * 
  *
  * When distributing Covered Code, include this CDDL Header Notice in each file
- * and include the License file at http://www.netbeans.org/cddl.txt.
+ * and include the License file at http://rachota.sourceforge.net/license.txt.
  * If applicable, add the following below the CDDL Header, with the fields
  * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
@@ -72,6 +72,11 @@ public class AboutDialog extends javax.swing.JDialog {
         btOK = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
+        });
         getContentPane().setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
@@ -190,6 +195,10 @@ public class AboutDialog extends javax.swing.JDialog {
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
         setVisible(false);
     }//GEN-LAST:event_btOKActionPerformed
+
+    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+        Tools.recordActivity();
+    }//GEN-LAST:event_formMouseEntered
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btOK;

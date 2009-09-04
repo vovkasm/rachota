@@ -3,11 +3,11 @@
  * and Distribution License (the License). You may not use this file except in
  * compliance with the License.
  *
- * You can obtain a copy of the License at http://www.netbeans.org/cddl.html
- * or http://www.netbeans.org/cddl.txt.
+ * You can obtain a copy of the License at http://rachota.sourceforge.net/license.txt.
+ * 
  *
  * When distributing Covered Code, include this CDDL Header Notice in each file
- * and include the License file at http://www.netbeans.org/cddl.txt.
+ * and include the License file at http://rachota.sourceforge.net/license.txt.
  * If applicable, add the following below the CDDL Header, with the fields
  * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
@@ -107,6 +107,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         Settings.loadSettings();
         new MainWindow().setVisible(true);
         startupWindow.hideWindow();
+        Tools.recordActivity();
     }
     
     /** Creates new application main window.
@@ -214,6 +215,11 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_small.png")).getImage());
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -228,6 +234,12 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             }
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        tpViews.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tpViewsMouseEntered(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -327,7 +339,6 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_TOOLS"));
         mnTools.setText(Translator.getTranslation("MAINWINDOW.MN_TOOLS"));
         mnTools.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_TOOLS_TOOLTIP"));
-        mnTools.setFont(getFont());
 
         mnSwitchDate.setFont(getFont());
         mnSwitchDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/calendar.png"))); // NOI18N
@@ -488,6 +499,14 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         dayView.adjustStartTime(this);
 }//GEN-LAST:event_mnAdjustStartActionPerformed
+
+    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+        System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+    }//GEN-LAST:event_formMouseEntered
+
+    private void tpViewsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tpViewsMouseEntered
+        System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+    }//GEN-LAST:event_tpViewsMouseEntered
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar mbMenu;
@@ -566,6 +585,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     try { Thread.sleep(100); }
                     catch(InterruptedException exception) {}
                     requestFocus();
+                    System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
             }
         };
         PopupMenu popup = new PopupMenu();
@@ -579,6 +599,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 TaskDialog dialog = new TaskDialog(dayView.getDay());
                 dialog.addPropertyChangeListener(dayView);
                 dialog.setVisible(true);
+                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
             }
         };
         menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.NEW"));
@@ -586,6 +607,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         popup.add(menuItem);
         ActionListener exitListener = new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
                 formWindowClosing(null);
             }
         };
@@ -609,6 +631,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 public void actionPerformed(ActionEvent arg0) {
                     DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
                     dayView.selectTask(task);
+                    System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
                     Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
                     TrayIcon[] trayIcons = systemTray.getTrayIcons();
                     for (int i = 0; i < trayIcons.length; i++) {
@@ -635,6 +658,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     dayView.startTask();
                     image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
                 }
+                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
                 TrayIcon[] trayIcons = systemTray.getTrayIcons();
                 for (int i = 0; i < trayIcons.length; i++) {
                     TrayIcon trayIcon = trayIcons[i];
@@ -651,6 +675,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 Task task = dayView.getTask();
                 dayView.finishTask();
                 Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
+                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
                 TrayIcon[] trayIcons = systemTray.getTrayIcons();
                 for (int i = 0; i < trayIcons.length; i++) {
                     TrayIcon trayIcon = trayIcons[i];
@@ -707,12 +732,17 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             };
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(actionListener);
+
             try { systemTray.add(trayIcon); }
             catch (AWTException ex) { System.out.println("Error: Can't create Rachota system tray icon."); };
         }
     }
 
     public void tick() {
+        if (Tools.getInactivity() > 5000) {
+            System.out.println("5 seconds of inactivity detected!");
+            System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+        }
         Boolean reportActivity = (Boolean) Settings.getDefault().getSetting("reportActivity");
         if (!reportActivity.booleanValue()) return;
         Calendar calendar = Calendar.getInstance();
