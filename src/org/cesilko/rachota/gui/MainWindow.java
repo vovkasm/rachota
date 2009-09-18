@@ -23,6 +23,7 @@
 
 package org.cesilko.rachota.gui;
 import java.awt.AWTException;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.MenuItem;
@@ -339,6 +340,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_TOOLS"));
         mnTools.setText(Translator.getTranslation("MAINWINDOW.MN_TOOLS"));
         mnTools.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_TOOLS_TOOLTIP"));
+        mnTools.setFont(getFont());
 
         mnSwitchDate.setFont(getFont());
         mnSwitchDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/calendar.png"))); // NOI18N
@@ -739,9 +741,15 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     }
 
     public void tick() {
-        if (Tools.getInactivity() > 5000) {
-            System.out.println("5 seconds of inactivity detected!");
-            System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+        Boolean detectInactivity = (Boolean) Settings.getDefault().getSetting("detectInactivity");
+        if (detectInactivity.booleanValue()) {
+            int inactivityTime = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityTime"));
+            if ((Tools.getInactivity() > inactivityTime * 60 * 1000) && (System.getProperty("inactivityReminderOpen")==null)) {
+                EventQueue.invokeLater(new Runnable() {
+                    public void run() {new InactivityReminderDialog(null, ((DayView) tpViews.getComponentAt(TAB_DAY_VIEW)).getTask()).setVisible(true);
+                    Tools.recordActivity();
+                }});
+            }
         }
         Boolean reportActivity = (Boolean) Settings.getDefault().getSetting("reportActivity");
         if (!reportActivity.booleanValue()) return;
