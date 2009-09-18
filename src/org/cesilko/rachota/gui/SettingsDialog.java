@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JOptionPane;
@@ -60,10 +61,16 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbCheckPriority.setSelected(((Boolean) Settings.getDefault().getSetting("checkPriority")).booleanValue());
         chbCountPrivate.setSelected(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
         chbReportActivity.setSelected(((Boolean) Settings.getDefault().getSetting("reportActivity")).booleanValue());
+        chbDetectInactivity.setSelected(((Boolean) Settings.getDefault().getSetting("detectInactivity")).booleanValue());
+        cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_NOTIFY"));
+        cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_STOP"));
+        int selectedInactivityAction = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityAction"));
+        cmbInactivityAction.setSelectedIndex(selectedInactivityAction);
         txtProxyHost.setText("" + Settings.getDefault().getSetting("proxyHost"));
         txtProxyPort.setText("" + Settings.getDefault().getSetting("proxyPort"));
-        txtProxyHost.setEnabled(chbReportActivity.isSelected());
-        txtProxyPort.setEnabled(chbReportActivity.isSelected());
+        txtInactivityTime.setText("" + Settings.getDefault().getSetting("inactivityTime"));
+        chbReportActivityActionPerformed(null);
+        chbDetectInactivityActionPerformed(null);
         chbLogEvents.setSelected(((Boolean) Settings.getDefault().getSetting("logTaskEvents")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbRegularTasks.getColumnModel().getColumn(1).setPreferredWidth(250);
@@ -124,6 +131,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         lblProxyPort = new javax.swing.JLabel();
         txtProxyPort = new javax.swing.JTextField();
         chbLogEvents = new javax.swing.JCheckBox();
+        chbDetectInactivity = new javax.swing.JCheckBox();
+        lblInactivityTime = new javax.swing.JLabel();
+        txtInactivityTime = new javax.swing.JTextField();
+        lblInactivityAction = new javax.swing.JLabel();
+        cmbInactivityAction = new javax.swing.JComboBox();
         pnRegularTasks = new javax.swing.JPanel();
         spRegularTasks = new javax.swing.JScrollPane();
         tbRegularTasks = new javax.swing.JTable();
@@ -381,6 +393,68 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(chbLogEvents, gridBagConstraints);
 
+        chbDetectInactivity.setFont(getFont());
+        chbDetectInactivity.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_DETECT_INACTIVITY"));
+        chbDetectInactivity.setSelected(true);
+        chbDetectInactivity.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_DETECT_INACTIVITY"));
+        chbDetectInactivity.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_DETECT_INACTIVITY_TOOLTIP"));
+        chbDetectInactivity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chbDetectInactivityActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(chbDetectInactivity, gridBagConstraints);
+
+        lblInactivityTime.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_INACTIVITY_TIME"));
+        lblInactivityTime.setFont(getFont());
+        lblInactivityTime.setLabelFor(txtInactivityTime);
+        lblInactivityTime.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_INACTIVITY_TIME"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(lblInactivityTime, gridBagConstraints);
+
+        txtInactivityTime.setFont(getFont());
+        txtInactivityTime.setText("10");
+        txtInactivityTime.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_INACTIVITY_TIME_TOOLTIP"));
+        txtInactivityTime.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtInactivityTimeKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(txtInactivityTime, gridBagConstraints);
+
+        lblInactivityAction.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_INACTIVITY_ACTION"));
+        lblInactivityAction.setFont(getFont());
+        lblInactivityAction.setLabelFor(cmbInactivityAction);
+        lblInactivityAction.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_INACTIVITY_ACTION"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(lblInactivityAction, gridBagConstraints);
+
+        cmbInactivityAction.setFont(getFont());
+        cmbInactivityAction.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CMB_INACTIVITY_ACTION_TOOLTIP"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(cmbInactivityAction, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -391,7 +465,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         pnRegularTasks.setFont(getFont());
         pnRegularTasks.setLayout(new java.awt.GridBagLayout());
 
-        spRegularTasks.setPreferredSize(new java.awt.Dimension(350, 150));
+        spRegularTasks.setPreferredSize(new java.awt.Dimension(400, 100));
         spRegularTasks.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 spRegularTasksKeyPressed(evt);
@@ -642,6 +716,9 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         Settings.getDefault().setSetting("countPrivateTasks", new Boolean(chbCountPrivate.isSelected()));
         Settings.getDefault().setSetting("reportActivity", new Boolean(chbReportActivity.isSelected()));
         Settings.getDefault().setSetting("logTaskEvents", new Boolean(chbLogEvents.isSelected()));
+        Settings.getDefault().setSetting("detectInactivity", new Boolean(chbDetectInactivity.isSelected()));
+        Settings.getDefault().setSetting("inactivityTime", txtInactivityTime.getText());
+        Settings.getDefault().setSetting("inactivityAction", "" + cmbInactivityAction.getSelectedIndex());
         String proxyHost = txtProxyHost.getText();
         String proxyPort = txtProxyPort.getText();
         Settings.getDefault().setSetting("proxyHost", proxyHost);
@@ -692,6 +769,8 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private void chbReportActivityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbReportActivityActionPerformed
         txtProxyHost.setEnabled(chbReportActivity.isSelected());
         txtProxyPort.setEnabled(chbReportActivity.isSelected());
+        lblProxyHost.setEnabled(chbReportActivity.isSelected());
+        lblProxyPort.setEnabled(chbReportActivity.isSelected());
     }//GEN-LAST:event_chbReportActivityActionPerformed
 
     private void chbLogEventsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbLogEventsKeyPressed
@@ -704,6 +783,20 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
         Tools.recordActivity();
     }//GEN-LAST:event_formMouseEntered
+
+    private void txtInactivityTimeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInactivityTimeKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_txtInactivityTimeKeyPressed
+
+    private void chbDetectInactivityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbDetectInactivityActionPerformed
+        lblInactivityTime.setEnabled(chbDetectInactivity.isSelected());
+        txtInactivityTime.setEnabled(chbDetectInactivity.isSelected());
+        lblInactivityAction.setEnabled(chbDetectInactivity.isSelected());
+        cmbInactivityAction.setEnabled(chbDetectInactivity.isSelected());
+    }//GEN-LAST:event_chbDetectInactivityActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
@@ -714,12 +807,16 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JCheckBox chbArchiveNotStarted;
     private javax.swing.JCheckBox chbCheckPriority;
     private javax.swing.JCheckBox chbCountPrivate;
+    private javax.swing.JCheckBox chbDetectInactivity;
     private javax.swing.JCheckBox chbHoursExceeded;
     private javax.swing.JCheckBox chbHoursNotReached;
     private javax.swing.JCheckBox chbLogEvents;
     private javax.swing.JCheckBox chbMoveUnfinished;
     private javax.swing.JCheckBox chbReportActivity;
+    private javax.swing.JComboBox cmbInactivityAction;
     private javax.swing.JLabel lblHours;
+    private javax.swing.JLabel lblInactivityAction;
+    private javax.swing.JLabel lblInactivityTime;
     private javax.swing.JLabel lblProxyHost;
     private javax.swing.JLabel lblProxyPort;
     private javax.swing.JLabel lblWarn;
@@ -730,6 +827,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JScrollPane spRegularTasks;
     private javax.swing.JTable tbRegularTasks;
     private javax.swing.JTextField txtHours;
+    private javax.swing.JTextField txtInactivityTime;
     private javax.swing.JTextField txtProxyHost;
     private javax.swing.JTextField txtProxyPort;
     // End of variables declaration//GEN-END:variables

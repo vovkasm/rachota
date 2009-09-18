@@ -67,8 +67,11 @@ public class Settings {
         settingsMap.put("displayFinishedTasks", new Boolean(false));
         settingsMap.put("countPrivateTasks", new Boolean(false));
         settingsMap.put("reportActivity", new Boolean(true));
+        settingsMap.put("detectInactivity", new Boolean(true));
         settingsMap.put("proxyHost", "");
         settingsMap.put("proxyPort", "");
+        settingsMap.put("inactivityTime", "10");
+        settingsMap.put("inactivityAction", "0");
         settingsMap.put("runningTask", null);
         settingsMap.put("savingPeriod", "30");
         settingsMap.put("dictionary", "Dictionary_" + Locale.getDefault().getLanguage() + "_" + Locale.getDefault().getCountry() + ".properties");
