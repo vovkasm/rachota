@@ -103,9 +103,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US");
             System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
+        Settings.loadSettings();
         checkAnotherInstance();
         StartupWindow startupWindow = StartupWindow.getInstance();
-        Settings.loadSettings();
         new MainWindow().setVisible(true);
         startupWindow.hideWindow();
         Tools.recordActivity();
@@ -456,11 +456,19 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         Settings.saveSettings();
         String task = (String) Settings.getDefault().getSetting("runningTask");
         if ((task != null) && !task.equals("null")) {
-            task = task.substring(0, task.indexOf("["));
-            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO"), Translator.getTranslation("MOVETIMEDIALOG.BT_CANCEL")};
-            int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-            if ((decision == JOptionPane.CANCEL_OPTION) || (decision == -1)) return;
-            if (decision == JOptionPane.NO_OPTION) Settings.getDefault().setSetting("runningTask", null);
+            
+            String onExitAction = (String) Settings.getDefault().getSetting("onExitAction");
+            if ("1".equals(onExitAction)) {
+                // Stop measuring current task
+                Settings.getDefault().setSetting("runningTask", null);
+            } else {
+                // ask user about measuring downtime
+                task = task.substring(0, task.indexOf("["));
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO"), Translator.getTranslation("MOVETIMEDIALOG.BT_CANCEL")};
+                int decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.COUNT_RUNNING_TASK", new String[] {task}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+                if ((decision == JOptionPane.CANCEL_OPTION) || (decision == -1)) return;
+                if (decision == JOptionPane.NO_OPTION) Settings.getDefault().setSetting("runningTask", null);
+            }            
             Settings.saveSettings();
         }
         int attempts = 0;
@@ -856,9 +864,12 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 System.out.println("Error: Can't create new " + lockFile + " file.");
             }
         }
-        String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-        int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.ANOTHER_INSTANCE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-        if (decision == JOptionPane.NO_OPTION) System.exit(-1);
+        String onExitAction = (String) Settings.getDefault().getSetting("onExitAction");
+        if (!"1".equals(onExitAction)) { // ask user about measuring downtime
+            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+            int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.ANOTHER_INSTANCE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+            if (decision == JOptionPane.NO_OPTION) System.exit(-1);
+        }
         lockFile.deleteOnExit();
     }
 }

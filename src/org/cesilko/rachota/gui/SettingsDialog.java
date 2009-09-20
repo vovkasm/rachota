@@ -66,6 +66,10 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_STOP"));
         int selectedInactivityAction = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityAction"));
         cmbInactivityAction.setSelectedIndex(selectedInactivityAction);
+        cmbOnExitAction.addItem(Translator.getTranslation("SETTINGSDIALOG.ON_EXIT_ACTION_ASK_USER"));
+        cmbOnExitAction.addItem(Translator.getTranslation("SETTINGSDIALOG.ON_EXIT_ACTION_STOP"));
+        int selectedOnExitAction = Integer.parseInt((String) Settings.getDefault().getSetting("onExitAction"));
+        cmbOnExitAction.setSelectedIndex(selectedOnExitAction);
         txtProxyHost.setText("" + Settings.getDefault().getSetting("proxyHost"));
         txtProxyPort.setText("" + Settings.getDefault().getSetting("proxyPort"));
         txtInactivityTime.setText("" + Settings.getDefault().getSetting("inactivityTime"));
@@ -136,6 +140,10 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         txtInactivityTime = new javax.swing.JTextField();
         lblInactivityAction = new javax.swing.JLabel();
         cmbInactivityAction = new javax.swing.JComboBox();
+        lbOnExit = new javax.swing.JLabel();
+        lbOnExit.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_ON_EXIT"));
+        lbOnExit.setFont(getFont());
+        cmbOnExitAction = new javax.swing.JComboBox();
         pnRegularTasks = new javax.swing.JPanel();
         spRegularTasks = new javax.swing.JScrollPane();
         tbRegularTasks = new javax.swing.JTable();
@@ -455,6 +463,25 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(cmbInactivityAction, gridBagConstraints);
 
+        lbOnExit.setLabelFor(cmbOnExitAction);
+        lbOnExit.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_ON_EXIT"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(lbOnExit, gridBagConstraints);
+
+        cmbOnExitAction.setFont(getFont());
+        cmbOnExitAction.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CMB_ON_EXIT_ACTION_TOOLTIP"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(cmbOnExitAction, gridBagConstraints);
+        cmbOnExitAction.getAccessibleContext().setAccessibleDescription("null");
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -719,6 +746,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         Settings.getDefault().setSetting("detectInactivity", new Boolean(chbDetectInactivity.isSelected()));
         Settings.getDefault().setSetting("inactivityTime", txtInactivityTime.getText());
         Settings.getDefault().setSetting("inactivityAction", "" + cmbInactivityAction.getSelectedIndex());
+        Settings.getDefault().setSetting("onExitAction", "" + cmbOnExitAction.getSelectedIndex());
         String proxyHost = txtProxyHost.getText();
         String proxyPort = txtProxyPort.getText();
         Settings.getDefault().setSetting("proxyHost", proxyHost);
@@ -814,6 +842,8 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JCheckBox chbMoveUnfinished;
     private javax.swing.JCheckBox chbReportActivity;
     private javax.swing.JComboBox cmbInactivityAction;
+    private javax.swing.JComboBox cmbOnExitAction;
+    private javax.swing.JLabel lbOnExit;
     private javax.swing.JLabel lblHours;
     private javax.swing.JLabel lblInactivityAction;
     private javax.swing.JLabel lblInactivityTime;
