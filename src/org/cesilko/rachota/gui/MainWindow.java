@@ -103,9 +103,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US");
             System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
         }
-        Settings.loadSettings();
         checkAnotherInstance();
         StartupWindow startupWindow = StartupWindow.getInstance();
+        Settings.loadSettings();
         new MainWindow().setVisible(true);
         startupWindow.hideWindow();
         Tools.recordActivity();
@@ -458,7 +458,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         if ((task != null) && !task.equals("null")) {
             
             String onExitAction = (String) Settings.getDefault().getSetting("onExitAction");
-            if ("1".equals(onExitAction)) {
+            if (Settings.ON_EXIT_STOP.equals(onExitAction)) {
                 // Stop measuring current task
                 Settings.getDefault().setSetting("runningTask", null);
             } else {
@@ -864,12 +864,9 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 System.out.println("Error: Can't create new " + lockFile + " file.");
             }
         }
-        String onExitAction = (String) Settings.getDefault().getSetting("onExitAction");
-        if (!"1".equals(onExitAction)) { // ask user about measuring downtime
-            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-            int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.ANOTHER_INSTANCE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-            if (decision == JOptionPane.NO_OPTION) System.exit(-1);
-        }
+        String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
+        int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.ANOTHER_INSTANCE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+        if (decision == JOptionPane.NO_OPTION) System.exit(-1);
         lockFile.deleteOnExit();
     }
 }
