@@ -93,6 +93,39 @@ public class FilteredTasksTableModel extends AbstractTableModel {
                 return "N/A";
         }
     }
+
+
+    public Task getSimilarTask(int row) {
+        if (!groupSameTasks) {
+            // We just return the selected row
+            return (Task) tasks.get(row);
+        } else {
+            // get all tasks with the same description
+            String description = (String) getValueAt(row, DESCRIPTION);
+            Vector similarTasks = getTasksByDescription(description);
+            if (similarTasks.size() == 1) {
+                // Then we just return the only task with that description
+                return (Task) similarTasks.get(0);
+            } else {
+                // We don't know which task to return so we create a new task with the given description
+                return new Task(description, "", "", Task.PRIORITY_MEDIUM, Task.STATE_NEW, 0, null, false, false);
+            }
+        }
+    }
+    
+    private Vector getTasksByDescription(final String description) {
+        Vector similartasks = new Vector();
+        if (description != null) {
+            Iterator iterator = tasks.iterator();
+            while (iterator.hasNext()) {
+                Task task = (Task) iterator.next();
+                if (description.equals(task.getDescription())) {
+                      similartasks.add(task);
+                }
+            }
+        }
+        return similartasks;
+    }
     
     /** Returns number of rows in the table i.e. filtered tasks. The
      * number depends on the groupSameTasks setting.

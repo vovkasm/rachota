@@ -24,6 +24,8 @@
 package org.cesilko.rachota.gui;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -43,8 +45,11 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -218,6 +223,12 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         tbTasks.getColumn(Translator.getTranslation("TASKS.DESCRIPTION")).setPreferredWidth(280);
         tbTasks.getColumn(Translator.getTranslation("TASKS.DURATION_DAYS")).setPreferredWidth(50);
         tbTasks.setRowSelectionAllowed(false);
+        final JPopupMenu copyPopupMenu = new JPopupMenu();
+        JMenuItem copyItem = new JMenuItem(Translator.getTranslation("HISTORYVIEW.BT_COPY_TASK_TODAY"));
+        MouseActionAdapter mouseActionAdapter = new MouseActionAdapter(copyPopupMenu);
+        copyItem.addActionListener(mouseActionAdapter);
+        copyPopupMenu.add(copyItem);
+        tbTasks.addMouseListener(mouseActionAdapter);
         tbTasks.getTableHeader().addMouseListener(new MouseAdapter() {
             Point pressedPoint;
             public void mousePressed(MouseEvent e) {
@@ -1698,5 +1709,47 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
         historyChart.setDays(getDays());
         updateTotalTime();
+    }
+    
+    public class MouseActionAdapter extends MouseAdapter implements ActionListener {
+        
+        private JPopupMenu popupMenu;
+        private int row;
+
+        public MouseActionAdapter(final JPopupMenu popupMenu) {
+            this.popupMenu = popupMenu;
+        }
+
+        Point pressedPoint;
+        public void mousePressed(MouseEvent mouseevent) {
+            pressedPoint = mouseevent.getPoint();
+        }
+
+        public void mouseReleased(MouseEvent mouseevent) {
+            if (SwingUtilities.isRightMouseButton(mouseevent)) {
+                    if (!mouseevent.getPoint().equals(pressedPoint)) return;
+
+                    int rowAtPoint = tbTasks.rowAtPoint(pressedPoint);
+                    if (rowAtPoint >= 0) {
+                        this.row = rowAtPoint;
+                        popupMenu.show(mouseevent.getComponent(), mouseevent.getX(), mouseevent.getY());
+                    }
+            }
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+            Task selectedTask = filteredTasksTableModel.getSimilarTask(row);
+            Plan plan = Plan.getDefault();
+            Day today = plan.getDay(new Date());
+            if (today.getTask(selectedTask.getDescription()) == null) {
+                Task clone = selectedTask.cloneTask();
+                if (selectedTask instanceof org.cesilko.rachota.core.RegularTask)
+                    clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), selectedTask.getNotes(), selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
+                today.addTask(clone);
+                return;
+            }
+
+        }
     }
 }
