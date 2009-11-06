@@ -45,12 +45,6 @@ import org.cesilko.rachota.gui.Tools;
  */
 public class Settings {
     
-    /** On exit, ask for measuring downtime. */
-    public static final String ON_EXIT_ASK = "0";
-    
-    /** On exit, stop measuring downtime. */ 
-    public static final String ON_EXIT_STOP = "1";
-    
     /** The only instance of Settings object in the system. */
     private static Settings settings;
     /** Map containing all settings. Key is setting name e.g. "displayFinishedTasks"
@@ -59,6 +53,17 @@ public class Settings {
     private HashMap settingsMap;
     /** Class containing all registered listeners interested in settings. */
     private PropertyChangeSupport propertyChangeSupport;
+    /** Flag to ignore downtime if hibernation was detected. */
+    public static String ON_HIBERNATION_IGNORE = "0";
+    /** Flag to include downtime if hibernation was detected. */
+    public static String ON_HIBERNATION_INCLUDE = "1";
+    /** Flag to ask user if hibernation was detected. */
+    public static String ON_HIBERNATION_ASK = "2";
+    /** On exit, ask for measuring downtime. */
+    public static final String ON_EXIT_ASK = "0";
+    /** On exit, stop measuring downtime. */
+    public static final String ON_EXIT_STOP = "1";
+
     
     /** Creates private instance of Settings object. */
     private Settings() {
@@ -90,6 +95,8 @@ public class Settings {
         settingsMap.put("backupAge", "10");
         settingsMap.put("startTask", new Boolean(false));
         settingsMap.put("logTaskEvents", new Boolean(false));
+        settingsMap.put("hibernationTime", "10");
+        settingsMap.put("hibernationAction", ON_HIBERNATION_ASK);
         System.setProperty("backupCreated", "" + new Date().getTime());
         
         java.net.URL url = Settings.class.getResource("Settings.class");
