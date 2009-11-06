@@ -769,7 +769,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             if (week == currentWeek) return;
             if (week == -1) return;
         }
-        Clock.getDefault().removeListener(this);
+        //Clock.getDefault().removeListener(this);
         String RID = Tools.getRID();
         Plan plan = Plan.getDefault();
         calendar.set(Calendar.WEEK_OF_YEAR, currentWeek - 1);
@@ -836,7 +836,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 }
             }
         }.start();
-        Clock.getDefault().addListener(this);
+        //Clock.getDefault().addListener(this);
     }
     
     /** Returns whether system tray icon should be created or not.
