@@ -29,7 +29,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JOptionPane;
@@ -66,6 +65,13 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_STOP"));
         int selectedInactivityAction = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityAction"));
         cmbInactivityAction.setSelectedIndex(selectedInactivityAction);
+        String[] hibernationActionKeys = new String[] {"SETTINGSDIALOG.HIBERNATION_ACTION_IGNORE", "SETTINGSDIALOG.HIBERNATION_ACTION_INCLUDE", "SETTINGSDIALOG.HIBERNATION_ACTION_ASK"};
+        for (int i = 0; i < hibernationActionKeys.length; i++) {
+            String item = Translator.getTranslation(hibernationActionKeys[i]);
+            cmbHibernationAction.addItem(item);
+        }
+        int selectedHibernationAction = Integer.parseInt((String) Settings.getDefault().getSetting("hibernationAction"));
+        cmbHibernationAction.setSelectedIndex(selectedHibernationAction);
         cmbOnExitAction.addItem(Translator.getTranslation("SETTINGSDIALOG.ON_EXIT_ACTION_ASK_USER"));
         cmbOnExitAction.addItem(Translator.getTranslation("SETTINGSDIALOG.ON_EXIT_ACTION_STOP"));
         int selectedOnExitAction = Integer.parseInt((String) Settings.getDefault().getSetting("onExitAction"));
@@ -75,6 +81,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         txtInactivityTime.setText("" + Settings.getDefault().getSetting("inactivityTime"));
         chbReportActivityActionPerformed(null);
         chbDetectInactivityActionPerformed(null);
+        txtHibernationTime.setText("" + Settings.getDefault().getSetting("hibernationTime"));
         chbLogEvents.setSelected(((Boolean) Settings.getDefault().getSetting("logTaskEvents")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbRegularTasks.getColumnModel().getColumn(1).setPreferredWidth(250);
@@ -99,6 +106,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                     tbRegularTasks.getColumnModel().getColumn(i).setHeaderValue(regularTasksTableModel.getColumnName(i));
             }
         });
+        pack();
     }
     
     /** Returns font that should be used for all widgets in this component
@@ -140,6 +148,10 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         txtInactivityTime = new javax.swing.JTextField();
         lblInactivityAction = new javax.swing.JLabel();
         cmbInactivityAction = new javax.swing.JComboBox();
+        lblHibernationTime = new javax.swing.JLabel();
+        txtHibernationTime = new javax.swing.JTextField();
+        lblHibernationAction = new javax.swing.JLabel();
+        cmbHibernationAction = new javax.swing.JComboBox();
         lbOnExit = new javax.swing.JLabel();
         lbOnExit.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_ON_EXIT"));
         lbOnExit.setFont(getFont());
@@ -428,7 +440,6 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         pnGeneral.add(lblInactivityTime, gridBagConstraints);
 
         txtInactivityTime.setFont(getFont());
-        txtInactivityTime.setText("10");
         txtInactivityTime.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_INACTIVITY_TIME_TOOLTIP"));
         txtInactivityTime.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -454,6 +465,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         cmbInactivityAction.setFont(getFont());
         cmbInactivityAction.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CMB_INACTIVITY_ACTION_TOOLTIP"));
+        cmbInactivityAction.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbInactivityActionKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 11;
@@ -463,10 +479,59 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(cmbInactivityAction, gridBagConstraints);
 
+        lblHibernationTime.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_HIBERNATION_TIME"));
+        lblHibernationTime.setFont(getFont());
+        lblHibernationTime.setLabelFor(txtHibernationTime);
+        lblHibernationTime.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_HIBERNATION_TIME"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(lblHibernationTime, gridBagConstraints);
+
+        txtHibernationTime.setFont(getFont());
+        txtHibernationTime.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_HIBERNATION_TIME_TOOLTIP"));
+        txtHibernationTime.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtHibernationTimeKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(txtHibernationTime, gridBagConstraints);
+
+        lblHibernationAction.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_HIBERNATION_ACTION"));
+        lblHibernationAction.setFont(getFont());
+        lblHibernationAction.setLabelFor(cmbHibernationAction);
+        lblHibernationAction.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_HIBERNATION_ACTION"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(lblHibernationAction, gridBagConstraints);
+
+        cmbHibernationAction.setFont(getFont());
+        cmbHibernationAction.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CMB_HIBERNATION_ACTION_TOOLTIP"));
+        cmbHibernationAction.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbHibernationActionKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(cmbHibernationAction, gridBagConstraints);
+
         lbOnExit.setLabelFor(cmbOnExitAction);
         lbOnExit.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_ON_EXIT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lbOnExit, gridBagConstraints);
 
@@ -474,7 +539,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         cmbOnExitAction.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CMB_ON_EXIT_ACTION_TOOLTIP"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -745,6 +810,8 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         Settings.getDefault().setSetting("detectInactivity", new Boolean(chbDetectInactivity.isSelected()));
         Settings.getDefault().setSetting("inactivityTime", txtInactivityTime.getText());
         Settings.getDefault().setSetting("inactivityAction", "" + cmbInactivityAction.getSelectedIndex());
+        Settings.getDefault().setSetting("hibernationTime", txtHibernationTime.getText());
+        Settings.getDefault().setSetting("hibernationAction", "" + cmbHibernationAction.getSelectedIndex());
         Settings.getDefault().setSetting("onExitAction", "" + cmbOnExitAction.getSelectedIndex());
         String proxyHost = txtProxyHost.getText();
         String proxyPort = txtProxyPort.getText();
@@ -824,6 +891,27 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         lblInactivityAction.setEnabled(chbDetectInactivity.isSelected());
         cmbInactivityAction.setEnabled(chbDetectInactivity.isSelected());
     }//GEN-LAST:event_chbDetectInactivityActionPerformed
+
+    private void txtHibernationTimeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHibernationTimeKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_txtHibernationTimeKeyPressed
+
+    private void cmbInactivityActionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbInactivityActionKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_cmbInactivityActionKeyPressed
+
+    private void cmbHibernationActionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbHibernationActionKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_cmbHibernationActionKeyPressed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
@@ -840,9 +928,12 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JCheckBox chbLogEvents;
     private javax.swing.JCheckBox chbMoveUnfinished;
     private javax.swing.JCheckBox chbReportActivity;
+    private javax.swing.JComboBox cmbHibernationAction;
     private javax.swing.JComboBox cmbInactivityAction;
     private javax.swing.JComboBox cmbOnExitAction;
     private javax.swing.JLabel lbOnExit;
+    private javax.swing.JLabel lblHibernationAction;
+    private javax.swing.JLabel lblHibernationTime;
     private javax.swing.JLabel lblHours;
     private javax.swing.JLabel lblInactivityAction;
     private javax.swing.JLabel lblInactivityTime;
@@ -855,6 +946,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JPanel pnRegularTasks;
     private javax.swing.JScrollPane spRegularTasks;
     private javax.swing.JTable tbRegularTasks;
+    private javax.swing.JTextField txtHibernationTime;
     private javax.swing.JTextField txtHours;
     private javax.swing.JTextField txtInactivityTime;
     private javax.swing.JTextField txtProxyHost;
