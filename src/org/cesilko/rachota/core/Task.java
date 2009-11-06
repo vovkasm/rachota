@@ -28,6 +28,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.DayTableModel;
 import org.cesilko.rachota.gui.Tools;
 
@@ -380,6 +381,27 @@ public class Task implements ClockListener {
     public void tick() {
         Date now = new Date();
         long timeSinceLastTick = now.getTime() - timeStamp.getTime();
+        String hibernationThreshold = (String) Settings.getDefault().getSetting("hibernationTime");
+        if (timeSinceLastTick > Integer.parseInt(hibernationThreshold) * 60 * 1000) {
+            String hibernationAction = (String) Settings.getDefault().getSetting("hibernationAction");
+            if (hibernationAction.equals(Settings.ON_HIBERNATION_IGNORE)) {
+                timeStamp = new Date();
+                propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "hibernation", null, null));
+                return;
+            }
+            if (hibernationAction.equals(Settings.ON_HIBERNATION_INCLUDE)) {
+                propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "hibernation", null, null));
+            } else {
+                String[] buttons = {Translator.getTranslation("QUESTION.BT_HIBERNATION_IGNORE"), Translator.getTranslation("QUESTION.BT_HIBERNATION_INCLUDE")};
+                int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.HIBERNATION_DETECTED", new String[] {hibernationThreshold, getDescription()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
+                if (decision == JOptionPane.YES_OPTION) {
+                    timeStamp = new Date();
+                    propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "hibernation", null, Settings.ON_HIBERNATION_IGNORE));
+                    return;
+                } else propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "hibernation", null, Settings.ON_HIBERNATION_INCLUDE));
+            }
+
+        }
         addDuration(timeSinceLastTick);
         if (!isIdleTask()) Settings.getDefault().setSetting("runningTask", getDescription() + "[" + timeStamp.getTime() + "]");
         timeStamp = new Date();
