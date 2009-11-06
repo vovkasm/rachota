@@ -1303,6 +1303,26 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                 } else startTask.addDuration(difference);
             }
         }
+        if (evt.getPropertyName().equals("hibernation")) {
+            final String hibernationThreshold = (String) Settings.getDefault().getSetting("hibernationTime");
+            Task initiatingTask = (Task) evt.getSource();
+            String hibernationAction = (String) Settings.getDefault().getSetting("hibernationAction");
+            if (hibernationAction.equals(Settings.ON_HIBERNATION_IGNORE)) {
+                if (!initiatingTask.isIdleTask()) pauseTask();
+                JOptionPane.showMessageDialog(null, Translator.getTranslation("INFORMATION.HIBERNATION_IGNORED", new String[] {hibernationThreshold}), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if (hibernationAction.equals(Settings.ON_HIBERNATION_INCLUDE))
+                new Thread() {
+                    public void run() {
+                        JOptionPane.showMessageDialog(null, Translator.getTranslation("INFORMATION.HIBERNATION_INCLUDED", new String[] {hibernationThreshold, getTask().getDescription()}), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }.start();
+            if (hibernationAction.equals(Settings.ON_HIBERNATION_ASK) && (evt.getNewValue().equals(Settings.ON_HIBERNATION_IGNORE))) {
+                if (!initiatingTask.isIdleTask()) pauseTask();
+                return;
+            }
+        }
         updateInformation(taskDurationChanged);
     }
     
