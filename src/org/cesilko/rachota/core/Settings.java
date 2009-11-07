@@ -63,6 +63,10 @@ public class Settings {
     public static final String ON_EXIT_ASK = "0";
     /** On exit, stop measuring downtime. */
     public static final String ON_EXIT_STOP = "1";
+    /** On inactivity, ask user what to do next. */
+    public static final String ON_INACTIVITY_ASK = "0";
+    /** On inactivity, stop measuring current task. */
+    public static final String ON_INACTIVITY_STOP = "1";
 
     
     /** Creates private instance of Settings object. */
@@ -82,7 +86,7 @@ public class Settings {
         settingsMap.put("proxyHost", "");
         settingsMap.put("proxyPort", "");
         settingsMap.put("inactivityTime", "10");
-        settingsMap.put("inactivityAction", "0");
+        settingsMap.put("inactivityAction", ON_INACTIVITY_ASK);
         settingsMap.put("onExitAction", ON_EXIT_ASK);
         settingsMap.put("runningTask", null);
         settingsMap.put("savingPeriod", "30");
