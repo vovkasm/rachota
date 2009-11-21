@@ -546,6 +546,11 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         tpSuggestions = new javax.swing.JTextPane();
 
         setName(Translator.getTranslation("ANALYTICSVIEW.TB_NAME"));
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
         setLayout(new java.awt.GridBagLayout());
 
         pnTimeUsage.setBorder(javax.swing.BorderFactory.createTitledBorder(null, Translator.getTranslation("ANALYTICSVIEW.PN_COMPARISON"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
@@ -763,6 +768,10 @@ public class AnalyticsView extends javax.swing.JPanel  implements PropertyChange
         updateAnalysis(SCALE_PAST_MONTH);
         updateSuggestions();
 }//GEN-LAST:event_rbMonthActionPerformed
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_formMouseMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbCategorization;
