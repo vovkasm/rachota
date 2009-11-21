@@ -37,20 +37,33 @@ import org.cesilko.rachota.core.Translator;
  */
 public class InactivityReminderDialog extends javax.swing.JDialog {
 
-    /** Creates new form InactivityReminderDialog */
-    public InactivityReminderDialog(java.awt.Frame parent, Task currentTask) {
-        super(parent, true);
-        this.currentTask = currentTask;
+    /** DayView to be perform user's decision about inactive time.
+     */
+    private final DayView dayView;
+
+    /** Creates new inactivity reminder dialog.
+     * @param dayView Day view that should be informed about user's decision.
+     */
+    public InactivityReminderDialog(DayView dayView) {
+        this.dayView = dayView;
+        currentTask = dayView.getTask();
+        if (currentTask == null) currentTask = dayView.getDay().getIdleTask();
+        else if (!currentTask.isRunning()) currentTask = dayView.getDay().getIdleTask();
         initComponents();
         Day today = Plan.getDefault().getDay(new Date());
-        Iterator iterator = today.getTasks().iterator();
-        while(iterator.hasNext()) {
-            Task task = (Task) iterator.next();
-            if (task == currentTask) continue;
-            if (task.isIdleTask()) continue;
-            cmbOtherTask.addItem(task);
+        if (today.getTasks().size() > 1) {
+            Iterator iterator = today.getTasks().iterator();
+            while(iterator.hasNext()) {
+                Task task = (Task) iterator.next();
+                if (task == currentTask) continue;
+                if (task.isIdleTask()) continue;
+                cmbOtherTask.addItem(task);
+                rbOtherTask.setEnabled(true);
+            }
         }
-        if (currentTask.isRunning() && currentTask.isIdleTask()) rbNothing.setVisible(false);
+        if (currentTask.isIdleTask()) rbNothing.setVisible(false);
+        String inactivityAction = (String) Settings.getDefault().getSetting("inactivityAction");
+        if (inactivityAction.equals(Settings.ON_INACTIVITY_STOP)) currentTask.suspendWork();
         setLocationRelativeTo(null);
         System.setProperty("inactivityReminderOpen", "true");
     }
@@ -137,6 +150,7 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
         rbOtherTask.setMnemonic(Translator.getMnemonic("INACTIVITYDIALOG.RB_OTHER_TASK"));
         rbOtherTask.setText(Translator.getTranslation("INACTIVITYDIALOG.RB_OTHER_TASK"));
         rbOtherTask.setToolTipText(Translator.getTranslation("INACTIVITYDIALOG.RB_OTHER_TASK_TOOLTIP"));
+        rbOtherTask.setEnabled(false);
         rbOtherTask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbOtherTaskActionPerformed(evt);
@@ -291,6 +305,22 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
     setVisible(false);
     System.clearProperty("inactivityReminderOpen");
+    String inactivityAction = (String) Settings.getDefault().getSetting("inactivityAction");
+    if (inactivityAction.equals(Settings.ON_INACTIVITY_STOP)) currentTask.startWork();
+    if (chbIgnore.isSelected()) Settings.getDefault().setSetting("detectInactivity", new Boolean(false));
+    if (rbNothing.isSelected()) {
+        dayView.pauseTask();
+    }
+    if (rbOtherTask.isSelected()) {
+        long duration = previousHours.intValue()*1000*60*60 + previousMinutes.intValue()*1000*60 + previousSeconds.intValue()*1000;
+        Task targetTask = (Task) cmbOtherTask.getSelectedItem();
+        targetTask.addDuration(duration);
+        targetTask.setState(Task.STATE_STARTED);
+        currentTask.addDuration(-duration);
+        dayView.selectTask(targetTask);
+        addPropertyChangeListener(dayView);
+        firePropertyChange("time_changed", null, null);
+    }
 }//GEN-LAST:event_btOKActionPerformed
 
     private void spHoursStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spHoursStateChanged
@@ -340,23 +370,23 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_formMouseEntered
 
     private void rbContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbContinueActionPerformed
-        boolean isSelected = rbContinue.isSelected();
-        rbOtherTask.setSelected(!isSelected);
-        rbNothing.setSelected(!isSelected);
+        rbContinue.setSelected(true);
+        rbOtherTask.setSelected(false);
+        rbNothing.setSelected(false);
         checkAccess();
     }//GEN-LAST:event_rbContinueActionPerformed
 
     private void rbOtherTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbOtherTaskActionPerformed
-        boolean isSelected = rbOtherTask.isSelected();
-        rbContinue.setSelected(!isSelected);
-        rbNothing.setSelected(!isSelected);
+        rbContinue.setSelected(false);
+        rbOtherTask.setSelected(true);
+        rbNothing.setSelected(false);
         checkAccess();
     }//GEN-LAST:event_rbOtherTaskActionPerformed
 
     private void rbNothingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbNothingActionPerformed
-        boolean isSelected = rbNothing.isSelected();
-        rbOtherTask.setSelected(!isSelected);
-        rbContinue.setSelected(!isSelected);
+        rbContinue.setSelected(false);
+        rbOtherTask.setSelected(false);
+        rbNothing.setSelected(true);
         checkAccess();
     }//GEN-LAST:event_rbNothingActionPerformed
 
