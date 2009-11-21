@@ -511,11 +511,11 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
 }//GEN-LAST:event_mnAdjustStartActionPerformed
 
     private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
-        System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+        Tools.recordActivity();
     }//GEN-LAST:event_formMouseEntered
 
     private void tpViewsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tpViewsMouseEntered
-        System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+        Tools.recordActivity();
     }//GEN-LAST:event_tpViewsMouseEntered
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -595,7 +595,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     try { Thread.sleep(100); }
                     catch(InterruptedException exception) {}
                     requestFocus();
-                    System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+                    Tools.recordActivity();
             }
         };
         PopupMenu popup = new PopupMenu();
@@ -609,7 +609,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 TaskDialog dialog = new TaskDialog(dayView.getDay());
                 dialog.addPropertyChangeListener(dayView);
                 dialog.setVisible(true);
-                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+                Tools.recordActivity();
             }
         };
         menuItem = new MenuItem(Translator.getTranslation("MAINWINDOW.NEW"));
@@ -617,7 +617,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         popup.add(menuItem);
         ActionListener exitListener = new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+                Tools.recordActivity();
                 formWindowClosing(null);
             }
         };
@@ -641,7 +641,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 public void actionPerformed(ActionEvent arg0) {
                     DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
                     dayView.selectTask(task);
-                    System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+                    Tools.recordActivity();
                     Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
                     TrayIcon[] trayIcons = systemTray.getTrayIcons();
                     for (int i = 0; i < trayIcons.length; i++) {
@@ -668,7 +668,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     dayView.startTask();
                     image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_48.png")).getImage();
                 }
-                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+                Tools.recordActivity();
                 TrayIcon[] trayIcons = systemTray.getTrayIcons();
                 for (int i = 0; i < trayIcons.length; i++) {
                     TrayIcon trayIcon = trayIcons[i];
@@ -685,7 +685,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 Task task = dayView.getTask();
                 dayView.finishTask();
                 Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
-                System.setProperty("rachota.lastInteraction", "" + new Date().getTime());
+                Tools.recordActivity();
                 TrayIcon[] trayIcons = systemTray.getTrayIcons();
                 for (int i = 0; i < trayIcons.length; i++) {
                     TrayIcon trayIcon = trayIcons[i];
@@ -754,7 +754,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             int inactivityTime = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityTime"));
             if ((Tools.getInactivity() > inactivityTime * 60 * 1000) && (System.getProperty("inactivityReminderOpen")==null)) {
                 EventQueue.invokeLater(new Runnable() {
-                    public void run() {new InactivityReminderDialog(null, ((DayView) tpViews.getComponentAt(TAB_DAY_VIEW)).getTask()).setVisible(true);
+                    DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+                    public void run() {new InactivityReminderDialog(dayView).setVisible(true);
                     Tools.recordActivity();
                 }});
             }
