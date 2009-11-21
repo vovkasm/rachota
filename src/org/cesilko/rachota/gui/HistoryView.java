@@ -198,6 +198,14 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 }
                 clickedWhere = e.getPoint();
                 clickedWhen = now;
+                Tools.recordActivity();
+            }
+
+            public void mouseEntered(MouseEvent e) {
+                Tools.recordActivity();
+            }
+            public void mouseExited(MouseEvent e) {
+                Tools.recordActivity();
             }
         });
         cmbPeriod.setSelectedIndex(SCALE_WEEK);
@@ -336,6 +344,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnShare = new javax.swing.JPanel();
 
         setName(Translator.getTranslation("HISTORYVIEW.TB_NAME"));
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
         setLayout(new java.awt.GridBagLayout());
 
         lblPeriod.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_PERIOD"));
@@ -435,6 +448,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         tpViews.setFont(getFont());
 
         pnTimes.setFont(getFont());
+        pnTimes.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                pnTimesMouseMoved(evt);
+            }
+        });
         pnTimes.setLayout(new java.awt.GridBagLayout());
 
         lblChartType.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_CHART_TYPE"));
@@ -593,6 +611,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TIMES_TAB_NAME"), pnTimes);
 
         pnTasks.setFont(getFont());
+        pnTasks.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                pnTasksMouseMoved(evt);
+            }
+        });
         pnTasks.setLayout(new java.awt.GridBagLayout());
 
         lblFilters.setDisplayedMnemonic(Translator.getMnemonic("HISTORYVIEW.LBL_FILTERS"));
@@ -606,6 +629,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
 
         spFilters.setMinimumSize(new java.awt.Dimension(453, 80));
         spFilters.setPreferredSize(new java.awt.Dimension(453, 80));
+        spFilters.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                spFiltersMouseMoved(evt);
+            }
+        });
 
         tbFilters.setFont(getFont());
         tbFilters.setModel(new FiltersTableModel());
@@ -691,6 +719,11 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         pnTasks.add(lblTasks, gridBagConstraints);
 
         spTasks.setPreferredSize(new java.awt.Dimension(453, 100));
+        spTasks.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                spTasksMouseMoved(evt);
+            }
+        });
 
         tbTasks.setModel(new FilteredTasksTableModel());
         spTasks.setViewportView(tbTasks);
@@ -750,11 +783,21 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TASKS_TAB_NAME"), pnTasks);
 
         pnProjects.setFont(getFont());
+        pnProjects.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                pnProjectsMouseMoved(evt);
+            }
+        });
         pnProjects.setLayout(new java.awt.GridBagLayout());
 
         spProjects.setPreferredSize(new java.awt.Dimension(81, 100));
 
         jtProjects.setFont(getFont());
+        jtProjects.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jtProjectsMouseMoved(evt);
+            }
+        });
         spProjects.setViewportView(jtProjects);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1146,6 +1189,34 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         model.setDays(getDays());
         jtProjects.setSelectionRow(0);
     }//GEN-LAST:event_spMinusStateChanged
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_formMouseMoved
+
+    private void pnTimesMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnTimesMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_pnTimesMouseMoved
+
+    private void pnTasksMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnTasksMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_pnTasksMouseMoved
+
+    private void pnProjectsMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnProjectsMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_pnProjectsMouseMoved
+
+    private void jtProjectsMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtProjectsMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_jtProjectsMouseMoved
+
+    private void spFiltersMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spFiltersMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_spFiltersMouseMoved
+
+    private void spTasksMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spTasksMouseMoved
+        Tools.recordActivity();
+    }//GEN-LAST:event_spTasksMouseMoved
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
