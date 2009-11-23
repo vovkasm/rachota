@@ -111,6 +111,11 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
                 formMouseEntered(evt);
             }
         });
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         lblInactivityMessage.setFont(getFont());
@@ -156,6 +161,11 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
                 rbOtherTaskActionPerformed(evt);
             }
         });
+        rbOtherTask.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rbOtherTaskKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -164,6 +174,11 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
 
         cmbOtherTask.setFont(getFont());
         cmbOtherTask.setEnabled(false);
+        cmbOtherTask.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbOtherTaskKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 5;
@@ -266,6 +281,11 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
                 rbNothingActionPerformed(evt);
             }
         });
+        rbNothing.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rbNothingKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 6;
@@ -277,6 +297,11 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
         chbIgnore.setMnemonic(Translator.getMnemonic("INACTIVITYDIALOG.CHB_IGNORE"));
         chbIgnore.setText(Translator.getTranslation("INACTIVITYDIALOG.CHB_IGNORE"));
         chbIgnore.setToolTipText(Translator.getTranslation("INACTIVITYDIALOG.CHB_IGNORE_TOOLTIP"));
+        chbIgnore.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbIgnoreKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 6;
@@ -389,6 +414,41 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
         rbNothing.setSelected(true);
         checkAccess();
     }//GEN-LAST:event_rbNothingActionPerformed
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            setVisible(false);
+    }//GEN-LAST:event_formKeyPressed
+
+    private void rbOtherTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbOtherTaskKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            setVisible(false);
+    }//GEN-LAST:event_rbOtherTaskKeyPressed
+
+    private void cmbOtherTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbOtherTaskKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            setVisible(false);
+    }//GEN-LAST:event_cmbOtherTaskKeyPressed
+
+    private void rbNothingKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbNothingKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            setVisible(false);
+    }//GEN-LAST:event_rbNothingKeyPressed
+
+    private void chbIgnoreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbIgnoreKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            setVisible(false);
+    }//GEN-LAST:event_chbIgnoreKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btOK;
