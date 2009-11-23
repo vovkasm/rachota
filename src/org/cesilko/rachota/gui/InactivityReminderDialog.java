@@ -144,6 +144,11 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
                 rbContinueActionPerformed(evt);
             }
         });
+        rbContinue.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rbContinueKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 6;
@@ -188,6 +193,7 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
         getContentPane().add(cmbOtherTask, gridBagConstraints);
 
         lblOtherTaskTime.setFont(getFont());
+        lblOtherTaskTime.setLabelFor(spHours);
         lblOtherTaskTime.setText(Translator.getTranslation("INACTIVITYDIALOG.LBL_OTHERTASK_TIME"));
         lblOtherTaskTime.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -449,6 +455,13 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
             setVisible(false);
     }//GEN-LAST:event_chbIgnoreKeyPressed
+
+    private void rbContinueKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rbContinueKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            setVisible(false);
+    }//GEN-LAST:event_rbContinueKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btOK;
