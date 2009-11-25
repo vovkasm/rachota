@@ -106,7 +106,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         checkAnotherInstance();
         StartupWindow startupWindow = StartupWindow.getInstance();
         Settings.loadSettings();
-        new MainWindow().setVisible(true);
+        MainWindow mainWindow = new MainWindow();
+        boolean minimizeOnStart = ((Boolean) Settings.getDefault().getSetting("minimizeOnStart")).booleanValue();
+        if (!minimizeOnStart) mainWindow.setVisible(true);
         startupWindow.hideWindow();
         Tools.recordActivity();
     }
