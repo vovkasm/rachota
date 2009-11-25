@@ -731,8 +731,11 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     System.setProperty("rachotaTrayColor", "red");
                 }
             final TrayIcon trayIcon = new TrayIcon(image, Tools.title, getTrayPopupMenu());
-            ActionListener actionListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+            trayIcon.setImageAutoSize(true);
+            trayIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (isVisible()) formWindowIconified(null);
+                else {
                     setVisible(true);
                     try { Thread.sleep(100); }
                     catch(InterruptedException exception) {}
@@ -741,9 +744,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     catch(InterruptedException exception) {}
                     requestFocus();
                 }
-            };
-            trayIcon.setImageAutoSize(true);
-            trayIcon.addActionListener(actionListener);
+            }
+        });
 
             try { systemTray.add(trayIcon); }
             catch (AWTException ex) { System.out.println("Error: Can't create Rachota system tray icon."); };
