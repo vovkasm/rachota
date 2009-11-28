@@ -61,7 +61,10 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
                 rbOtherTask.setEnabled(true);
             }
         }
-        if (currentTask.isIdleTask()) rbNothing.setVisible(false);
+        if (currentTask.isIdleTask()) {
+            rbNothing.setVisible(false);
+            rbContinue.setText(Translator.getTranslation("INACTIVITYDIALOG.RB_CONTINUE_IDLE"));
+        }
         String inactivityAction = (String) Settings.getDefault().getSetting("inactivityAction");
         if (inactivityAction.equals(Settings.ON_INACTIVITY_STOP)) currentTask.suspendWork();
         setLocationRelativeTo(null);
