@@ -57,6 +57,7 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
                 Task task = (Task) iterator.next();
                 if (task == currentTask) continue;
                 if (task.isIdleTask()) continue;
+                if (task.getState() == Task.STATE_DONE) continue;
                 cmbOtherTask.addItem(task);
                 rbOtherTask.setEnabled(true);
             }
