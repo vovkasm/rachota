@@ -582,7 +582,7 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
         int modifier = System.getProperty("os.name").indexOf("Windows") != -1 ? evt.CTRL_MASK : evt.SHIFT_MASK;
         if ((evt.getModifiers() == modifier) & (evt.getKeyChar() == ' ')) {
             evt.consume();
-            new CompletionWindow(txtCategory, Plan.getDefault().getCategories()).setVisible(true);
+            new CompletionWindow(txtCategory, Plan.getDefault().getCategories(), this).setVisible(true);
         }
     }//GEN-LAST:event_txtCategoryKeyTyped
     
@@ -642,7 +642,10 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             } else {
                 task = new Task(description, keyword, notes, priority, state, duration, notificationTime, automaticStart, privateTask);
                 Boolean logTaskEvents = (Boolean) Settings.getDefault().getSetting("logTaskEvents");
-                if (logTaskEvents.booleanValue()) task.addNote("created", true);
+                if (logTaskEvents.booleanValue()) {
+                    if (Plan.getDefault().isToday(day)) task.addNote("created", true);
+                    else task.setNotes("[" + Plan.getDefault().getDay(new Date()).toString() + " " + Tools.getTime(new Date()) + "] created");
+                }
                 if (Plan.getDefault().isToday(day)) {
                     System.setProperty("startTaskNow", "" + chbStartTask.isSelected());
                     Settings.getDefault().setSetting("startTask", Boolean.valueOf(chbStartTask.isSelected()));
@@ -738,5 +741,10 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
      */
     public Task getTask() {
         return task;
+    }
+
+    public void requestFocus() {
+        super.requestFocus();
+        txtCategory.requestFocusInWindow();
     }
 }
