@@ -47,6 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.ClockListener;
@@ -211,6 +212,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTask = new javax.swing.JMenu();
         mnCopyTask = new javax.swing.JMenuItem();
         mnMoveTime = new javax.swing.JMenuItem();
+        mnCorrectDuration = new javax.swing.JMenuItem();
         mnAddNote = new javax.swing.JMenuItem();
         mnTools = new javax.swing.JMenu();
         mnSwitchDate = new javax.swing.JMenuItem();
@@ -324,6 +326,18 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             }
         });
         mnTask.add(mnMoveTime);
+
+        mnCorrectDuration.setFont(getFont());
+        mnCorrectDuration.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/fix_time.png"))); // NOI18N
+        mnCorrectDuration.setMnemonic(Translator.getMnemonic("MAINWINDOW.CORRECT_DURATION"));
+        mnCorrectDuration.setText(Translator.getTranslation("MAINWINDOW.CORRECT_DURATION"));
+        mnCorrectDuration.setToolTipText(Translator.getTranslation("MAINWINDOW.CORRECT_DURATION_TOOLTIP"));
+        mnCorrectDuration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnCorrectDurationActionPerformed(evt);
+            }
+        });
+        mnTask.add(mnCorrectDuration);
 
         mnAddNote.setFont(getFont());
         mnAddNote.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/note.png"))); // NOI18N
@@ -519,6 +533,11 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private void tpViewsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tpViewsMouseEntered
         Tools.recordActivity();
     }//GEN-LAST:event_tpViewsMouseEntered
+
+    private void mnCorrectDurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCorrectDurationActionPerformed
+        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+        dayView.correctTaskDuration(this);
+    }//GEN-LAST:event_mnCorrectDurationActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar mbMenu;
@@ -526,6 +545,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private javax.swing.JMenuItem mnAddNote;
     private javax.swing.JMenuItem mnAdjustStart;
     private javax.swing.JMenuItem mnCopyTask;
+    private javax.swing.JMenuItem mnCorrectDuration;
     private javax.swing.JMenuItem mnExit;
     private javax.swing.JMenuItem mnMoveTime;
     private javax.swing.JMenuItem mnSettings;
@@ -559,6 +579,9 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             if (reportedWeek != null)
                 if (reportedWeek.equals("-1"))
                     Settings.getDefault().setSetting("rachota.reported.week", null);
+        }
+        if (evt.getPropertyName().equals("enable_menu")) {
+            getMenuItem((String) evt.getOldValue()).setEnabled(Boolean.parseBoolean((String) evt.getNewValue()));
         }
         updateSystemTray(dayView);
     }
@@ -873,5 +896,15 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         int decision = JOptionPane.showOptionDialog(null, Translator.getTranslation("QUESTION.ANOTHER_INSTANCE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
         if (decision == JOptionPane.NO_OPTION) System.exit(-1);
         lockFile.deleteOnExit();
+    }
+
+    private JMenuItem getMenuItem(String menuName) {
+        JMenuItem menuItem = null;
+        if (menuName.equals("mnCorrectDuration")) menuItem = mnCorrectDuration;
+        if (menuName.equals("mnCopyTask")) menuItem = mnCopyTask;
+        if (menuName.equals("mnAddNote")) menuItem = mnAddNote;
+        if (menuName.equals("mnMoveTime")) menuItem = mnMoveTime;
+        if (menuName.equals("mnAdjustStart")) menuItem = mnAdjustStart;
+        return menuItem;
     }
 }
