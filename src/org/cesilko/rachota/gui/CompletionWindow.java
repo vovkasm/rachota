@@ -29,6 +29,7 @@ import java.awt.Toolkit;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import javax.swing.JDialog;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 import org.cesilko.rachota.core.Translator;
@@ -42,14 +43,17 @@ public class CompletionWindow extends javax.swing.JDialog {
     private JTextComponent textComponent;
     /** List of all possible completion items. */
     private Vector allCompletionItems;
+    /** Reference to task dialog for passing focus after completion is done. */
+    private final JDialog taskDialog;
     
     /** Creates new form CompletionWindow
      * @param textComponent Text component that invoked this completion window.
      * @param allCompletionItems List of all possible completion items.
      */
-    public CompletionWindow(JTextComponent textComponent, Vector allCompletionItems) {
+    public CompletionWindow(JTextComponent textComponent, Vector allCompletionItems, JDialog taskDialog) {
         this.textComponent = textComponent;
         this.allCompletionItems = allCompletionItems;
+        this.taskDialog = taskDialog;
         initComponents();
         jlCompletion.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jlCompletion.setModel(new CompletionListModel());
@@ -135,6 +139,7 @@ public class CompletionWindow extends javax.swing.JDialog {
             evt.consume();
         }
         if ((keyCode == 27) | (keyCode == 10)) setVisible(false);
+        taskDialog.requestFocus();
     }//GEN-LAST:event_jlCompletionKeyPressed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jlCompletion;
