@@ -495,11 +495,11 @@ public class Task implements ClockListener {
         return task;
     }
     
-    /** Returns clone of itself with time set to 0 and state set to STATE_NEW.
-     * @return Task similar to this one except time and state.
+    /** Returns clone of itself with time set to 0, empty notes and state set to STATE_NEW.
+     * @return Task similar to this one except time, notes and state.
      */
     public Task cloneTask() {
-        return new Task(description, keyword, notes, priority, STATE_NEW, 0, notificationTime, automaticStart, privateTask);
+        return new Task(description, keyword, "", priority, STATE_NEW, 0, notificationTime, automaticStart, privateTask);
     }
     
     /** Return textual representation of task.
