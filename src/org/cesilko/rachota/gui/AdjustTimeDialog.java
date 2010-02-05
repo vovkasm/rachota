@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.util.Calendar;
+import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
 /** Dialog for user friendly setting up start/end day time.
@@ -34,8 +35,36 @@ import org.cesilko.rachota.core.Translator;
  */
 public class AdjustTimeDialog extends javax.swing.JDialog {
     
-    /** Creates new dialog for moving time between two tasks.
-     * @param task Source task whose time will be transferred to another task.
+    /** Creates new dialog for time selection and presets hours and minutes 
+     * @param parent Parent window that invoked this dialog.
+     * @parent title String that should be used as a title of this dialog.
+     * @param task Source task whose time will be preset in the dialog.
+     */
+    public AdjustTimeDialog(Frame parent, String title, Task task) {
+        this(parent, title);
+        String shortDuration = Tools.getTimeShort(task.getDuration());
+        Integer hours = new Integer(shortDuration.substring(0, 2));
+        Integer minutes = new Integer(shortDuration.substring(3, 5));
+        spHours.setValue(hours);
+        spMinutes.setValue(minutes);
+        this.task = task;
+    }
+    
+    /** Creates new dialog for time selection and presets hours and minutes
+     * @param parent Parent window that invoked this dialog.
+     * @parent title String that should be used as a title of this dialog.
+     * @param hours Number of hours to be preset in the dialog.
+     * @param minutes Number of minutes to be preset in the dialog.
+     */
+    public AdjustTimeDialog(Frame parent, String title, int hours, int minutes) {
+        this(parent, title);
+        spHours.setValue(new Integer(hours));
+        spMinutes.setValue(new Integer(minutes));
+    }
+
+    /** Creates new dialog for time selection.
+     * @param parent Parent window that invoked this dialog.
+     * @parent title String that should be used as a title of this dialog.
      */
     public AdjustTimeDialog(Frame parent, String title) {
         setTitle(title);
@@ -212,7 +241,14 @@ private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_s
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hours.intValue());
         calendar.set(Calendar.MINUTE, minutes.intValue());
-        firePropertyChange("time_adjusted", calendar.getTime(), null);
+        if (task == null) firePropertyChange("time_adjusted", calendar.getTime(), null);
+        else {
+            long newDuration = hours.intValue()*3600 + minutes.intValue()*60;
+            task.setDuration(newDuration*1000);
+            if (newDuration == 0) task.setState(Task.STATE_NEW);
+            else if (task.getState() == Task.STATE_NEW) task.setState(Task.STATE_STARTED);
+            firePropertyChange("duration_corrected", null, null);
+        }
     }//GEN-LAST:event_btOKActionPerformed
 
     private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
@@ -232,4 +268,6 @@ private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_s
     private Integer previousHours = new Integer(0);
     /** Last correct value of minutes specified by user. */
     private Integer previousMinutes = new Integer(0);
+    /** Task whose time should be edited. */
+    private Task task = null;
 }
