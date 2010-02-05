@@ -340,6 +340,7 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
     setVisible(false);
     System.clearProperty("inactivityReminderOpen");
+    Tools.recordActivity();
     String inactivityAction = (String) Settings.getDefault().getSetting("inactivityAction");
     if (inactivityAction.equals(Settings.ON_INACTIVITY_STOP)) currentTask.startWork();
     if (chbIgnore.isSelected()) Settings.getDefault().setSetting("detectInactivity", new Boolean(false));
