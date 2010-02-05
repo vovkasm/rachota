@@ -160,8 +160,15 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         return Tools.getFont();
     }
 
-    void adjustStartTime(Frame parent) {
-        AdjustTimeDialog adjustTimeDialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.START_TIME"));
+    /** Method called when user wants to adjust day start time.
+     * @param parent Main window which called this method to set correct location.
+     */
+    public void adjustStartTime(Frame parent) {
+        Day today = Plan.getDefault().getDay(new Date());
+        String startTime = Tools.getTimeShort(today.getStartTime().getTime());
+        int hours = new Integer(startTime.substring(0, 2)).intValue() + 1;
+        int minutes = new Integer(startTime.substring(3, 5)).intValue();
+        AdjustTimeDialog adjustTimeDialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.START_TIME"), hours, minutes);
         adjustTimeDialog.addPropertyChangeListener(this);
         adjustTimeDialog.setVisible(true);
     }
@@ -921,7 +928,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                     }.start();
                 }
             }
-        } else dayTableModel.fireTableDataChanged();
+        } else { 
+            dayTableModel.fireTableDataChanged();
+            checkButtons();
+        }
         firePropertyChange("view_updated", null, null);
     }
     
@@ -929,7 +939,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      */
     private void checkButtons() {
         boolean today = Plan.getDefault().isToday(day);
-        boolean futureDay = Plan.getDefault().isFuture(day) | today;
+        boolean futureDay = Plan.getDefault().isFuture(day);
+        boolean editableDay = futureDay | today;
         int row = tbPlan.getSelectedRow();
         boolean taskSelected = row != -1;
         boolean taskAlreadySelected = false;
@@ -940,14 +951,32 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             if (selectedTask.isIdleTask()) idleTask = true;
             else taskAlreadySelected = task == selectedTask;
         }
+
+        if (futureDay | idleTask) firePropertyChange("enable_menu", "mnCorrectDuration", "false"); // Can't set task duration for days to come or idle tasks.
+        else firePropertyChange("enable_menu", "mnCorrectDuration", "true");
+        if (idleTask) {
+            firePropertyChange("enable_menu", "mnCopyTask", "false"); // Can't copy idle task as it's created automatically.
+            firePropertyChange("enable_menu", "mnAddNote", "false");  // Can't add notes to idle task.
+        } else {
+            firePropertyChange("enable_menu", "mnCopyTask", "true");
+            firePropertyChange("enable_menu", "mnAddNote", "true");
+        }
+        if (!editableDay) {
+            firePropertyChange("enable_menu", "mnMoveTime", "false"); // Can't move time between tasks from past days.
+            firePropertyChange("enable_menu", "mnAdjustStart", "false"); // Can't change start time past days.
+        } else {
+            firePropertyChange("enable_menu", "mnMoveTime", "true");
+            firePropertyChange("enable_menu", "mnAdjustStart", "true");
+        }
+
         btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !idleTask);
         selectButtonEnabled = btSelect.isEnabled();
-        btAdd.setEnabled(futureDay);
-        btRemove.setEnabled(futureDay & taskSelected & !idleTask);
+        btAdd.setEnabled(editableDay);
+        btRemove.setEnabled(editableDay & taskSelected & !idleTask);
         btEdit.setEnabled(taskSelected & !idleTask);
         btEdit.setText(Translator.getTranslation("DAYVIEW.BT_VIEW"));
         btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_VIEW_TOOLTIP"));
-        if (futureDay & taskSelected & !idleTask) {
+        if (editableDay & taskSelected & !idleTask) {
             btEdit.setText(Translator.getTranslation("DAYVIEW.BT_EDIT"));
             btEdit.setToolTipText(Translator.getTranslation("DAYVIEW.BT_EDIT_TOOLTIP"));
         }
@@ -1015,9 +1044,30 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         dateDialog.setVisible(true);
     }
     
-    /** Method called when add note to task action is required.
+    /** Method called when correct task duration action is required.
+     * @param parent Main window which called this method to set correct location.
      */
-    void addNote(java.awt.Frame parent) {
+    public void correctTaskDuration(java.awt.Frame parent) {
+        if (Plan.getDefault().isFuture(day)) {
+            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.ONLY_TODAY"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int row = tbPlan.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+        Task selectedTask = dayTableModel.getTask(row);
+        AdjustTimeDialog dialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.FIX_DURATION", new String[] {selectedTask.getDescription()}), selectedTask);
+        dialog.addPropertyChangeListener(this);
+        dialog.setVisible(true);
+    }
+
+    /** Method called when add note to task action is required.
+     * @param parent Main window which called this method to set correct location.
+     */
+    public void addNote(java.awt.Frame parent) {
         int row = tbPlan.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
@@ -1030,7 +1080,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             return;
         }
         String note = JOptionPane.showInputDialog(parent, Translator.getTranslation("MAINWINDOW.NEW_NOTE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
-        selectedTask.addNote(note, true);
+        if (Plan.getDefault().isToday(day)) selectedTask.addNote(note, true);
+        else selectedTask.setNotes("[" + Plan.getDefault().getDay(new Date()).toString() + " " + Tools.getTime(new Date()) + "] " + note);
     }
 
     /** Set whether finished tasks should be displayed or not.
@@ -1274,7 +1325,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                 if (targetDay.getTask(selectedTask.getDescription()) == null) {
                     Task clone = selectedTask.cloneTask();
                     if (selectedTask instanceof RegularTask)
-                        clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), selectedTask.getNotes(), selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
+                        clone = new Task(selectedTask.getDescription(), selectedTask.getKeyword(), "", selectedTask.getPriority(), Task.STATE_NEW, 0, selectedTask.getNotificationTime(), selectedTask.automaticStart(), selectedTask.privateTask());
+                    Boolean logTaskEvents = (Boolean) Settings.getDefault().getSetting("logTaskEvents");
+                    if (logTaskEvents.booleanValue())
+                        clone.setNotes("[" + plan.getDay(new Date()).toString() + " " + Tools.getTime(new Date()) + "] created");
                     targetDay.addTask(clone);
                     plan.addDay(targetDay);
                     if ((plan.isFuture(day) | plan.isToday(day)) && (selectedTask.getState() == Task.STATE_NEW))
