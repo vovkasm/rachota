@@ -69,6 +69,7 @@ public class InactivityReminderDialog extends javax.swing.JDialog {
         String inactivityAction = (String) Settings.getDefault().getSetting("inactivityAction");
         if (inactivityAction.equals(Settings.ON_INACTIVITY_STOP)) currentTask.suspendWork();
         setLocationRelativeTo(null);
+        requestFocus();
         System.setProperty("inactivityReminderOpen", "true");
     }
 
