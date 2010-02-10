@@ -62,6 +62,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbReportActivity.setSelected(((Boolean) Settings.getDefault().getSetting("reportActivity")).booleanValue());
         chbDetectInactivity.setSelected(((Boolean) Settings.getDefault().getSetting("detectInactivity")).booleanValue());
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_NOTIFY"));
+        cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_ASK"));
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_STOP"));
         int selectedInactivityAction = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityAction"));
         cmbInactivityAction.setSelectedIndex(selectedInactivityAction);
