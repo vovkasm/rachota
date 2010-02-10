@@ -780,11 +780,23 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         if (detectInactivity.booleanValue()) {
             int inactivityTime = Integer.parseInt((String) Settings.getDefault().getSetting("inactivityTime"));
             if ((Tools.getInactivity() > inactivityTime * 60 * 1000) && (System.getProperty("inactivityReminderOpen")==null)) {
-                EventQueue.invokeLater(new Runnable() {
-                    DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-                    public void run() {new InactivityReminderDialog(dayView).setVisible(true);
-                    Tools.recordActivity();
-                }});
+                Tools.recordActivity();
+                SystemTray systemTray = SystemTray.getSystemTray();
+                TrayIcon[] trayIcons = systemTray.getTrayIcons();
+                for (int i = 0; i < trayIcons.length; i++) {
+                    TrayIcon trayIcon = trayIcons[i];
+                    if (trayIcon.getToolTip().startsWith(Tools.title))
+                        trayIcon.displayMessage(Translator.getTranslation("WARNING.WARNING_TITLE"), Translator.getTranslation("INACTIVITYDIALOG.LBL_INACTIVITY_MESSAGE", new String[] {(String) Settings.getDefault().getSetting("inactivityTime")}), TrayIcon.MessageType.WARNING);
+                }
+                String inactivityAction = (String) Settings.getDefault().getSetting("inactivityAction");
+                if (!inactivityAction.equals(Settings.ON_INACTIVITY_NOTIFY)) {
+                    EventQueue.invokeLater(new Runnable() {
+                        DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
+                        public void run() {
+                            new InactivityReminderDialog(dayView).setVisible(true);
+                        }
+                    });
+                }
             }
         }
         Boolean reportActivity = (Boolean) Settings.getDefault().getSetting("reportActivity");
