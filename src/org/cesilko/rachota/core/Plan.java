@@ -35,11 +35,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.cesilko.rachota.gui.AnalyticsView;
 import org.cesilko.rachota.gui.StartupWindow;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /** Plan containing all days that have some tasks planned. Plan also contains
@@ -383,12 +385,19 @@ public class Plan {
      */
     public static void loadRegularTasks() throws Exception {
         String userDir = (String) Settings.getDefault().getSetting("userDir");
-        File regularTasksFile = new File(userDir + File.separator + "regular_tasks.xml");
+        String fileName = userDir + File.separator + "regular_tasks.xml";
+        File regularTasksFile = new File(fileName);
         if (!regularTasksFile.exists()) return;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         RegularTasksScanner.createDTD();
-        RegularTasksScanner scanner = new RegularTasksScanner(builder.parse(regularTasksFile));
+        RegularTasksScanner scanner;
+        try{
+            scanner = new RegularTasksScanner(builder.parse(regularTasksFile));
+        }catch(SAXException ex){
+            java.util.logging.Logger.getLogger(Plan.class.getName()).log(Level.WARNING, "Error occured while parsing existing regular task XML file.", ex);
+            return;
+        }
         scanner.loadDocument();
     }
     
