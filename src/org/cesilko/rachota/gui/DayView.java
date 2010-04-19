@@ -170,6 +170,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         int minutes = new Integer(startTime.substring(3, 5)).intValue();
         AdjustTimeDialog adjustTimeDialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.START_TIME"), hours, minutes);
         adjustTimeDialog.addPropertyChangeListener(this);
+        adjustTimeDialog.setLocationRelativeTo(this);
         adjustTimeDialog.setVisible(true);
     }
 
@@ -662,6 +663,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         boolean readOnly = btEdit.getText().equals(Translator.getTranslation("DAYVIEW.BT_VIEW"));
         TaskDialog dialog = new TaskDialog(selectedTask, day, readOnly);
         dialog.addPropertyChangeListener(this);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_btEditActionPerformed
     
@@ -671,6 +673,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
         TaskDialog dialog = new TaskDialog(day);
         dialog.addPropertyChangeListener(this);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_btAddActionPerformed
     
@@ -991,6 +994,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     public void switchDate(java.awt.Frame parent) {
         DateDialog dateDialog = new DateDialog(parent, day.getDate(), DateDialog.TYPE_SWITCH_DATE);
         dateDialog.addPropertyChangeListener(this);
+        dateDialog.setLocationRelativeTo(this);
         dateDialog.setVisible(true);
     }
     
@@ -1024,6 +1028,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         }
         MoveTimeDialog moveTimeDialog = new MoveTimeDialog(parent, selectedTask);
         moveTimeDialog.addPropertyChangeListener(this);
+        moveTimeDialog.setLocationRelativeTo(this);
         moveTimeDialog.setVisible(true);
     }
     
@@ -1039,6 +1044,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         boolean futureDay = plan.isFuture(plan.getDayAfter(day));
         DateDialog dateDialog = new DateDialog(parent, futureDay ? plan.getDayAfter(day).getDate() : plan.getDay(new Date()).getDate(), DateDialog.TYPE_COPY_TASK);
         dateDialog.addPropertyChangeListener(this);
+        dateDialog.setLocationRelativeTo(this);
         dateDialog.setVisible(true);
     }
     
@@ -1059,6 +1065,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         Task selectedTask = dayTableModel.getTask(row);
         AdjustTimeDialog dialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.FIX_DURATION", new String[] {selectedTask.getDescription()}), selectedTask);
         dialog.addPropertyChangeListener(this);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
 

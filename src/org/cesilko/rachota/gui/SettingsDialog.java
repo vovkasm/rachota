@@ -766,6 +766,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         RegularTask regularTask = (RegularTask) regularTasks.get(row);
         TaskDialog taskDialog = new TaskDialog(regularTask);
         taskDialog.addPropertyChangeListener(this);
+        taskDialog.setLocationRelativeTo(this);
         taskDialog.setVisible(true);
     }//GEN-LAST:event_btEditActionPerformed
     
@@ -776,6 +777,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         if (!workHoursValid()) return;
         TaskDialog taskDialog = new TaskDialog();
         taskDialog.addPropertyChangeListener(this);
+        taskDialog.setLocationRelativeTo(this);
         taskDialog.setVisible(true);
     }//GEN-LAST:event_btAddActionPerformed
     
