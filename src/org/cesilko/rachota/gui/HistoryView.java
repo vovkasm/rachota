@@ -1062,7 +1062,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         int row = tbFilters.getSelectedRow();
         FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
         AbstractTaskFilter taskFilter = tableModel.getFilter(row);
-        new FilterDialog(tableModel, taskFilter).setVisible(true);
+        FilterDialog dialog = new FilterDialog(tableModel, taskFilter);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
         checkButtons();
         filterTasks();
     }//GEN-LAST:event_btEditFilterActionPerformed
@@ -1084,7 +1086,9 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      */
     private void btAddFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddFilterActionPerformed
         FiltersTableModel tableModel = (FiltersTableModel) tbFilters.getModel();
-        new FilterDialog(tableModel).setVisible(true);
+        FilterDialog dialog = new FilterDialog(tableModel);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
         checkButtons();
         filterTasks();
     }//GEN-LAST:event_btAddFilterActionPerformed
