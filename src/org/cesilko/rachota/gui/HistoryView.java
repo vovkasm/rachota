@@ -410,7 +410,8 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         txtDate.setFont(getFont());
         txtDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDate.setToolTipText(Translator.getTranslation("HISTORYVIEW.TXT_DATE_TOOLTIP"));
-        txtDate.setPreferredSize(new java.awt.Dimension(150, 23));
+        txtDate.setPreferredSize(new java.awt.Dimension(200, 23));
+        txtDate.setRequestFocusEnabled(false);
         txtDate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtDateMouseClicked(evt);
@@ -1125,7 +1126,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                 txtDate.setText(Tools.replaceAll(sdf.format(period), "|", (String) cmbPeriod.getSelectedItem()));
                 break;
             default:
-                format = Translator.getTranslation("FORMAT.DAY");
+                format = Translator.getTranslation("FORMAT.DATE");
                 sdf.applyPattern(format);
                 txtDate.setText(sdf.format(period));
                 break;
