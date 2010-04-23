@@ -963,13 +963,9 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             firePropertyChange("enable_menu", "mnCopyTask", "true");
             firePropertyChange("enable_menu", "mnAddNote", "true");
         }
-        if (!editableDay) {
-            firePropertyChange("enable_menu", "mnMoveTime", "false"); // Can't move time between tasks from past days.
-            firePropertyChange("enable_menu", "mnAdjustStart", "false"); // Can't change start time past days.
-        } else {
-            firePropertyChange("enable_menu", "mnMoveTime", "true");
-            firePropertyChange("enable_menu", "mnAdjustStart", "true");
-        }
+        
+        firePropertyChange("enable_menu", "mnMoveTime", "true");
+        firePropertyChange("enable_menu", "mnAdjustStart", "true");
 
         btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !idleTask);
         selectButtonEnabled = btSelect.isEnabled();
@@ -1001,10 +997,6 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     /** Method called when move time action is required.
      */
     public void moveTime(java.awt.Frame parent) {
-        if (!Plan.getDefault().isToday(day)) {
-            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.ONLY_TODAY"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         int row = tbPlan.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TASK_SELECTED"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
@@ -1026,7 +1018,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.NO_TARGET_TASK"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        MoveTimeDialog moveTimeDialog = new MoveTimeDialog(parent, selectedTask);
+        MoveTimeDialog moveTimeDialog = new MoveTimeDialog(parent, selectedTask, day);
         moveTimeDialog.addPropertyChangeListener(this);
         moveTimeDialog.setLocationRelativeTo(this);
         moveTimeDialog.setVisible(true);
@@ -1349,11 +1341,19 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             dayTableModel.resortRows();
         }
         if (evt.getPropertyName().equals("time_adjusted")) {
-            Date startTime = (Date) evt.getOldValue();
+            String newTime = (String) evt.getNewValue();
+            Date startTime = new Date(Tools.getTime(newTime));
+
+            // If finishTime or startTime is not set, set it to startTime
+            if (day.getStartTime() == null)
+                day.setStartTime(startTime);
+            if (day.getFinishTime() == null)
+                day.setFinishTime(startTime);
             if (day.getFinishTime().before(startTime)) {
                 JOptionPane.showMessageDialog(null, Translator.getTranslation("WARNING.START_AFTER_END"));
                 return;
             }
+            
             long difference = day.getStartTime().getTime() - startTime.getTime();
             day.setStartTime(startTime);
             if (difference > 0) {
