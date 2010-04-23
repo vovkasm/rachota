@@ -238,11 +238,13 @@ private void spHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_s
         setVisible(false);//GEN-HEADEREND:event_btOKActionPerformed
         Integer hours = (Integer) spHours.getValue();
         Integer minutes = (Integer) spMinutes.getValue();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hours.intValue());
-        calendar.set(Calendar.MINUTE, minutes.intValue());
-        if (task == null) firePropertyChange("time_adjusted", calendar.getTime(), null);
-        else {
+        if (task == null) {
+            String newTime = "" + minutes.toString();
+            if (minutes.intValue() < 10) newTime = "0" + newTime;
+            newTime = hours.toString() + ":" + newTime;
+            if (hours.intValue() < 10) newTime = "0" + newTime;
+            firePropertyChange("time_adjusted", null, newTime);
+        } else {
             long newDuration = hours.intValue()*3600 + minutes.intValue()*60;
             task.setDuration(newDuration*1000);
             if (newDuration == 0) task.setState(Task.STATE_NEW);
