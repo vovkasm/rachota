@@ -39,13 +39,14 @@ public class MoveTimeDialog extends javax.swing.JDialog {
     
     /** Creates new dialog for moving time between two tasks.
      * @param task Source task whose time will be transferred to another task.
+     * @param day Day on which the task to be moved occurs
      */
-    public MoveTimeDialog(java.awt.Frame parent, Task task) {
+    public MoveTimeDialog(java.awt.Frame parent, Task task, Day day) {
         this.task = task;
         initComponents();
         setLocationRelativeTo(parent);
-        Day today = Plan.getDefault().getDay(new Date());
-        Iterator iterator = today.getTasks().iterator();
+
+        Iterator iterator = day.getTasks().iterator();
         while (iterator.hasNext()) {
             task = (Task) iterator.next();
             // htietgens: next line deactivated to shop up IdleTask in MoveTimeDialog
