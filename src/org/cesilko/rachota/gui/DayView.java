@@ -164,10 +164,10 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
      * @param parent Main window which called this method to set correct location.
      */
     public void adjustStartTime(Frame parent) {
-        Day today = Plan.getDefault().getDay(new Date());
-        String startTime = Tools.getTimeShort(today.getStartTime().getTime());
-        int hours = new Integer(startTime.substring(0, 2)).intValue() + 1;
-        int minutes = new Integer(startTime.substring(3, 5)).intValue();
+        Date startTime = day.getStartTime();
+        if (startTime == null) startTime = new Date();
+        int hours = new Integer(Tools.getTime(startTime).substring(0, 2)).intValue();
+        int minutes = new Integer(Tools.getTime(startTime).substring(3, 5)).intValue();
         AdjustTimeDialog adjustTimeDialog = new AdjustTimeDialog(parent, Translator.getTranslation("ADJUSTTIMEDIALOG.START_TIME"), hours, minutes);
         adjustTimeDialog.addPropertyChangeListener(this);
         adjustTimeDialog.setLocationRelativeTo(this);
