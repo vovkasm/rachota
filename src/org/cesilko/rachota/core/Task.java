@@ -27,7 +27,10 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.DayTableModel;
 import org.cesilko.rachota.gui.Tools;
@@ -122,7 +125,7 @@ public class Task implements ClockListener {
      * @param keyword Keyword of task.
      */
     public void setKeyword(String keyword) {
-        this.keyword = keyword;
+        this.keyword = keyword.trim();
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "keyword", null, keyword));
     }
     
@@ -131,6 +134,16 @@ public class Task implements ClockListener {
      */
     public String getKeyword() {
         return keyword;
+    }
+
+    /** Returns keywords of this task.
+     * @return Iterator of keyword tokens
+     */
+    public Iterator getKeywordTokens() {
+        StringTokenizer tokenizer = new StringTokenizer(keyword, " ");
+        ArrayList tokens = new ArrayList();
+        while (tokenizer.hasMoreTokens()) tokens.add(tokenizer.nextToken());
+        return tokens.iterator();
     }
     
     /**

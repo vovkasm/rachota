@@ -33,7 +33,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
@@ -466,13 +465,10 @@ public class Plan {
             Iterator taskIterator = tasks.iterator();
             while (taskIterator.hasNext()) {
                 Task task = (Task) taskIterator.next();
-                String keywords = task.getKeyword();
-                if (keywords != null) {
-                    StringTokenizer tokenizer = new StringTokenizer(keywords, " ");
-                    while(tokenizer.hasMoreElements()) {
-                        String category = (String) tokenizer.nextElement();
-                        if (!allCategories.contains(category)) allCategories.add(category);
-                    }
+                Iterator keywordIter = task.getKeywordTokens();
+                while(keywordIter.hasNext()) {
+                    String category = (String) keywordIter.next();
+                    if (!allCategories.contains(category)) allCategories.add(category);
                 }
             }
         }

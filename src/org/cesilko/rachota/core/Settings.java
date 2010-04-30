@@ -105,6 +105,7 @@ public class Settings {
         settingsMap.put("hibernationAction", ON_HIBERNATION_ASK);
         System.setProperty("backupCreated", "" + new Date().getTime());
         settingsMap.put("minimizeOnStart", new Boolean(false));
+        settingsMap.put("popupGroupByKeyword", new Boolean(false));
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
