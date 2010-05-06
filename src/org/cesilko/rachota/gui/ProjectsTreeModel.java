@@ -4,7 +4,7 @@
  * compliance with the License.
  *
  * You can obtain a copy of the License at http://rachota.sourceforge.net/license.txt.
- * 
+ *
  *
  * When distributing Covered Code, include this CDDL Header Notice in each file
  * and include the License file at http://rachota.sourceforge.net/license.txt.
@@ -25,7 +25,6 @@ package org.cesilko.rachota.gui;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -41,7 +40,7 @@ import org.cesilko.rachota.core.Translator;
  * @author Jiri Kovalsky
  */
 class ProjectsTreeModel extends DefaultTreeModel {
-    
+
     public static final int NODE_TYPE_ROOT = 1;
     public static final int NODE_TYPE_CATEGORY = 2;
     public static final int NODE_TYPE_TASK = 3;
@@ -57,7 +56,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
         super(new DefaultMutableTreeNode(Translator.getTranslation("HISTORYVIEW.PROJECTS_TREE_ALL")));
         setDays(days);
     }
-    
+
     public void setDays(Vector days) {
         this.days = days;
         initializeProjectTree();
@@ -96,11 +95,10 @@ class ProjectsTreeModel extends DefaultTreeModel {
                 if (task.getDuration() == 0) {
                     continue;
                 }
-                String keywords = task.getKeyword();
-                if (!keywords.equals("")) {
-                    StringTokenizer tokenizer = new StringTokenizer(keywords, " ");
-                    while (tokenizer.hasMoreElements()) {
-                        String category = (String) tokenizer.nextElement();
+                Iterator keywordIter = task.getKeywordTokens();
+                if (keywordIter.hasNext()) {
+                    while (keywordIter.hasNext()) {
+                        String category = (String) keywordIter.next();
                         categoryNode = getCategoryNode(categories, category);
                         if (categoryNode != null) {
                             categoryNode.addTask(task);
@@ -201,7 +199,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
             }
             return duration;
         }
-        
+
         public int getAverageValue(int property) {
             Iterator taskNodesIterator = taskNodes.iterator();
             int totalProperty = 0;
@@ -227,7 +225,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
             if (categoryNode.getTotalTime() > getTotalTime()) return 1;
             return -1;
         }
-        
+
         public void sortTaskNodes() {
             int taskNodesCount = taskNodes.size();
             TaskNode[] taskNodesArray = new TaskNode[taskNodesCount];

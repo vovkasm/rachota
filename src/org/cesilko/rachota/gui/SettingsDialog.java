@@ -61,6 +61,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         chbCountPrivate.setSelected(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue());
         chbReportActivity.setSelected(((Boolean) Settings.getDefault().getSetting("reportActivity")).booleanValue());
         chbDetectInactivity.setSelected(((Boolean) Settings.getDefault().getSetting("detectInactivity")).booleanValue());
+        chbPopupGroupByKeyword.setSelected(((Boolean) Settings.getDefault().getSetting("popupGroupByKeyword")).booleanValue());
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_NOTIFY"));
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_ASK"));
         cmbInactivityAction.addItem(Translator.getTranslation("SETTINGSDIALOG.INACTIVITY_ACTION_STOP"));
@@ -152,6 +153,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         lblHibernationTime = new javax.swing.JLabel();
         txtHibernationTime = new javax.swing.JTextField();
         lblHibernationAction = new javax.swing.JLabel();
+        chbPopupGroupByKeyword = new javax.swing.JCheckBox();
         cmbHibernationAction = new javax.swing.JComboBox();
         lbOnExit = new javax.swing.JLabel();
         lbOnExit.setDisplayedMnemonic(Translator.getMnemonic("SETTINGSDIALOG.LBL_ON_EXIT"));
@@ -181,7 +183,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        pnGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
+        pnGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
         pnGeneral.setFont(getFont());
         pnGeneral.setLayout(new java.awt.GridBagLayout());
 
@@ -513,6 +515,23 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblHibernationAction, gridBagConstraints);
 
+        chbPopupGroupByKeyword.setFont(getFont());
+        chbPopupGroupByKeyword.setMnemonic(Translator.getMnemonic("SETTINGSDIALOG.CHB_POPUP_GROUPBY_KEYWORD"));
+        chbPopupGroupByKeyword.setSelected(((Boolean) Settings.getDefault().getSetting("popupGroupByKeyword")).booleanValue());
+        chbPopupGroupByKeyword.setText(Translator.getTranslation("SETTINGSDIALOG.CHB_POPUP_GROUPBY_KEYWORD"));
+        chbPopupGroupByKeyword.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CHB_POPUP_GROUPBY_KEYWORD_TOOLTIP"));
+        chbPopupGroupByKeyword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                chbPopupGroupByKeywordKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnGeneral.add(chbPopupGroupByKeyword, gridBagConstraints);
+
         cmbHibernationAction.setFont(getFont());
         cmbHibernationAction.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.CMB_HIBERNATION_ACTION_TOOLTIP"));
         cmbHibernationAction.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -529,6 +548,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(cmbHibernationAction, gridBagConstraints);
 
+        lbOnExit.setFont(getFont());
         lbOnExit.setLabelFor(cmbOnExitAction);
         lbOnExit.setText(Translator.getTranslation("SETTINGSDIALOG.LBL_ON_EXIT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -553,7 +573,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(pnGeneral, gridBagConstraints);
 
-        pnRegularTasks.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
+        pnRegularTasks.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
         pnRegularTasks.setFont(getFont());
         pnRegularTasks.setLayout(new java.awt.GridBagLayout());
 
@@ -816,6 +836,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         Settings.getDefault().setSetting("hibernationTime", txtHibernationTime.getText());
         Settings.getDefault().setSetting("hibernationAction", "" + cmbHibernationAction.getSelectedIndex());
         Settings.getDefault().setSetting("onExitAction", "" + cmbOnExitAction.getSelectedIndex());
+        Settings.getDefault().setSetting("popupGroupByKeyword", new Boolean(chbPopupGroupByKeyword.isSelected()));
         String proxyHost = txtProxyHost.getText();
         String proxyPort = txtProxyPort.getText();
         Settings.getDefault().setSetting("proxyHost", proxyHost);
@@ -915,6 +936,13 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
             btCancelActionPerformed(null);
     }//GEN-LAST:event_cmbHibernationActionKeyPressed
+
+    private void chbPopupGroupByKeywordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chbPopupGroupByKeywordKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_chbPopupGroupByKeywordKeyPressed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
@@ -930,6 +958,7 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JCheckBox chbHoursNotReached;
     private javax.swing.JCheckBox chbLogEvents;
     private javax.swing.JCheckBox chbMoveUnfinished;
+    private javax.swing.JCheckBox chbPopupGroupByKeyword;
     private javax.swing.JCheckBox chbReportActivity;
     private javax.swing.JComboBox cmbHibernationAction;
     private javax.swing.JComboBox cmbInactivityAction;
