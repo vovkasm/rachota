@@ -454,7 +454,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         boolean warnHoursNotReaced = ((Boolean) Settings.getDefault().getSetting("warnHoursNotReached")).booleanValue();
         if (warnHoursNotReaced) {
-            double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
+            double dayWorkHours = Settings.getDefault().getWorkingHours();
             Day today = Plan.getDefault().getDay(new Date());
             double totalTime = (double) today.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
             if (totalTime < dayWorkHours) {
