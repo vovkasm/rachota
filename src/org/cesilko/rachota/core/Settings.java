@@ -31,11 +31,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.cesilko.rachota.gui.Tools;
 
@@ -44,7 +48,9 @@ import org.cesilko.rachota.gui.Tools;
  * @author  Jiri Kovalsky
  */
 public class Settings {
-    
+
+    /** Logger for recording important or erroneous events. */
+    private static final Logger logger = Logger.getLogger(Settings.class.getName());
     /** The only instance of Settings object in the system. */
     private static Settings settings;
     /** Map containing all settings. Key is setting name e.g. "displayFinishedTasks"
@@ -75,7 +81,8 @@ public class Settings {
     private Settings() {
         propertyChangeSupport = new PropertyChangeSupport(this);
         settingsMap = new HashMap();
-        settingsMap.put("dayWorkHours", "8.0");
+        // This is done to make sure that the default value is correctly formatted.
+        settingsMap.put("dayWorkHours", DecimalFormat.getInstance().format(8.0));
         settingsMap.put("warnHoursNotReached", new Boolean(true));
         settingsMap.put("warnHoursExceeded", new Boolean(false));
         settingsMap.put("moveUnfinished", new Boolean(true));
@@ -224,5 +231,19 @@ public class Settings {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    /** Reads the "dayWorkHours" field in the settings, and returns the
+     * value as a double. This method will handle different locales.
+     * @return The working hours value as stored in the settings.
+     */
+    public double getWorkingHours(){
+        double returnValue = 8;
+        try {
+            returnValue = DecimalFormat.getInstance().parse(getSetting("dayWorkHours").toString()).doubleValue();
+        } catch (ParseException ex) {
+            logger.log(Level.WARNING, "Unable to read setting: " + "\"dayWorkHours\"" + ".", ex);
+        }
+        return returnValue;
     }
 }
