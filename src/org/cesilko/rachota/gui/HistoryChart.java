@@ -406,7 +406,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
         }
         double averageAll = totalHours / days.size();
         double averageWork = (workDays == 0 ? 0 : totalHours / workDays);
-        double given = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
+        double given = Settings.getDefault().getWorkingHours();
         int width = getBounds().width;
         int height = getBounds().height;
         Font originalFont = getFont();

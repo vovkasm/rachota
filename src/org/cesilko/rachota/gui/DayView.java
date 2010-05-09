@@ -732,7 +732,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         Settings.getDefault().setSetting("runningTask", null);
         Settings.saveSettings();
         txtTask.setText("");
-        double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
+        double dayWorkHours = Settings.getDefault().getWorkingHours();
         double totalTime = (double) day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
         int progress = (int) (totalTime * 100 / dayWorkHours);
         pbProgress.setValue(progress);
@@ -897,7 +897,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         else txtEnd.setText("");
         double totalTime = (double) day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
         if (totalTime != 0) {
-            double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
+            double dayWorkHours = Settings.getDefault().getWorkingHours();
             int progress = (int) (totalTime * 100 / dayWorkHours);
             pbProgress.setValue(progress);
             pbProgress.setString(Tools.getTime(day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())));
@@ -919,7 +919,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             }
             boolean warnHoursExceeded = ((Boolean) Settings.getDefault().getSetting("warnHoursExceeded")).booleanValue();
             if (warnHoursExceeded && !warningConfirmed) {
-                double dayWorkHours = Double.parseDouble((String) Settings.getDefault().getSetting("dayWorkHours"));
+                double dayWorkHours = Settings.getDefault().getWorkingHours();
                 totalTime = (double) Plan.getDefault().getDay(new Date()).getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
                 if (totalTime > dayWorkHours) {
                     warningConfirmed = true;
