@@ -463,6 +463,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 if (decision != JOptionPane.YES_OPTION) return;
             }
         }
+        String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
+        if (reportedWeek.equals(Settings.ACTIVITY_REPORT_FAILED)) Settings.getDefault().setSetting("rachota.reported.week", Settings.ACTIVITY_NOT_REPORTED);
         Settings.getDefault().setSetting("size", "[" + (int) getBounds().getWidth() + "," + (int) getBounds().getHeight() + "]");
         Settings.getDefault().setSetting("location", "[" + (int) getBounds().getLocation().getX() + "," + (int) getBounds().getLocation().getY() + "]");
         HistoryView historyView = (HistoryView) tpViews.getComponentAt(TAB_HISTORY_VIEW);
@@ -574,12 +576,6 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         setTitle(Tools.title + " " + dayView.getTitleSuffix());
         if (evt.getPropertyName().equals("day"))
             tpViews.setSelectedIndex(0);
-        if (evt.getPropertyName().equals("settings")) {
-            String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
-            if (reportedWeek != null)
-                if (reportedWeek.equals("-1"))
-                    Settings.getDefault().setSetting("rachota.reported.week", null);
-        }
         if (evt.getPropertyName().equals("enable_menu")) {
             getMenuItem((String) evt.getOldValue()).setEnabled(Boolean.parseBoolean((String) evt.getNewValue()));
         }
@@ -707,7 +703,6 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         ActionListener finishTaskListener = new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-                Task task = dayView.getTask();
                 dayView.finishTask();
                 Image image = new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_red_48.png")).getImage();
                 Tools.recordActivity();
@@ -804,12 +799,8 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         Calendar calendar = Calendar.getInstance();
         final int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         String reportedWeek = (String) Settings.getDefault().getSetting("rachota.reported.week");
-        if (reportedWeek != null) {
-            int week = Integer.parseInt(reportedWeek);
-            if (week == currentWeek) return;
-            if (week == -1) return;
-        }
-        //Clock.getDefault().removeListener(this);
+        if (reportedWeek.equals(Settings.ACTIVITY_REPORT_FAILED)) return;
+        if (Integer.parseInt(reportedWeek)  == currentWeek) return;
         String RID = Tools.getRID();
         Plan plan = Plan.getDefault();
         calendar.set(Calendar.WEEK_OF_YEAR, currentWeek - 1);
@@ -862,7 +853,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 }
                 catch (Exception e) {
                     System.out.println("Error: Can't connect to Rachota Analytics server.");
-                    Settings.getDefault().setSetting("rachota.reported.week", "-1");
+                    Settings.getDefault().setSetting("rachota.reported.week", Settings.ACTIVITY_REPORT_FAILED);
                     reportingActivity = false;
                 }
             }};
