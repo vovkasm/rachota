@@ -75,7 +75,10 @@ public class Settings {
     public static final String ON_INACTIVITY_ASK = "1";
     /** On inactivity, stop measuring current task. */
     public static final String ON_INACTIVITY_STOP = "2";
-
+    /** Tried to report activity but failed. */
+    public static final String ACTIVITY_REPORT_FAILED = "-1";
+    /** Activity not yet reported. */
+    public static final String ACTIVITY_NOT_REPORTED = "-2";
     
     /** Creates private instance of Settings object. */
     private Settings() {
@@ -91,6 +94,7 @@ public class Settings {
         settingsMap.put("displayFinishedTasks", new Boolean(false));
         settingsMap.put("countPrivateTasks", new Boolean(false));
         settingsMap.put("reportActivity", new Boolean(true));
+        settingsMap.put("rachota.reported.week", ACTIVITY_NOT_REPORTED);
         settingsMap.put("detectInactivity", new Boolean(true));
         settingsMap.put("proxyHost", "");
         settingsMap.put("proxyPort", "");
