@@ -1344,6 +1344,17 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             String newTime = (String) evt.getNewValue();
             Date startTime = new Date(Tools.getTime(newTime));
 
+            Calendar newStartTime = Calendar.getInstance();
+            newStartTime.setTime(day.getStartTime());
+            // The time returned by the Tools.getTime() method is at epoch.
+            Calendar startTimeAtEpoch = Calendar.getInstance();
+            startTimeAtEpoch.setTime(startTime);
+            // Translate the interesting fields.
+            newStartTime.set(Calendar.HOUR_OF_DAY, startTimeAtEpoch.get(Calendar.HOUR_OF_DAY));
+            newStartTime.set(Calendar.MINUTE, startTimeAtEpoch.get(Calendar.MINUTE));
+            // Correct the retrieved startTime.
+            startTime = newStartTime.getTime();
+
             // If finishTime or startTime is not set, set it to startTime
             if (day.getStartTime() == null)
                 day.setStartTime(startTime);
