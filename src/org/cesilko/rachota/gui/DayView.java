@@ -1359,7 +1359,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             if (difference > 0) {
                 Task startTask = day.getTask(Translator.getTranslation("TASK.STARTTASK"));
                 if (startTask == null) {
-                    startTask = new Task(Translator.getTranslation("TASK.STARTTASK"), null, null, Task.PRIORITY_LOW, Task.STATE_STARTED, difference, null, false, false);
+                    startTask = new Task(Translator.getTranslation("TASK.STARTTASK"), "", null, Task.PRIORITY_LOW, Task.STATE_STARTED, difference, null, false, false);
                     day.addTask(startTask);
                 } else startTask.addDuration(difference);
             }
