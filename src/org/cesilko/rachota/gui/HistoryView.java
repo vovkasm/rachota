@@ -1597,7 +1597,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         if (!fileName.endsWith(".html")) file = new File(fileName + ".html");
         Settings.getDefault().setSetting("reportDir", file.getParent());
         fileName = file.getAbsolutePath();
-        fileName = fileName.substring(0, fileName.indexOf("."));
+        fileName = fileName.substring(0, fileName.lastIndexOf("."));
         if (file.exists()) {
             String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
             decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
@@ -1727,6 +1727,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
             historyChart.paint(image.getGraphics());
             imageWriter.write(image, out);
         } catch (IOException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
         JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
