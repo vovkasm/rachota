@@ -24,10 +24,15 @@
 package org.cesilko.rachota.gui;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Translator;
 
@@ -183,4 +188,33 @@ public class Tools {
         long lastActivity = Long.parseLong(System.getProperty("rachota.lastInteraction"));
         return new Date().getTime() - lastActivity;
     }
+
+    /** Sets up a focus gained listener to the {@code JSpinner} that selects all text
+     * currently in the text field of the supplied {@code JSpinner}.
+     * @param spinner The {@code JSpinner} to add a select all listener to.
+     */
+    public static void setupSelectAllListener(JSpinner spinner) {
+        FocusAdapter spinnerFocus = new FocusAdapter() {
+
+            @Override
+            public void focusGained(final FocusEvent e) {
+                // Make sure that the event is from a JTextField
+                if (e.getSource() instanceof JTextField) {
+                    Runnable runnable = new Runnable() {
+
+                        public void run() {
+                            ((JTextField) e.getSource()).selectAll();
+                        }
+                    };
+                    SwingUtilities.invokeLater(runnable);
+                }
+            }
+        };
+        // Make sure that the editor is a instance of JSpinner.DefaultEditor.
+        if (spinner.getEditor() instanceof JSpinner.DefaultEditor) {
+            // Get the text field from the JSpinner, and add the focus listener to it.
+            ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().addFocusListener(spinnerFocus);
+        }
+    }
+
 }

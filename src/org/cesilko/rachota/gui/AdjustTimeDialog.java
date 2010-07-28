@@ -73,6 +73,9 @@ public class AdjustTimeDialog extends javax.swing.JDialog {
         Dimension size = spHours.getPreferredSize();
         spHours.setPreferredSize(new Dimension((int) size.getWidth()*2, (int) size.getHeight()));
         spMinutes.setPreferredSize(new Dimension((int) size.getWidth()*2, (int) size.getHeight()));
+        Tools.setupSelectAllListener(spHours);
+        Tools.setupSelectAllListener(spMinutes);
+        getRootPane().setDefaultButton(btOK);
         pack();
     }
     

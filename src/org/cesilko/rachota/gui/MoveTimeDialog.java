@@ -25,10 +25,10 @@ package org.cesilko.rachota.gui;
 
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
-import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
 import org.cesilko.rachota.core.Day;
-import org.cesilko.rachota.core.Plan;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
@@ -58,9 +58,14 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         spHours.setPreferredSize(new Dimension((int) size.getWidth()*2, (int) size.getHeight()));
         spMinutes.setPreferredSize(new Dimension((int) size.getWidth()*2, (int) size.getHeight()));
         spSeconds.setPreferredSize(new Dimension((int) size.getWidth()*2, (int) size.getHeight()));
+
+        Tools.setupSelectAllListener(spHours);
+        Tools.setupSelectAllListener(spMinutes);
+        Tools.setupSelectAllListener(spSeconds);
+        getRootPane().setDefaultButton(btOK);
         pack();
     }
-    
+
     /** Returns font that should be used for all widgets in this component
      * based on the language preferences specified by user.
      * @return Font to be used in this component.
@@ -125,6 +130,12 @@ public class MoveTimeDialog extends javax.swing.JDialog {
         lbSelectTime.setFont(getFont());
         lbSelectTime.setLabelFor(spHours);
         lbSelectTime.setText(Translator.getTranslation("MOVETIMEDIALOG.SELECT_TIME"));
+        lbSelectTime.setToolTipText(Translator.getTranslation("MOVETIMEDIALOG.SELECT_TIME_TOOLTIP"));
+        lbSelectTime.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbSelectTimeMouseClicked(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -310,6 +321,12 @@ private void cmbSelectTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         Tools.recordActivity();
     }//GEN-LAST:event_formMouseEntered
 
+    private void lbSelectTimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSelectTimeMouseClicked
+        if(evt.getClickCount() == 2){
+            setTime(this.task.getDuration());
+        }
+    }//GEN-LAST:event_lbSelectTimeMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btOK;
@@ -349,5 +366,30 @@ private void cmbSelectTaskKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             previousMinutes = (Integer) spMinutes.getValue();
             previousHours = (Integer) spHours.getValue();
         }
+    }
+
+    /** Sets the time to show in the dialog in ms.
+     * @param time The time in ms to show.
+     */
+    public void setTime(long time) {
+        // Calculate how many hours the provided time is.
+        final Long hours = TimeUnit.HOURS.convert(time, TimeUnit.MILLISECONDS);
+        // Subtract that from further calculations.
+        time -= TimeUnit.HOURS.toMillis(hours);
+        // Calculate the remainding minutes.
+        final Long minutes = TimeUnit.MINUTES.convert(time, TimeUnit.MILLISECONDS);
+        // Subtract that from further calculations.
+        time -= TimeUnit.MINUTES.toMillis(minutes);
+        // Convert the remainding ms to seconds, 500ms is added to properly round the result.
+        final Long seconds = TimeUnit.SECONDS.convert(time + 500, TimeUnit.MILLISECONDS);
+        Runnable runnable = new Runnable() {
+
+            public void run() {
+                spHours.setValue(hours.intValue());
+                spMinutes.setValue(minutes.intValue());
+                spSeconds.setValue(seconds.intValue());
+            }
+        };
+        SwingUtilities.invokeLater(runnable);
     }
 }
