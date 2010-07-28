@@ -46,6 +46,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -91,19 +92,20 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
             if (decision != JFileChooser.APPROVE_OPTION) return;
             Settings.getDefault().setSetting("userDir", fileChooser.getSelectedFile().getAbsolutePath());
         }
-        System.out.println("----------------------------------------------------------------------------------");
-        System.out.println("�� " + Tools.title + " �� (build " + Tools.build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM"));
-        System.out.println("   http://rachota.sourceforge.net");
-        System.out.println("   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()));
-        System.out.println("   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary"));
-        System.out.println("   " + Translator.getTranslation("INFORMATION.USERDIR") + ": " + userDir);
+        String infoString = "\n--------------------------------------------------------------------------------";
+        infoString += "\n�� " + Tools.title + " �� (build " + Tools.build + ") - " + Translator.getTranslation("INFORMATION.PROGRAM");
+        infoString += "\n   http://rachota.sourceforge.net";
+        infoString += "\n   " + Translator.getTranslation("INFORMATION.SESSION") + ": " + System.getProperty("os.name") + ", JDK " + System.getProperty("java.version") + ", " + DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()) ;
+        infoString += "\n   " + Translator.getTranslation("INFORMATION.LOCALIZATION") + ": " + Settings.getDefault().getSetting("dictionary");
+        infoString += "\n   " + Translator.getTranslation("INFORMATION.USERDIR") + ": " + userDir;
         if (printHelp) {
-            System.out.println("\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar rachota_22.jar [-userdir=<diary_folder>] where:");
-            System.out.println("      <diary_folder> is directory with settings and diary files e.g. C:\\rachota\\diaries");
-            System.out.println("      <language_id> is Java language code e.g. cs, de, en, es, hu, it, ja, pt, ro or ru");
-            System.out.println("      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US");
-            System.out.println("      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries");
+            infoString += "\n\nHelp: java [-Duser.language=<language_id> -Duser.country=<country_id>] -jar rachota_22.jar [-userdir=<diary_folder>] where:";
+            infoString += "\n      <diary_folder> is directory with settings and diary files e.g. C:\\rachota\\diaries";
+            infoString += "\n      <language_id> is Java language code e.g. cs, de, en, es, hu, it, ja, pt, ro or ru";
+            infoString += "\n      <country_id> is Java country code e.g. BR, CZ, DE, ES, HU, IT, JP, MX, RO, RU or US";
+            infoString += "\n      java -Duser.language=cs -Duser.country=CZ -jar Rachota.jar -userdir=/home/jkovalsky/diaries";
         }
+        Logger.getLogger(MainWindow.class.getName()).info(infoString);
         checkAnotherInstance();
         StartupWindow startupWindow = StartupWindow.getInstance();
         Settings.loadSettings();
