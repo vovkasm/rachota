@@ -139,7 +139,7 @@ public class Task implements ClockListener {
     /** Returns keywords of this task.
      * @return Iterator of keyword tokens
      */
-    public Iterator getKeywordTokens() {
+    public Iterator getKeywordIterator() {
         StringTokenizer tokenizer = new StringTokenizer(keyword, " ");
         ArrayList tokens = new ArrayList();
         while (tokenizer.hasMoreTokens()) tokens.add(tokenizer.nextToken());

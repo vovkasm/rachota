@@ -95,7 +95,7 @@ class ProjectsTreeModel extends DefaultTreeModel {
                 if (task.getDuration() == 0) {
                     continue;
                 }
-                Iterator keywordIter = task.getKeywordTokens();
+                Iterator keywordIter = task.getKeywordIterator();
                 if (keywordIter.hasNext()) {
                     while (keywordIter.hasNext()) {
                         String category = (String) keywordIter.next();

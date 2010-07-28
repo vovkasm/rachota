@@ -465,7 +465,7 @@ public class Plan {
             Iterator taskIterator = tasks.iterator();
             while (taskIterator.hasNext()) {
                 Task task = (Task) taskIterator.next();
-                Iterator keywordIter = task.getKeywordTokens();
+                Iterator keywordIter = task.getKeywordIterator();
                 while(keywordIter.hasNext()) {
                     String category = (String) keywordIter.next();
                     if (!allCategories.contains(category)) allCategories.add(category);
