@@ -85,7 +85,7 @@ public class Settings {
         propertyChangeSupport = new PropertyChangeSupport(this);
         settingsMap = new HashMap();
         // This is done to make sure that the default value is correctly formatted.
-        settingsMap.put("dayWorkHours", DecimalFormat.getInstance().format(8.0));
+        settingsMap.put("dayWorkHours", "8.0");
         settingsMap.put("warnHoursNotReached", new Boolean(true));
         settingsMap.put("warnHoursExceeded", new Boolean(false));
         settingsMap.put("moveUnfinished", new Boolean(true));
@@ -236,18 +236,29 @@ public class Settings {
             JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    /** Static String used to store the daily working hours field. */
+    public static final String DAY_WORKING_HOURS = "dayWorkHours";
 
-    /** Reads the "dayWorkHours" field in the settings, and returns the
-     * value as a double. This method will handle different locales.
-     * @return The working hours value as stored in the settings.
+    /** Returns the daily working hours.
+     * @return The daily working hours.
      */
-    public double getWorkingHours(){
+    public double getWorkingHours() {
         double returnValue = 8;
         try {
-            returnValue = DecimalFormat.getInstance().parse(getSetting("dayWorkHours").toString()).doubleValue();
-        } catch (ParseException ex) {
+            // Convert the String to a double.
+            returnValue = Double.parseDouble(getSetting(DAY_WORKING_HOURS).toString());
+        } catch (NumberFormatException ex) {
             logger.log(Level.WARNING, "Unable to read setting: " + "\"dayWorkHours\"" + ".", ex);
         }
         return returnValue;
+    }
+
+    /** Sets the daily working hours.
+     * @param value The new value for the daily working hours.
+     */
+    public void setWorkingHours(double value) {
+        // Convert the double to a String.
+        setSetting(DAY_WORKING_HOURS, Double.toString(value));
     }
 }

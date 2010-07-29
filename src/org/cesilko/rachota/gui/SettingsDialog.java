@@ -29,8 +29,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import org.cesilko.rachota.core.Plan;
@@ -43,6 +46,8 @@ import org.cesilko.rachota.core.Translator;
  * @author Jiri Kovalsky
  */
 public class SettingsDialog extends javax.swing.JDialog implements PropertyChangeListener {
+
+    private static final Logger log = Logger.getLogger(SettingsDialog.class.getName());
     
     /** Creates new dialog with system settings.
      * @param parent Parent component of this dialog i.e. main window.
@@ -52,7 +57,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         regularTasks = (Vector) Plan.getDefault().getRegularTasks().clone();
         initComponents();
         setLocationRelativeTo(parent);
-        txtHours.setText((String) Settings.getDefault().getSetting("dayWorkHours"));
+        txtHours.setValue(Settings.getDefault().getWorkingHours());
         chbHoursNotReached.setSelected(((Boolean) Settings.getDefault().getSetting("warnHoursNotReached")).booleanValue());
         chbHoursExceeded.setSelected(((Boolean) Settings.getDefault().getSetting("warnHoursExceeded")).booleanValue());
         chbMoveUnfinished.setSelected(((Boolean) Settings.getDefault().getSetting("moveUnfinished")).booleanValue());
@@ -80,10 +85,10 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         cmbOnExitAction.setSelectedIndex(selectedOnExitAction);
         txtProxyHost.setText("" + Settings.getDefault().getSetting("proxyHost"));
         txtProxyPort.setText("" + Settings.getDefault().getSetting("proxyPort"));
-        txtInactivityTime.setText("" + Settings.getDefault().getSetting("inactivityTime"));
+        txtInactivityTime.setValue(Integer.valueOf(Settings.getDefault().getSetting("inactivityTime").toString()));
         chbReportActivityActionPerformed(null);
         chbDetectInactivityActionPerformed(null);
-        txtHibernationTime.setText("" + Settings.getDefault().getSetting("hibernationTime"));
+        txtHibernationTime.setValue(Integer.valueOf(Settings.getDefault().getSetting("hibernationTime").toString()));
         chbLogEvents.setSelected(((Boolean) Settings.getDefault().getSetting("logTaskEvents")).booleanValue());
         tbRegularTasks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbRegularTasks.getColumnModel().getColumn(1).setPreferredWidth(250);
@@ -108,6 +113,9 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
                     tbRegularTasks.getColumnModel().getColumn(i).setHeaderValue(regularTasksTableModel.getColumnName(i));
             }
         });
+
+        getRootPane().setDefaultButton(btOK);
+
         pack();
     }
     
@@ -130,7 +138,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
 
         pnGeneral = new javax.swing.JPanel();
         lblWorkingHours = new javax.swing.JLabel();
-        txtHours = new javax.swing.JTextField();
+        txtHours = new javax.swing.JFormattedTextField();
         lblHours = new javax.swing.JLabel();
         lblWarn = new javax.swing.JLabel();
         chbHoursNotReached = new javax.swing.JCheckBox();
@@ -143,15 +151,15 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         lblProxyHost = new javax.swing.JLabel();
         txtProxyHost = new javax.swing.JTextField();
         lblProxyPort = new javax.swing.JLabel();
-        txtProxyPort = new javax.swing.JTextField();
+        txtProxyPort = new javax.swing.JFormattedTextField();
         chbLogEvents = new javax.swing.JCheckBox();
         chbDetectInactivity = new javax.swing.JCheckBox();
         lblInactivityTime = new javax.swing.JLabel();
-        txtInactivityTime = new javax.swing.JTextField();
+        txtInactivityTime = new javax.swing.JFormattedTextField();
         lblInactivityAction = new javax.swing.JLabel();
         cmbInactivityAction = new javax.swing.JComboBox();
         lblHibernationTime = new javax.swing.JLabel();
-        txtHibernationTime = new javax.swing.JTextField();
+        txtHibernationTime = new javax.swing.JFormattedTextField();
         lblHibernationAction = new javax.swing.JLabel();
         chbPopupGroupByKeyword = new javax.swing.JCheckBox();
         cmbHibernationAction = new javax.swing.JComboBox();
@@ -183,7 +191,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        pnGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
+        pnGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_GENERAL"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
         pnGeneral.setFont(getFont());
         pnGeneral.setLayout(new java.awt.GridBagLayout());
 
@@ -195,16 +203,12 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblWorkingHours, gridBagConstraints);
 
-        txtHours.setFont(getFont());
-        txtHours.setText("8.0");
+        txtHours.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.0"))));
+        txtHours.setText("8.5");
         txtHours.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_HOURS_TOOLTIP"));
-        txtHours.setMinimumSize(new java.awt.Dimension(30, 19));
-        txtHours.setPreferredSize(new java.awt.Dimension(30, 19));
-        txtHours.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtHoursFocusLost(evt);
-            }
-        });
+        txtHours.setFont(getFont());
+        txtHours.setMinimumSize(new java.awt.Dimension(30, 20));
+        txtHours.setPreferredSize(new java.awt.Dimension(30, 20));
         txtHours.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtHoursKeyPressed(evt);
@@ -386,10 +390,11 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblProxyPort, gridBagConstraints);
 
-        txtProxyPort.setFont(getFont());
+        txtProxyPort.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtProxyPort.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_PROXY_PORT_TOOLTIP"));
-        txtProxyPort.setMinimumSize(new java.awt.Dimension(40, 19));
-        txtProxyPort.setPreferredSize(new java.awt.Dimension(40, 19));
+        txtProxyPort.setFont(getFont());
+        txtProxyPort.setMinimumSize(new java.awt.Dimension(40, 20));
+        txtProxyPort.setPreferredSize(new java.awt.Dimension(40, 20));
         txtProxyPort.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtProxyPortKeyPressed(evt);
@@ -397,6 +402,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(txtProxyPort, gridBagConstraints);
 
@@ -442,8 +448,9 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblInactivityTime, gridBagConstraints);
 
-        txtInactivityTime.setFont(getFont());
+        txtInactivityTime.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtInactivityTime.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_INACTIVITY_TIME_TOOLTIP"));
+        txtInactivityTime.setFont(getFont());
         txtInactivityTime.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtInactivityTimeKeyPressed(evt);
@@ -491,8 +498,9 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnGeneral.add(lblHibernationTime, gridBagConstraints);
 
-        txtHibernationTime.setFont(getFont());
+        txtHibernationTime.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtHibernationTime.setToolTipText(Translator.getTranslation("SETTINGSDIALOG.TXT_HIBERNATION_TIME_TOOLTIP"));
+        txtHibernationTime.setFont(getFont());
         txtHibernationTime.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtHibernationTimeKeyPressed(evt);
@@ -573,7 +581,7 @@ public class SettingsDialog extends javax.swing.JDialog implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(pnGeneral, gridBagConstraints);
 
-        pnRegularTasks.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
+        pnRegularTasks.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), Translator.getTranslation("SETTINGSDIALOG.BORDER_REGULAR_TASKS"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, getFont(), new java.awt.Color(0, 0, 255)));
         pnRegularTasks.setFont(getFont());
         pnRegularTasks.setLayout(new java.awt.GridBagLayout());
 
@@ -737,13 +745,6 @@ private void chbHoursNotReachedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FI
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
         btCancelActionPerformed(null);
 }//GEN-LAST:event_chbHoursNotReachedKeyPressed
-
-private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoursKeyPressed
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
-        btOKActionPerformed(null);
-    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
-        btCancelActionPerformed(null);
-}//GEN-LAST:event_txtHoursKeyPressed
     
     /** Method called when any key was released while table with regular tasks had focus.
      * @param evt Event that invoked this method call.
@@ -754,18 +755,11 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     
     /** Method called when textfield with working hours lost its focus.
      * @param evt Event that invoked this method call.
-     */
-    private void txtHoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHoursFocusLost
-        if (evt.getOppositeComponent() == null) return; // In case of closing window via X button, do not check validity now
-        if (evt.getOppositeComponent() instanceof javax.swing.JButton) return; // In case of any button, do not check validity either
-        workHoursValid();
-    }//GEN-LAST:event_txtHoursFocusLost
-    
+     */    
     /** Method called when remove button was pressed.
      * @param evt Event that invoked this method call.
      */
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
-        if (!workHoursValid()) return;
         int row = tbRegularTasks.getSelectedRow();
         RegularTask regularTask = (RegularTask) regularTasks.get(row);
         String description = regularTask.getDescription();String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
@@ -781,7 +775,6 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
      * @param evt Event that invoked this method call.
      */
     private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
-        if (!workHoursValid()) return;
         int row = tbRegularTasks.getSelectedRow();
         RegularTask regularTask = (RegularTask) regularTasks.get(row);
         TaskDialog taskDialog = new TaskDialog(regularTask);
@@ -794,7 +787,6 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
      * @param evt Event that invoked this method call.
      */
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
-        if (!workHoursValid()) return;
         TaskDialog taskDialog = new TaskDialog();
         taskDialog.addPropertyChangeListener(this);
         taskDialog.setLocationRelativeTo(this);
@@ -819,9 +811,14 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
      * @param evt Event that invoked this method call.
      */
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
-        if (!workHoursValid()) return;
         formWindowClosing(null);
-        Settings.getDefault().setSetting("dayWorkHours", txtHours.getText());
+        try {
+            txtHours.commitEdit();
+            Settings.getDefault().setWorkingHours(((Number) txtHours.getValue()).doubleValue());
+        } catch (ParseException ex) {
+            log.log(Level.WARNING, "Unable to read the value of the working hours field as a double value, resetting value to currently saved.", ex);
+            txtHours.setValue(Settings.getDefault().getWorkingHours());
+        }
         Settings.getDefault().setSetting("warnHoursNotReached", new Boolean(chbHoursNotReached.isSelected()));
         Settings.getDefault().setSetting("warnHoursExceeded", new Boolean(chbHoursExceeded.isSelected()));
         Settings.getDefault().setSetting("moveUnfinished", new Boolean(chbMoveUnfinished.isSelected()));
@@ -831,9 +828,19 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         Settings.getDefault().setSetting("reportActivity", new Boolean(chbReportActivity.isSelected()));
         Settings.getDefault().setSetting("logTaskEvents", new Boolean(chbLogEvents.isSelected()));
         Settings.getDefault().setSetting("detectInactivity", new Boolean(chbDetectInactivity.isSelected()));
-        Settings.getDefault().setSetting("inactivityTime", txtInactivityTime.getText());
+        try {
+            txtInactivityTime.commitEdit();
+        } catch (ParseException ex) {
+            log.log(Level.WARNING, "Unable to parse the text in the inactivity time field, will use last valid value.", ex);
+        }
+        Settings.getDefault().setSetting("inactivityTime", Integer.toString(((Number) txtInactivityTime.getValue()).intValue()));
         Settings.getDefault().setSetting("inactivityAction", "" + cmbInactivityAction.getSelectedIndex());
-        Settings.getDefault().setSetting("hibernationTime", txtHibernationTime.getText());
+        try {
+            txtHibernationTime.commitEdit();
+        } catch (ParseException ex) {
+            log.log(Level.WARNING, "Unable to parse the text in the hibernation time field, will use last valid value.", ex);
+        }
+        Settings.getDefault().setSetting("hibernationTime", Integer.toString(((Number) txtHibernationTime.getValue()).intValue()));
         Settings.getDefault().setSetting("hibernationAction", "" + cmbHibernationAction.getSelectedIndex());
         Settings.getDefault().setSetting("onExitAction", "" + cmbOnExitAction.getSelectedIndex());
         Settings.getDefault().setSetting("popupGroupByKeyword", new Boolean(chbPopupGroupByKeyword.isSelected()));
@@ -876,13 +883,6 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
         btCancelActionPerformed(null);
 }//GEN-LAST:event_txtProxyHostKeyPressed
-
-    private void txtProxyPortKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProxyPortKeyPressed
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER)
-        btOKActionPerformed(null);
-    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
-        btCancelActionPerformed(null);
-}//GEN-LAST:event_txtProxyPortKeyPressed
 
     private void chbReportActivityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbReportActivityActionPerformed
         txtProxyHost.setEnabled(chbReportActivity.isSelected());
@@ -943,6 +943,20 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
             btCancelActionPerformed(null);
     }//GEN-LAST:event_chbPopupGroupByKeywordKeyPressed
+
+    private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoursKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_txtHoursKeyPressed
+
+    private void txtProxyPortKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProxyPortKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+            btOKActionPerformed(null);
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+            btCancelActionPerformed(null);
+    }//GEN-LAST:event_txtProxyPortKeyPressed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
@@ -978,11 +992,11 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private javax.swing.JPanel pnRegularTasks;
     private javax.swing.JScrollPane spRegularTasks;
     private javax.swing.JTable tbRegularTasks;
-    private javax.swing.JTextField txtHibernationTime;
-    private javax.swing.JTextField txtHours;
-    private javax.swing.JTextField txtInactivityTime;
+    private javax.swing.JFormattedTextField txtHibernationTime;
+    private javax.swing.JFormattedTextField txtHours;
+    private javax.swing.JFormattedTextField txtInactivityTime;
     private javax.swing.JTextField txtProxyHost;
-    private javax.swing.JTextField txtProxyPort;
+    private javax.swing.JFormattedTextField txtProxyPort;
     // End of variables declaration//GEN-END:variables
     
     /** Vector of currently planned regular tasks. */
@@ -996,21 +1010,6 @@ private void txtHoursKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         btRemove.setEnabled(row != -1);
     }
     
-    /** Check validity of number provided as working hours and warn user if it is invalid.
-     * @return True if number provided as working hours is valid double number e.g. 8.5 or false otherwise.
-     */
-    private boolean workHoursValid() {
-        boolean valid = true;
-        try {
-            Double.parseDouble(txtHours.getText());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, Translator.getTranslation("WARNING.INVALID_WORKING_HOURS"), Translator.getTranslation("WARNING.WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
-            txtHours.setText((String) Settings.getDefault().getSetting("dayWorkHours"));
-            valid = false;
-        }
-        return valid;
-    }
-
     /** Method called when some property of task was changed.
      * @param evt Event describing what was changed.
      */
