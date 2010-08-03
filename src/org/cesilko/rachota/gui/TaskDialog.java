@@ -592,6 +592,11 @@ private void txtDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed
         if (readOnly) closeDialog(null);
         String description = txtDescription.getText();
+        /* Generates error dialog box when no description is provided for the new task */
+        if (description.equalsIgnoreCase("")) { // Is there a description for the task ?
+            JOptionPane.showMessageDialog(this, Translator.getTranslation("ERROR.MISSING_DESCRIPTION"), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (day != null) {
             boolean error = false;
             if (day.getTask(description) != null) // Is there a task in day's plan with same description ?
