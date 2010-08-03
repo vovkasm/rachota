@@ -1077,6 +1077,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             return;
         }
         String note = JOptionPane.showInputDialog(parent, Translator.getTranslation("MAINWINDOW.NEW_NOTE"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
+        if (null == note) return; // Cancel pressed, don't add the note :-)
         if (Plan.getDefault().isToday(day)) selectedTask.addNote(note, true);
         else selectedTask.setNotes("[" + Plan.getDefault().getDay(new Date()).toString() + " " + Tools.getTime(new Date()) + "] " + note);
     }
