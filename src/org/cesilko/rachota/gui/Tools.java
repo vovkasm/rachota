@@ -29,11 +29,15 @@ import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Vector;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Settings;
+import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
 
 /** Helper class providing support for time conversion between
@@ -45,7 +49,7 @@ public class Tools {
     /** Name and version of application. */
     public static final String title = "Rachota 2.3";
     /** Build number. */
-    public static final String build = "#091130";
+    public static final String build = "#100806";
     /** Warning type of beep. */
     public static final int BEEP_WARNING = 0;
     /** Notification type of beep. */
@@ -124,6 +128,26 @@ public class Tools {
         return time;
     }
     
+    /** Returns total time measured in selected period.
+     * @param includeIdleTime Should idle time be included in the total time?
+     * @param includePrivateTime Should private time be included in the total time?
+     * @param days Vector of days whose total time should be counted.
+     * @return Total time measured in selected period including idle time and private time if desired.
+     */
+    public static long getTotalTime(boolean includeIdleTime, boolean includePrivateTime, Vector days) {
+        long totalTime = 0;
+        Iterator iterator = days.iterator();
+        while (iterator.hasNext()) {
+            Day day = (Day) iterator.next();
+            totalTime = totalTime + day.getTotalTime(includePrivateTime);
+            if (includeIdleTime) {
+                Task idleTask = day.getIdleTask();
+                if (idleTask != null) totalTime = totalTime + idleTask.getDuration();
+            }
+        }
+        return totalTime;
+    }
+
     /** Returns text string that has all occurences of oldText strings replaced by newText string.
      * @param text String where all occurences of oldText should be replaced.
      * @param oldText Substring to be searched for in text string.
