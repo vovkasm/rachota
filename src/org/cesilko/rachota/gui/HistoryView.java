@@ -122,7 +122,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                     txtTime.setText(Tools.getTime(categoryNode.getTotalTime()));
                     txtTasks.setText("" + categoryNode.getTaskNodes().size());
                     boolean includePrivateTime = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
-                    float shareCategory = Math.round(((float) categoryNode.getTotalTime()/(float) getTotalTime(true, includePrivateTime))*100);
+                    float shareCategory = Math.round(((float) categoryNode.getTotalTime()/(float) Tools.getTotalTime(true, includePrivateTime, getDays()))*100);
                     txtPercentage.setText("" + shareCategory + "%");
                     txtPriority.setText(Task.getPriority(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY)));
                     txtState.setText(Task.getState(categoryNode.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE)));
@@ -146,7 +146,7 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
                             priority = priority + node.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_PRIORITY);
                             state = state + node.getAverageValue(ProjectsTreeModel.CategoryNode.PROPERTY_STATE);
                             tasks = tasks + node.getTaskNodes().size();
-                            float share = Math.round(((float) node.getTotalTime()/(float) getTotalTime(true, true))*100);
+                            float share = Math.round(((float) node.getTotalTime()/(float) Tools.getTotalTime(true, true, getDays()))*100);
                             rootStack.put(new Float(share), node.getName());
                         }
                         priority = priority / count;
@@ -262,23 +262,6 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         return Tools.getFont();
     }
 
-    /** Returns total time measured in selected period.
-     * @return Total time measured in selected period including idle time and private time if desired.
-     */
-    private long getTotalTime(boolean includeIdleTime, boolean includePrivateTime) {
-        long totalTime = 0;
-        Iterator iterator = getDays().iterator();
-        while (iterator.hasNext()) {
-            Day day = (Day) iterator.next();
-            totalTime = totalTime + day.getTotalTime(includePrivateTime);
-            if (includeIdleTime) {
-                Task idleTask = day.getIdleTask();
-                if (idleTask != null) totalTime = totalTime + idleTask.getDuration();
-            }
-        }
-        return totalTime;
-    }
-    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -976,7 +959,12 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
      * @param evt Event that invoked the action.
      */
     private void btReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReportActionPerformed
-        createReport();
+        FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
+        Vector selectFilters = new Vector();
+        int count = filtersTableModel.getRowCount();
+        for (int i = 0; i < count; i++)
+            selectFilters.add(filtersTableModel.getFilter(i));
+        new ReportWizard(getDays(), historyChart, getFilter(), selectFilters).setVisible(true);
     }//GEN-LAST:event_btReportActionPerformed
     
     /** Method called when highlight tasks checkbox is un/checked.
@@ -1574,169 +1562,10 @@ public class HistoryView extends javax.swing.JPanel implements PropertyChangeLis
         return taskFilter;
     }
     
-    /** Generates HTML file with work statistics for selected period. */
-    private void createReport() {
-        String location = (String) Settings.getDefault().getSetting("reportDir");
-        if (location == null) location = (String) Settings.getDefault().getSetting("userDir");
-        JFileChooser fileChooser = new JFileChooser(location);
-        fileChooser.setFileFilter(new FileFilter() {
-            public boolean accept(File f) {
-                return (f.isDirectory() || f.isFile() && f.getName().endsWith(".html"));
-            }
-            public String getDescription() {
-                return "All HTML Files";
-            }
-        });
-        fileChooser.setApproveButtonText(Translator.getTranslation("HISTORYVIEW.BT_SELECT"));
-        fileChooser.setApproveButtonMnemonic(Translator.getMnemonic("HISTORYVIEW.BT_SELECT"));
-        fileChooser.setApproveButtonToolTipText(Translator.getTranslation("HISTORYVIEW.BT_SELECT_TOOLTIP"));
-        int decision = fileChooser.showOpenDialog(this);
-        if (decision != JFileChooser.APPROVE_OPTION) return;
-        File file = fileChooser.getSelectedFile();
-        String fileName = file.getAbsolutePath();
-        if (!fileName.endsWith(".html")) file = new File(fileName + ".html");
-        Settings.getDefault().setSetting("reportDir", file.getParent());
-        fileName = file.getAbsolutePath();
-        fileName = fileName.substring(0, fileName.lastIndexOf("."));
-        if (file.exists()) {
-            String[] buttons = {Translator.getTranslation("QUESTION.BT_YES"), Translator.getTranslation("QUESTION.BT_NO")};
-            decision = JOptionPane.showOptionDialog(this, Translator.getTranslation("QUESTION.OVERWRITE_FILE", new String[] {file.getName()}), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[1]);
-            if (decision != JOptionPane.YES_OPTION) return;
-        }
-        String description = JOptionPane.showInputDialog(this, Translator.getTranslation("QUESTION.REPORT_DESCRIPTION"), Translator.getTranslation("QUESTION.QUESTION_TITLE"), JOptionPane.QUESTION_MESSAGE);
-        if (description == null) return;
-        try {
-            //BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), (String) Settings.getDefault().getSetting("systemEncoding"));
-            writer.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-            writer.write("\n");
-            writer.write("<!--");
-            writer.write("\n");
-            writer.write("    Rachota 2.0 report file");
-            writer.write("\n");
-            writer.write("    Generated: " + new Date());
-            writer.write("\n");
-            writer.write("-->");
-            writer.write("\n");
-            writer.write("<html lang=\"" + Locale.getDefault().getLanguage() + "\">");
-            writer.write("\n");
-            writer.write("  <head>");
-            writer.write("\n");
-            writer.write("    <title>" + Translator.getTranslation("REPORT.TITLE") + "</title>");
-            writer.write("\n");
-            writer.write("    <meta http-equiv=\"Content-Type\" content=\"text/html;charset=" + (String) Settings.getDefault().getSetting("systemEncoding") + "\">");
-            writer.write("\n");
-            writer.write("  </head>");
-            writer.write("\n");
-            writer.write("  <body>");
-            writer.write("\n");
-            writer.write("    <h1>" + Translator.getTranslation("REPORT.TITLE") + "</h1>");
-            writer.write("\n");
-            writer.write("    <table>");
-            writer.write("\n");
-            writer.write("      <tr><td><u>" + Translator.getTranslation("QUESTION.REPORT_DESCRIPTION") + "</u></td><td width=\"20\"/><td>" + description + "</td></tr>");
-            writer.write("\n");
-            Vector days = getDays();
-            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            Day firstDay = (Day) days.get(0);
-            Day lastDay = (Day) days.get(days.size() - 1);
-            int numberOfWorkingDays = 0;
-            Iterator iterator = days.iterator();
-            while(iterator.hasNext()) {
-                Day day = (Day) iterator.next();
-                if (day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()) != 0) numberOfWorkingDays++;
-            }
-            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.PERIOD") + "</u></td><td width=\"20\"/><td>" + df.format(firstDay.getDate()) + " - " + df.format(lastDay.getDate()) + "</td></tr>");
-            writer.write("\n");
-            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_DAYS") + "</u></td><td width=\"20\"/><td>" + days.size() + "</td></tr>");
-            writer.write("\n");
-            writer.write("      <tr><td><u>" + Translator.getTranslation("REPORT.NUMBER_OF_WORK_DAYS") + "</u></td><td width=\"20\"/><td>" + numberOfWorkingDays + "</td></tr>");
-            writer.write("\n");
-            writer.write("    </table><br/>");
-            writer.write("\n");
-            writer.write("    <img src=\"" + file.getName().substring(0, file.getName().indexOf(".")) + "_chart.png\" border=\"1\"/><br/><br/>");
-            writer.write("\n");
-            AbstractTaskFilter filter = getFilter();
-            if (filter != null) {
-                writer.write("    <u>" + Translator.getTranslation("HISTORYVIEW.LBL_HIGHLIGHT_TASKS") + "</u>");
-                writer.write("\n");
-                writer.write("    <ul><li>" + filter.toString() + " " + filter.getContentRules().get(filter.getContentRule()) + " <b>" + filter.getContent() + "</b></li></ul>");
-                writer.write("\n");
-            }
-            writer.write("    <u>" + Translator.getTranslation("REPORT.APPLIED_FILTERS") + "</u>");
-            writer.write("\n");
-            writer.write("    <ul>");
-            writer.write("\n");
-            FiltersTableModel filtersTableModel = (FiltersTableModel) tbFilters.getModel();
-            int count = filtersTableModel.getRowCount();
-            for (int i=0; i<count; i++) {
-                writer.write("      <li>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_NAME) + " ");
-                writer.write(filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT_RULE) + " ");
-                writer.write("<b>" + filtersTableModel.getValueAt(i, FiltersTableModel.FILTER_CONTENT) + "</b></li>");
-                writer.write("\n");
-            }
-            writer.write("    </ul>");
-            writer.write("\n");
-            writer.write("    <u>" + Translator.getTranslation("REPORT.TASKS") + "</u><br/><br/>");
-            writer.write("\n");
-            writer.write("    <table border=\"1\">");
-            writer.write("\n");
-            writer.write("      <tr bgcolor=\"CCCCCC\">");
-            writer.write("\n");
-            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DESCRIPTION") + "</b></td>");
-            writer.write("\n");
-            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_TIME") + "</b></td>");
-            writer.write("\n");
-            writer.write("        <td align=\"center\"><b>" + Translator.getTranslation("TASKS.DURATION_DAYS") + "</b></td>");
-            writer.write("\n");
-            writer.write("      </tr>");
-            writer.write("\n");
-            FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
-            count = filteredTasksTableModel.getRowCount();
-            for (int i=0; i<count; i++) {
-                writer.write("      <tr>");
-                writer.write("\n");
-                writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DESCRIPTION) + "</td>");
-                writer.write("\n");
-                writer.write("        <td>" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_TIME) + "</td>");
-                writer.write("\n");
-                writer.write("        <td align=\"right\">" + filteredTasksTableModel.getValueAt(i, FilteredTasksTableModel.DURATION_DAYS) + "</td>");
-                writer.write("\n");
-                writer.write("      </tr>");
-                writer.write("\n");
-            }
-            writer.write("    </table><br/>");
-            writer.write("\n");
-            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_FILTERED_TIME") + "</u> " + Tools.getTime(filteredTasksTableModel.getTotalTime()) + "<br/>");
-            writer.write("\n");
-            boolean includePrivateTime = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
-            writer.write("    <u>" + Translator.getTranslation("REPORT.TOTAL_TIME") + "</u><b> " + Tools.getTime(getTotalTime(false, includePrivateTime)) + "</b><br/><br/>");
-            writer.write("\n");
-            writer.write("    <hr/><u>" + Translator.getTranslation("REPORT.GENERATED_BY") + "</u> <a href=\"http://rachota.sourceforge.net/\">" + Tools.title + "</a> " + "(build " + Tools.build + ")<br/>");
-            writer.write("\n");
-            writer.write("    " + new Date());
-            writer.write("\n");
-            writer.write("  </body>");
-            writer.write("\n");
-            writer.write("</html>");
-            writer.write("\n");
-            writer.close();
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileName + "_chart.png"));
-            PNGImageWriter imageWriter = new PNGImageWriter();
-            BufferedImage image = new BufferedImage(historyChart.getBounds().width, historyChart.getBounds().height, BufferedImage.TYPE_INT_RGB);
-            historyChart.paint(image.getGraphics());
-            imageWriter.write(image, out);
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, Translator.getTranslation("ERROR.WRITE_ERROR", new String[] {location}), Translator.getTranslation("ERROR.ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-        }
-        JOptionPane.showMessageDialog(this, Translator.getTranslation("INFORMATION.REPORT_CREATED"), Translator.getTranslation("INFORMATION.INFORMATION_TITLE"), JOptionPane.INFORMATION_MESSAGE);
-    }
-    
     /** Updates information about total time. */
     private void updateTotalTime() {
         boolean includePrivateTime = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
-        long totalTime = getTotalTime(false,includePrivateTime);
+        long totalTime = Tools.getTotalTime(false,includePrivateTime, getDays());
         txtTotalTime.setText(Tools.getTime(totalTime));
     }
     
