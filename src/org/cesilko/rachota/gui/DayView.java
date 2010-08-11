@@ -46,6 +46,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.ToolTipManager;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.ClockListener;
 import org.cesilko.rachota.core.Day;
@@ -496,14 +497,19 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         });
 
         tbPlan.setModel(new DayTableModel(day));
-        tbPlan.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tbPlanKeyReleased(evt);
-            }
-        });
         tbPlan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbPlanMouseClicked(evt);
+            }
+        });
+        tbPlan.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                tbPlanMouseMoved(evt);
+            }
+        });
+        tbPlan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbPlanKeyReleased(evt);
             }
         });
         spPlan.setViewportView(tbPlan);
@@ -829,6 +835,16 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
         Tools.recordActivity();
     }//GEN-LAST:event_formMouseMoved
+
+    private void tbPlanMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPlanMouseMoved
+        int row = tbPlan.rowAtPoint(evt.getPoint());
+        DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
+        Task task = dayTableModel.getTask(row);
+        String notes = task.getNotes();
+        if (notes.isEmpty()) notes = null;
+        tbPlan.setToolTipText(notes);
+        ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(tbPlan, 0, 0, 0, 0, 0, 0, false));
+    }//GEN-LAST:event_tbPlanMouseMoved
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
