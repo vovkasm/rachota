@@ -31,8 +31,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -108,6 +106,7 @@ public class Settings {
         settingsMap.put("location", null);
         // htietgens: new param for automatic starting of IdleTask on startup of program
         settingsMap.put("automaticStart", new Boolean(true));
+        settingsMap.put("recordStartStopTimeOnIdle", new Boolean(false)); // Do not record start/finish time when not working
         settingsMap.put("showTime", "both");
         settingsMap.put("backupAge", "10");
         settingsMap.put("startTask", new Boolean(false));

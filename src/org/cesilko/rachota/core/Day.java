@@ -203,6 +203,9 @@ public class Day implements PropertyChangeListener {
      * @param startTime Start time of day.
      */
     public void setStartTime(Date startTime) {
+        boolean recordStartStopTimeOnIdle = ((Boolean) Settings.getDefault().getSetting("recordStartStopTimeOnIdle")).booleanValue();
+        if (!recordStartStopTimeOnIdle) // User does not want to record start time when not working
+            if (getTotalTime(true) == 0) return;
         this.startTime = startTime;
         modified = true;
     }
@@ -218,6 +221,9 @@ public class Day implements PropertyChangeListener {
      * @param finishTime Finish time of day.
      */
     public void setFinishTime(Date finishTime) {
+        boolean recordStartStopTimeOnIdle = ((Boolean) Settings.getDefault().getSetting("recordStartStopTimeOnIdle")).booleanValue();
+        if (!recordStartStopTimeOnIdle) // User does not want to record finish time if not working
+            if (getIdleTask().isRunning()) return;
         this.finishTime = finishTime;
         modified = true;
     }
@@ -312,8 +318,8 @@ public class Day implements PropertyChangeListener {
         if (today & (evt.getPropertyName().equals("duration"))) {
             modified = true;
             Plan.getDefault().addDay(this);
-            if (startTime == null)
-                startTime = new Date();
+            if (getStartTime() == null)
+                setStartTime(new Date());
             setFinishTime(new Date());
             propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, null));
         } else propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "generic", null, tasks));

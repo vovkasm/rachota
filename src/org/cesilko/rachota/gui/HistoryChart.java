@@ -161,7 +161,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                 if (hours > maxValueY) maxValueY = hours;
             }
             if (chartType == TYPE_FROM_TO) {
-                if (day.getStartTime() != null) {
+                if ((day.getStartTime() != null) & (day.getFinishTime() != null)) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(day.getStartTime());
                     int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -278,7 +278,7 @@ public class HistoryChart extends JPanel implements PropertyChangeListener {
                 }
             }
             if (chartType == TYPE_FROM_TO) {
-                if (day.getStartTime() != null) {
+                if ((day.getStartTime() != null) & (day.getFinishTime() != null)) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(day.getStartTime());
                     int hour = calendar.get(Calendar.HOUR_OF_DAY);
