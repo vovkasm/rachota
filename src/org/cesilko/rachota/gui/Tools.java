@@ -49,7 +49,7 @@ public class Tools {
     /** Name and version of application. */
     public static final String title = "Rachota 2.3";
     /** Build number. */
-    public static final String build = "#100811";
+    public static final String build = "#100920";
     /** Warning type of beep. */
     public static final int BEEP_WARNING = 0;
     /** Notification type of beep. */
@@ -241,4 +241,11 @@ public class Tools {
         }
     }
 
+    /** Generates random three digits identifier.
+     * @return Returns random three digits as a string. e.g. "537"
+     */
+    static String getRandomID() {
+        Double randomID = new Double(Math.random());
+        return randomID.toString().substring(2, 5);
+    }
 }
