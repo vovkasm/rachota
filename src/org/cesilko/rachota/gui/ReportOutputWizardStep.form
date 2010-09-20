@@ -74,7 +74,6 @@
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Translator.getTranslation(&quot;REPORTWIZARD.RB_INVOICE_TOOLTIP&quot;)" type="code"/>
         </Property>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbInvoiceActionPerformed"/>

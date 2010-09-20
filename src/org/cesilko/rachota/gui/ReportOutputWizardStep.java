@@ -96,7 +96,6 @@ public class ReportOutputWizardStep extends WizardStep {
         rbInvoice.setMnemonic(Translator.getMnemonic("REPORTWIZARD.RB_INVOICE"));
         rbInvoice.setText(Translator.getTranslation("REPORTWIZARD.RB_INVOICE"));
         rbInvoice.setToolTipText(Translator.getTranslation("REPORTWIZARD.RB_INVOICE_TOOLTIP"));
-        rbInvoice.setEnabled(false);
         rbInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbInvoiceActionPerformed(evt);
