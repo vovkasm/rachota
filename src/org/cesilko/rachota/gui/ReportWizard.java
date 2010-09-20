@@ -79,7 +79,7 @@ public class ReportWizard extends GenericWizard {
         reportOutputWizardStep.addPropertyChangeListener(reportContentWizardStep);
 
         setPreview(TYPE_REPORT);
-        setSize(700, 500);
+        setSize(700, 530);
         setLocationRelativeTo(null);
     }
 
@@ -116,17 +116,32 @@ public class ReportWizard extends GenericWizard {
     @Override
     public void finishWizard() {
         setVisible(false);
+        String reportType = (String) getWizardProperty("report.type");
         File outputFile = (File) getWizardProperty("report.output.file_selected");
-        String reportTitle = (String) getWizardProperty("report.title");
-        Boolean showChart = (Boolean) getWizardProperty("report.chart");
-        Boolean showFilters = (Boolean) getWizardProperty("report.filters");
-        String rowsRepresent = (String) getWizardProperty("report.rows");
-        Boolean includeDuration = (Boolean) getWizardProperty("report.content.duration");
-        Boolean includeProjectsTasks = (Boolean) getWizardProperty("report.content.projects_tasks");
-        Boolean includeOccurrences = (Boolean) getWizardProperty("report.content.occurrences");
-        Boolean includeNotes = (Boolean) getWizardProperty("report.content.notes");
-        String sortBy = (String) getWizardProperty("report.sortby");
-        ReportGenerator reportGenerator = new ReportGenerator(outputFile, reportTitle, showChart, showFilters, rowsRepresent, includeDuration, includeProjectsTasks, includeOccurrences, includeNotes, sortBy, days, chart, highlightFilter, selectFilters);
-        reportGenerator.generateReport();
+        if (reportType.equals(ReportWizard.TYPE_REPORT)) {
+            String reportTitle = (String) getWizardProperty("report.title");
+            Boolean showChart = (Boolean) getWizardProperty("report.chart");
+            Boolean showFilters = (Boolean) getWizardProperty("report.filters");
+            String rowsRepresent = (String) getWizardProperty("report.rows");
+            Boolean includeDuration = (Boolean) getWizardProperty("report.content.duration");
+            Boolean includeProjectsTasks = (Boolean) getWizardProperty("report.content.projects_tasks");
+            Boolean includeOccurrences = (Boolean) getWizardProperty("report.content.occurrences");
+            Boolean includeNotes = (Boolean) getWizardProperty("report.content.notes");
+            String sortBy = (String) getWizardProperty("report.sortby");
+            ReportGenerator reportGenerator = new ReportGenerator(outputFile, reportTitle, showChart, showFilters, rowsRepresent, includeDuration, includeProjectsTasks, includeOccurrences, includeNotes, sortBy, days, chart, highlightFilter, selectFilters);
+            reportGenerator.generateReport();
+        } else {
+            String invoiceTitle = (String) getWizardProperty("invoice.title");
+            String userDetails = (String) getWizardProperty("invoice.details.user");
+            String customerDetails = (String) getWizardProperty("invoice.details.customer");
+            String paymentDetails = (String) getWizardProperty("invoice.details.payment");
+            Integer dueDays = (Integer) getWizardProperty("invoice.due_days");
+            Double price = Double.parseDouble((String) getWizardProperty("invoice.price"));
+            String currency = (String) getWizardProperty("invoice.currency");
+            Double tax = Double.parseDouble((String) getWizardProperty("invoice.tax"));
+            String rowsRepresent = (String) getWizardProperty("invoice.rows");
+            InvoiceGenerator invoiceGenerator = new InvoiceGenerator(outputFile, invoiceTitle, userDetails, customerDetails, paymentDetails, dueDays, price, currency, tax, rowsRepresent, days);
+            invoiceGenerator.generateInvoice();
+        }
     }
 }
