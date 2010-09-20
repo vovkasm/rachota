@@ -77,6 +77,9 @@ public class ReportContentWizardStep extends WizardStep {
         pnInvoice = new javax.swing.JPanel();
         lbInvoiceTitle = new javax.swing.JLabel();
         txInvoiceTitle = new javax.swing.JTextField();
+        lbDueDate = new javax.swing.JLabel();
+        spDueDate = new javax.swing.JSpinner();
+        lbDueDays = new javax.swing.JLabel();
         lbPrice = new javax.swing.JLabel();
         txPrice = new javax.swing.JTextField();
         lbCurrency = new javax.swing.JLabel();
@@ -369,12 +372,50 @@ public class ReportContentWizardStep extends WizardStep {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(txInvoiceTitle, gridBagConstraints);
 
+        lbDueDate.setDisplayedMnemonic(Translator.getMnemonic("REPORTWIZARD.LB_DUEDATE"));
+        lbDueDate.setFont(getFont());
+        lbDueDate.setLabelFor(spDueDate);
+        lbDueDate.setText(Translator.getTranslation("REPORTWIZARD.LB_DUEDATE"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnInvoice.add(lbDueDate, gridBagConstraints);
+
+        spDueDate.setFont(getFont());
+        spDueDate.setToolTipText(Translator.getTranslation("REPORTWIZARD.LB_DUEDATE_TOOLTIP"));
+        spDueDate.setValue(new Integer(14));
+        spDueDate.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spDueDateStateChanged(evt);
+            }
+        });
+        spDueDate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ReportContentWizardStep.this.keyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnInvoice.add(spDueDate, gridBagConstraints);
+
+        lbDueDays.setDisplayedMnemonic(Translator.getMnemonic("REPORTWIZARD.LB_DUEDAYS"));
+        lbDueDays.setFont(getFont());
+        lbDueDays.setText(Translator.getTranslation("REPORTWIZARD.LB_DUEDAYS"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        pnInvoice.add(lbDueDays, gridBagConstraints);
+
         lbPrice.setDisplayedMnemonic(Translator.getMnemonic("REPORTWIZARD.LB_PRICE"));
         lbPrice.setFont(getFont());
         lbPrice.setLabelFor(txPrice);
         lbPrice.setText(Translator.getTranslation("REPORTWIZARD.LB_PRICE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbPrice, gridBagConstraints);
@@ -394,7 +435,7 @@ public class ReportContentWizardStep extends WizardStep {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(txPrice, gridBagConstraints);
 
@@ -403,7 +444,7 @@ public class ReportContentWizardStep extends WizardStep {
         lbCurrency.setLabelFor(txCurrency);
         lbCurrency.setText(Translator.getTranslation("REPORTWIZARD.LB_CURRENCY"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbCurrency, gridBagConstraints);
@@ -423,7 +464,7 @@ public class ReportContentWizardStep extends WizardStep {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(txCurrency, gridBagConstraints);
@@ -433,7 +474,7 @@ public class ReportContentWizardStep extends WizardStep {
         lbTax.setLabelFor(txTax);
         lbTax.setText(Translator.getTranslation("REPORTWIZARD.LB_TAX"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbTax, gridBagConstraints);
@@ -454,14 +495,14 @@ public class ReportContentWizardStep extends WizardStep {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(txTax, gridBagConstraints);
 
         lbTaxPercentage.setFont(getFont());
         lbTaxPercentage.setText(Translator.getTranslation("REPORTWIZARD.LB_TAX_PERCENTAGE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbTaxPercentage, gridBagConstraints);
@@ -471,7 +512,7 @@ public class ReportContentWizardStep extends WizardStep {
         lbInvoiceInclude.setLabelFor(rbInvoiceProjectsTasks);
         lbInvoiceInclude.setText(Translator.getTranslation("REPORTWIZARD.LB_INCLUDE"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbInvoiceInclude, gridBagConstraints);
@@ -492,14 +533,14 @@ public class ReportContentWizardStep extends WizardStep {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(rbInvoiceProjectsTasks, gridBagConstraints);
 
-        rbInvoiceTasks.setFont(getFont());
         rbInvoiceTasks.setMnemonic(Translator.getMnemonic("REPORTWIZARD.RB_INVOICE_TASKS"));
+        rbInvoiceTasks.setFont(getFont());
         rbInvoiceTasks.setText(Translator.getTranslation("REPORTWIZARD.RB_INVOICE_TASKS"));
         rbInvoiceTasks.setToolTipText(Translator.getTranslation("REPORTWIZARD.RB_INVOICE_TASKS_TOOLTIP"));
         rbInvoiceTasks.addActionListener(new java.awt.event.ActionListener() {
@@ -514,7 +555,7 @@ public class ReportContentWizardStep extends WizardStep {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -525,7 +566,7 @@ public class ReportContentWizardStep extends WizardStep {
         lbCustomerDetails.setLabelFor(spCustomerDetails);
         lbCustomerDetails.setText(Translator.getTranslation("REPORTWIZARD.LB_CUSTOMER_DETAILS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbCustomerDetails, gridBagConstraints);
@@ -533,18 +574,14 @@ public class ReportContentWizardStep extends WizardStep {
         taCustomerDetails.setColumns(20);
         taCustomerDetails.setRows(2);
         taCustomerDetails.setToolTipText(Translator.getTranslation("REPORTWIZARD.LB_CUSTOMER_DETAILS_TOOLTIP"));
-        taCustomerDetails.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                ReportContentWizardStep.this.keyPressed(evt);
-            }
-        });
         spCustomerDetails.setViewportView(taCustomerDetails);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(spCustomerDetails, gridBagConstraints);
 
@@ -553,7 +590,7 @@ public class ReportContentWizardStep extends WizardStep {
         lbYourDetails.setLabelFor(spYourDetails);
         lbYourDetails.setText(Translator.getTranslation("REPORTWIZARD.LB_YOUR_DETAILS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbYourDetails, gridBagConstraints);
@@ -561,18 +598,14 @@ public class ReportContentWizardStep extends WizardStep {
         taYourDetails.setColumns(20);
         taYourDetails.setRows(2);
         taYourDetails.setToolTipText(Translator.getTranslation("REPORTWIZARD.LB_YOUR_DETAILS_TOOLTIP"));
-        taYourDetails.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                ReportContentWizardStep.this.keyPressed(evt);
-            }
-        });
         spYourDetails.setViewportView(taYourDetails);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(spYourDetails, gridBagConstraints);
 
@@ -581,7 +614,7 @@ public class ReportContentWizardStep extends WizardStep {
         lbPaymentDetails.setLabelFor(spPaymentDetails);
         lbPaymentDetails.setText(Translator.getTranslation("REPORTWIZARD.LB_PAYMENT_DETAILS"));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(lbPaymentDetails, gridBagConstraints);
@@ -589,18 +622,14 @@ public class ReportContentWizardStep extends WizardStep {
         taPaymentDetails.setColumns(20);
         taPaymentDetails.setRows(2);
         taPaymentDetails.setToolTipText(Translator.getTranslation("REPORTWIZARD.LB_PAYMENT_DETAILS_TOOLTIP"));
-        taPaymentDetails.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                ReportContentWizardStep.this.keyPressed(evt);
-            }
-        });
         spPaymentDetails.setViewportView(taPaymentDetails);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         pnInvoice.add(spPaymentDetails, gridBagConstraints);
 
@@ -740,6 +769,13 @@ public class ReportContentWizardStep extends WizardStep {
             firePropertyChange("wizard.cancel", null, null);
     }//GEN-LAST:event_keyPressed
 
+    private void spDueDateStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spDueDateStateChanged
+        Integer dueDays = (Integer) spDueDate.getValue();
+        int value = dueDays.intValue();
+        if (value < 0) spDueDate.setValue(previousDueDays);
+        else previousDueDays = dueDays;
+    }//GEN-LAST:event_spDueDateStateChanged
+
     /** Method called when property of some other wizard step changed.
      * @param evt Event that generated this call.
      */
@@ -797,14 +833,6 @@ public class ReportContentWizardStep extends WizardStep {
             firePropertyChange("status.error", null, Translator.getTranslation("REPORTWIZARD.STATUS_TAX_NOT_NUMBER"));
             return false;
         }
-        if (txCurrency == null) {
-            firePropertyChange("status.error", null, Translator.getTranslation("REPORTWIZARD.STATUS_NO_CURRENCY"));
-            return false;
-        }
-        if (txCurrency.getText().isEmpty()) {
-            firePropertyChange("status.error", null, Translator.getTranslation("REPORTWIZARD.STATUS_NO_CURRENCY"));
-            return false;
-        }
         firePropertyChange("status.error", null, null);
         return true;
     }
@@ -826,6 +854,8 @@ public class ReportContentWizardStep extends WizardStep {
     private javax.swing.JComboBox cmbSortBy;
     private javax.swing.JLabel lbCurrency;
     private javax.swing.JLabel lbCustomerDetails;
+    private javax.swing.JLabel lbDueDate;
+    private javax.swing.JLabel lbDueDays;
     private javax.swing.JLabel lbInvoiceInclude;
     private javax.swing.JLabel lbInvoiceTitle;
     private javax.swing.JLabel lbPaymentDetails;
@@ -845,6 +875,7 @@ public class ReportContentWizardStep extends WizardStep {
     private javax.swing.JRadioButton rbReportProjects;
     private javax.swing.JRadioButton rbReportTasks;
     private javax.swing.JScrollPane spCustomerDetails;
+    private javax.swing.JSpinner spDueDate;
     private javax.swing.JScrollPane spPaymentDetails;
     private javax.swing.JScrollPane spYourDetails;
     private javax.swing.JTextArea taCustomerDetails;
@@ -857,17 +888,32 @@ public class ReportContentWizardStep extends WizardStep {
     private javax.swing.JTextField txTax;
     // End of variables declaration//GEN-END:variables
 
+    private Integer previousDueDays = new Integer(14); // Last valid number of due days for backup reasons
+
     private void setProperties() {
-        firePropertyChange("report.title", null, txReportTitle.getText());
-        firePropertyChange("report.chart", null, cbTimesChart.isEnabled() & cbTimesChart.isSelected());
-        firePropertyChange("report.filters", null, cbFilters.isSelected());
-        if (rbReportTasks.isSelected()) firePropertyChange("report.rows", null, ReportWizard.REPORT_ROWS_TASKS);
-        else firePropertyChange("report.rows", null, ReportWizard.REPORT_ROWS_PROJECTS);
-        firePropertyChange("report.content.duration", null, cbDuration.isSelected());
-        firePropertyChange("report.content.projects_tasks", null, cbProjectsTasks.isSelected());
-        firePropertyChange("report.content.occurrences", null, cbOccurrences.isSelected());
-        firePropertyChange("report.content.notes", null, cbNotes.isSelected());
-        firePropertyChange("report.sortby", null, cmbSortBy.getSelectedItem());
+        if (pnReport.isVisible()) {
+            firePropertyChange("report.title", null, txReportTitle.getText());
+            firePropertyChange("report.chart", null, cbTimesChart.isEnabled() & cbTimesChart.isSelected());
+            firePropertyChange("report.filters", null, cbFilters.isSelected());
+            if (rbReportTasks.isSelected()) firePropertyChange("report.rows", null, ReportWizard.REPORT_ROWS_TASKS);
+            else firePropertyChange("report.rows", null, ReportWizard.REPORT_ROWS_PROJECTS);
+            firePropertyChange("report.content.duration", null, cbDuration.isSelected());
+            firePropertyChange("report.content.projects_tasks", null, cbProjectsTasks.isSelected());
+            firePropertyChange("report.content.occurrences", null, cbOccurrences.isSelected());
+            firePropertyChange("report.content.notes", null, cbNotes.isSelected());
+            firePropertyChange("report.sortby", null, cmbSortBy.getSelectedItem());
+        } else {
+            firePropertyChange("invoice.title", null, txInvoiceTitle.getText());
+            firePropertyChange("invoice.details.user", null, taYourDetails.getText());
+            firePropertyChange("invoice.details.customer", null, taCustomerDetails.getText());
+            firePropertyChange("invoice.details.payment", null, taPaymentDetails.getText());
+            firePropertyChange("invoice.due_days", null, spDueDate.getValue());
+            firePropertyChange("invoice.price", null, txPrice.getText());
+            firePropertyChange("invoice.currency", null, txCurrency.getText());
+            firePropertyChange("invoice.tax", null, txTax.getText());
+            if (rbInvoiceProjectsTasks.isSelected()) firePropertyChange("invoice.rows", null, ReportWizard.INVOICE_TASKS_PROJECTS);
+            else firePropertyChange("invoice.rows", null, ReportWizard.INVOICE_TASKS);
+        }
     }
 
 }
