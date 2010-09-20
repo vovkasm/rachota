@@ -876,7 +876,13 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
      * @return False if Rachota is not running on Java 6 or 7. True otherwise.
      */
     private boolean enableSystemTray() {
-        return System.getProperty("java.version").startsWith("1.6") || System.getProperty("java.version").startsWith("1.7");
+        Boolean enableSystemTray = (Boolean) Settings.getDefault().getSetting("enable.systemtray");
+        if (enableSystemTray == null) enableSystemTray = new Boolean(true);
+        if (enableSystemTray.booleanValue()) {
+            if (System.getProperty("java.version").startsWith("1.6")) return true;
+            if (System.getProperty("java.version").startsWith("1.7")) return true;
+        }
+        return false;
     }
     
     /** Checks whether another instance of Rachota is running or Rachota was not
