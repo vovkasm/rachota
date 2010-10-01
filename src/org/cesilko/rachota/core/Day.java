@@ -208,6 +208,7 @@ public class Day implements PropertyChangeListener {
             if (getTotalTime(true) == 0) return;
         this.startTime = startTime;
         modified = true;
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "startTime", null, null));
     }
     
     /** Returns start time of day.
