@@ -841,7 +841,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         DayTableModel dayTableModel = (DayTableModel) tbPlan.getModel();
         Task task = dayTableModel.getTask(row);
         String notes = task.getNotes();
-        if (notes.isEmpty()) notes = null;
+        if (notes != null)
+            if (notes.isEmpty()) notes = null;
         tbPlan.setToolTipText(notes);
         ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(tbPlan, 0, 0, 0, 0, 0, 0, false));
     }//GEN-LAST:event_tbPlanMouseMoved
@@ -981,7 +982,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         }
         
         firePropertyChange("enable_menu", "mnMoveTime", "true");
-        firePropertyChange("enable_menu", "mnAdjustStart", "true");
+        if (day.getStartTime() == null) firePropertyChange("enable_menu", "mnAdjustStart", "false");
+        else firePropertyChange("enable_menu", "mnAdjustStart", "true");
 
         btSelect.setEnabled(today & taskSelected & !taskAlreadySelected & !idleTask);
         selectButtonEnabled = btSelect.isEnabled();
@@ -1412,6 +1414,8 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
                 return;
             }
         }
+        if (evt.getPropertyName().equals("startTime"))
+            checkButtons();
         updateInformation(taskDurationChanged);
     }
     
