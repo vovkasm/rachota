@@ -39,6 +39,7 @@ public class ReportOutputWizardStep extends WizardStep {
         super(wizard, Translator.getTranslation("REPORTWIZARD.STEP_OUTPUT"));
         initComponents();
         selectOutput(ReportWizard.OUTPUT_HTML);
+        firePropertyChange("report.type", null, ReportWizard.TYPE_REPORT);
     }
 
     /** This method is called from within the constructor to
