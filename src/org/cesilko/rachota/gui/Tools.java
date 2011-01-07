@@ -22,10 +22,12 @@
  */
 
 package org.cesilko.rachota.gui;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -247,5 +249,33 @@ public class Tools {
     static String getRandomID() {
         Double randomID = new Double(Math.random());
         return randomID.toString().substring(2, 5);
+    }
+
+    static void showURL(String webPage) {
+        if (System.getProperty("java.version").startsWith("1.6")) {
+            try { 
+                URI url = new URI(webPage);
+                Desktop.getDesktop().browse(url);
+                return;
+            }
+            catch (Exception e) { e.printStackTrace(); }
+        }
+        String[] commands = null;
+        String os = System.getProperty("os.name");
+        if (os.indexOf("Unix") != -1) commands = new String[] {"firefox ", "konqueror ", "mozilla ", "opera "};
+        if (os.indexOf("Linux") != -1) commands = new String[] {"firefox ", "konqueror ", "mozilla ", "opera "};
+        if (os.indexOf("Windows") != -1) commands = new String[] {"cmd.exe /c start "};
+        if (os.indexOf("Macintosh") != -1) commands = new String[] {"open "};
+        if (commands == null) return;
+        for (int i = 0; i < commands.length; i++) {
+            String command = commands[i] + webPage;
+            System.out.println("Executing \"" + command + "\" command.");
+            try {
+                Process process = Runtime.getRuntime().exec(command);
+                process.waitFor();
+                int exit = process.exitValue();
+                if (exit == 0) return;
+            } catch(Exception e) { e.printStackTrace(); }
+        }
     }
 }

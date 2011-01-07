@@ -24,9 +24,7 @@
 package org.cesilko.rachota.gui;
 
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.event.KeyEvent;
-import java.net.URI;
 import javax.swing.ImageIcon;
 import org.cesilko.rachota.core.Translator;
 
@@ -165,31 +163,7 @@ public class AboutDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btOKKeyPressed
 
     private void lbURLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbURLMouseClicked
-        if (System.getProperty("java.version").startsWith("1.6")) {
-            try { 
-                URI url = new URI("http://rachota.sourceforge.net");
-                Desktop.getDesktop().browse(url);
-                return;
-            }
-            catch (Exception e) { e.printStackTrace(); }
-        }
-        String[] commands = null;
-        String os = System.getProperty("os.name");
-        if (os.indexOf("Unix") != -1) commands = new String[] {"firefox ", "konqueror ", "mozilla ", "opera "};
-        if (os.indexOf("Linux") != -1) commands = new String[] {"firefox ", "konqueror ", "mozilla ", "opera "};
-        if (os.indexOf("Windows") != -1) commands = new String[] {"cmd.exe /c start "};
-        if (os.indexOf("Macintosh") != -1) commands = new String[] {"open "};
-        if (commands == null) return;
-        for (int i = 0; i < commands.length; i++) {
-            String command = commands[i] + "http://rachota.sourceforge.net";
-            System.out.println("Executing \"" + command + "\" command.");
-            try {
-                Process process = Runtime.getRuntime().exec(command);
-                process.waitFor();
-                int exit = process.exitValue();
-                if (exit == 0) return;
-            } catch(Exception e) { e.printStackTrace(); }
-        }
+        Tools.showURL("http://rachota.sourceforge.net");
     }//GEN-LAST:event_lbURLMouseClicked
 
     private void btOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOKActionPerformed

@@ -219,6 +219,9 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         mnTools = new javax.swing.JMenu();
         mnSwitchDate = new javax.swing.JMenuItem();
         mnAdjustStart = new javax.swing.JMenuItem();
+        mnHelp = new javax.swing.JMenu();
+        mnDocs = new javax.swing.JMenuItem();
+        mnFAQs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/logo_small.png")).getImage());
@@ -386,6 +389,37 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
 
         mbMenu.add(mnTools);
 
+        mnHelp.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_HELP"));
+        mnHelp.setText(Translator.getTranslation("MAINWINDOW.MN_HELP"));
+        mnHelp.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_HELP_TOOLTIP"));
+        mnHelp.setFont(getFont());
+
+        mnDocs.setFont(getFont());
+        mnDocs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/info.png"))); // NOI18N
+        mnDocs.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_DOCS"));
+        mnDocs.setText(Translator.getTranslation("MAINWINDOW.MN_DOCS"));
+        mnDocs.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_DOCS_TOOLTIP"));
+        mnDocs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnDocsActionPerformed(evt);
+            }
+        });
+        mnHelp.add(mnDocs);
+
+        mnFAQs.setFont(getFont());
+        mnFAQs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/cesilko/rachota/gui/images/info.png"))); // NOI18N
+        mnFAQs.setMnemonic(Translator.getMnemonic("MAINWINDOW.MN_FAQS"));
+        mnFAQs.setText(Translator.getTranslation("MAINWINDOW.MN_FAQS"));
+        mnFAQs.setToolTipText(Translator.getTranslation("MAINWINDOW.MN_FAQS_TOOLTIP"));
+        mnFAQs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnFAQsActionPerformed(evt);
+            }
+        });
+        mnHelp.add(mnFAQs);
+
+        mbMenu.add(mnHelp);
+
         setJMenuBar(mbMenu);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -542,6 +576,14 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
         dayView.correctTaskDuration(this);
     }//GEN-LAST:event_mnCorrectDurationActionPerformed
+
+    private void mnDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnDocsActionPerformed
+        Tools.showURL("http://rachota.sourceforge.net/en/documentation.html");
+    }//GEN-LAST:event_mnDocsActionPerformed
+
+    private void mnFAQsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnFAQsActionPerformed
+        Tools.showURL("http://rachota.sourceforge.net/en/faq.html");
+    }//GEN-LAST:event_mnFAQsActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar mbMenu;
@@ -550,7 +592,10 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private javax.swing.JMenuItem mnAdjustStart;
     private javax.swing.JMenuItem mnCopyTask;
     private javax.swing.JMenuItem mnCorrectDuration;
+    private javax.swing.JMenuItem mnDocs;
     private javax.swing.JMenuItem mnExit;
+    private javax.swing.JMenuItem mnFAQs;
+    private javax.swing.JMenu mnHelp;
     private javax.swing.JMenuItem mnMoveTime;
     private javax.swing.JMenuItem mnSettings;
     private javax.swing.JMenuItem mnSwitchDate;
