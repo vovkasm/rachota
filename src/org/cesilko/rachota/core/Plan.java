@@ -232,7 +232,6 @@ public class Plan {
     public static boolean savePlan() {
         Plan plan = Plan.getDefault();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
         int thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         int weekToSave = plan.getNextWeekToSave(thisWeek - 2);
         boolean planSaved = true;
@@ -248,6 +247,7 @@ public class Plan {
      * @return Index of next week to save or -1 if there is no more day in plan after given week.
      */
     private int getNextWeekToSave(int savedWeek) {
+        if (savedWeek < 1) return 1; // Year was overlapped, let's start with the first week
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.WEEK_OF_YEAR, savedWeek);
         Date savedDate = calendar.getTime();
