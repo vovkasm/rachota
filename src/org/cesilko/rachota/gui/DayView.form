@@ -295,6 +295,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection component="Form" name="getFont" type="method"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="Translator.getTranslation(&quot;DAYVIEW.LBL_ESTIMATED_END_TOOLTIP&quot;)" type="code"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

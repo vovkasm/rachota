@@ -138,7 +138,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         tpViews.add(historyView, TAB_HISTORY_VIEW);
         AnalyticsView analyticsView = new AnalyticsView();
         tpViews.add(analyticsView, TAB_ANALYTICS_VIEW);
-        setSize(511, 646);
+        setSize(550, 650);
         setTitle(Tools.title + " " + dayView.getTitleSuffix());
         String size = (String) Settings.getDefault().getSetting("size");
         String location = (String) Settings.getDefault().getSetting("location");
@@ -147,8 +147,8 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
                 int width = Integer.parseInt(size.substring(1, size.indexOf(",")));
                 int height = Integer.parseInt(size.substring(size.indexOf(",") + 1, size.length() - 1));
                 if ((width < 0) || (height < 0)) {
-                    width = 511;
-                    height = 646;
+                    width = 550;
+                    height = 650;
                 }
                 setSize(width, height);
             } catch (Exception e) {

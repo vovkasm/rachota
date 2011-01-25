@@ -26,8 +26,6 @@ package org.cesilko.rachota.gui;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -45,7 +43,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -412,6 +409,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         txtEnd.setColumns(5);
         txtEnd.setEditable(false);
         txtEnd.setFont(getFont());
+        txtEnd.setToolTipText(Translator.getTranslation("DAYVIEW.LBL_ESTIMATED_END_TOOLTIP"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -993,7 +991,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
     private String getFinishedAtTime(){
         String value = "";
         if(useEstimatedEnd()){
-            value = Tools.getTime(new Date(new Date().getTime() + day.getRemainingWorkingTime()));
+            value = "~ " + Tools.getTime(new Date(new Date().getTime() + day.getRemainingWorkingTime()));
         }else{
             value = Tools.getTime(day.getFinishTime());
         }
