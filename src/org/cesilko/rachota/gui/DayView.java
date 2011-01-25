@@ -26,6 +26,8 @@ package org.cesilko.rachota.gui;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -42,11 +44,14 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ToolTipManager;
+import javax.swing.event.MouseInputAdapter;
 import org.cesilko.rachota.core.Clock;
 import org.cesilko.rachota.core.ClockListener;
 import org.cesilko.rachota.core.Day;
@@ -151,6 +156,24 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         tbPlan.getTableHeader().setFont(getFont());
         tbPlan.setFont(getFont());
         tbPlan.setRowHeight(getFont().getSize() + 2);
+        setupEndTimeMouseListener(lblEnd, txtEnd);
+    }
+
+    private void setupEndTimeMouseListener(JComponent... components){
+        if (components.length == 0) {
+            return;
+        }
+        MouseInputAdapter adapter = new MouseInputAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // This will toggle the value.
+                Settings.getDefault().setUseEstimatedWorkDay(!Settings.getDefault().getUseEstimatedWorkDay());
+            }
+        };
+        for (JComponent component : components) {
+            component.addMouseListener(adapter);
+        }
     }
     
     /** Returns font that should be used for all widgets in this component
@@ -379,7 +402,7 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         pnDayView.add(txtStart, gridBagConstraints);
 
         lblEnd.setFont(getFont());
-        lblEnd.setText(Translator.getTranslation("DAYVIEW.LBL_END"));
+        lblEnd.setText(getFinishedAtText());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -910,8 +933,9 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         txtWeek.setText("" + calendar.get(Calendar.WEEK_OF_YEAR) + ".");
         if (day.getStartTime() != null) txtStart.setText(Tools.getTime(day.getStartTime()));
         else txtStart.setText("");
-        if (day.getFinishTime() != null) txtEnd.setText(Tools.getTime(day.getFinishTime()));
+        if (day.getFinishTime() != null) txtEnd.setText(getFinishedAtTime());
         else txtEnd.setText("");
+        lblEnd.setText(getFinishedAtText());
         double totalTime = (double) day.getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue())/(60 * 60 * 1000);
         if (totalTime != 0) {
             double dayWorkHours = Settings.getDefault().getWorkingHours();
@@ -952,6 +976,28 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
             checkButtons();
         }
         firePropertyChange("view_updated", null, null);
+    }
+
+    private boolean useEstimatedEnd(){
+        return Plan.getDefault().isToday(day) && Settings.getDefault().getUseEstimatedWorkDay();
+    }
+    private String getFinishedAtText(){
+        String value = "";
+        if(useEstimatedEnd()){
+            value = Translator.getTranslation("DAYVIEW.LBL_ESTIMATED_END");
+        }else{
+            value = Translator.getTranslation("DAYVIEW.LBL_END");
+        }
+        return value;
+    }
+    private String getFinishedAtTime(){
+        String value = "";
+        if(useEstimatedEnd()){
+            value = Tools.getTime(new Date(new Date().getTime() + day.getRemainingWorkingTime()));
+        }else{
+            value = Tools.getTime(day.getFinishTime());
+        }
+        return value;
     }
     
     /** Check availability of buttons according to current state of view.

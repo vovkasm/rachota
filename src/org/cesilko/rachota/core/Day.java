@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import org.cesilko.rachota.gui.Tools;
 
 
@@ -257,6 +258,16 @@ public class Day implements PropertyChangeListener {
         }
         return totalTime;
     }
+
+    /** Get total time spent on tasks without idle time. This will use the preference
+     * stored in the settings determine whether or not to count private tasks.
+     * @return Total time spent on tasks in milliseconds.
+     * @see #getTotalTime(boolean)
+     * @see Settings#getCountPrivateTasks()
+     */
+    public long getTotalTime(){
+        return getTotalTime(Settings.getDefault().getCountPrivateTasks());
+    }
     
     /** Sort tasks by given attribute and sorting order.
      * @param attribute Attribute used for sorting tasks e.g. DayTableModel.TASK_PRIORITY
@@ -324,5 +335,15 @@ public class Day implements PropertyChangeListener {
             setFinishTime(new Date());
             propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "duration", null, null));
         } else propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "generic", null, tasks));
+    }
+
+    /** Returns the remaining work time for this day.
+     * @return the remaining work time for this day in milli seconds.
+     */
+    public long getRemainingWorkingTime() {
+        Double workingHoursInMinutes = Settings.getDefault().getWorkingHours() * 60;
+        long remaining = TimeUnit.MILLISECONDS.convert(workingHoursInMinutes.longValue(), TimeUnit.MINUTES);
+        remaining -= getTotalTime();
+        return remaining >= 0 ? remaining : 0;
     }
 }

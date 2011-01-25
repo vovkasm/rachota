@@ -116,6 +116,8 @@ public class Settings {
         System.setProperty("backupCreated", "" + new Date().getTime());
         settingsMap.put("minimizeOnStart", new Boolean(false));
         settingsMap.put("popupGroupByKeyword", new Boolean(false));
+        // This decides wheter or not to display a estimate of working time remainding when displaying the current day in the day view.
+        settingsMap.put("dayViewUseEstimate", true);
         
         java.net.URL url = Settings.class.getResource("Settings.class");
         String userDir = url.getFile();
@@ -165,7 +167,7 @@ public class Settings {
         setSetting(setting, bundleValue);
         return bundleValue;
     }
-    
+
     /** Adds new listener to set of objects interested in this settings.
      * @param listener Object interested in this settings.
      */
@@ -259,5 +261,41 @@ public class Settings {
     public void setWorkingHours(double value) {
         // Convert the double to a String.
         setSetting(DAY_WORKING_HOURS, Double.toString(value));
+    }
+
+    /** Return whether or not to count private tasks towards the daily
+     * working hours.
+     * @return {@code true} if the private tasks should count towards the daily
+     * working hours, {@code false} if not.
+     * @see #setCountPrivateTasks(boolean)
+     */
+    public boolean getCountPrivateTasks(){
+        return Boolean.valueOf(getSetting("countPrivateTasks").toString());
+    }
+
+    /** Sets whether or not to count private tasks towards the daily
+     * working hours.
+     * @param countPrivateTasks whether or not to count tasks towards the
+     * daily working hours.
+     * @see #getCountPrivateTasks() 
+     */
+    public void setCountPrivateTasks(boolean countPrivateTasks){
+        setSetting("countPrivateTasks", countPrivateTasks);
+    }
+
+    /** Returns whether or not to use estimated work day in the day view when
+     * viewing current working day.
+     * @return {@code true} if the day view should show estimated end of work day,
+     * {@code false} otherwise.
+     */
+    public boolean getUseEstimatedWorkDay(){
+        return Boolean.valueOf(getSetting("dayViewUseEstimate").toString());
+    }
+
+    /** Sets whether or not to use estimated work day in the day view.
+     * @param useEstimate whether or not to use estimated work day in the day view.
+     */
+    public void setUseEstimatedWorkDay(boolean useEstimate){
+        setSetting("dayViewUseEstimate", useEstimate);
     }
 }
