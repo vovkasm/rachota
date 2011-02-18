@@ -46,6 +46,7 @@ public class GenericWizard extends javax.swing.JDialog implements PropertyChange
     public GenericWizard(String wizardTitle) {
         initComponents();
         setTitle(wizardTitle);
+        setModal(true);
         steps = new Vector();
     }
 
