@@ -646,7 +646,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     System.setProperty("rachotaTrayColor", neededRachotaTrayColor);
                 }
                 trayIcon.setPopupMenu(getTrayPopupMenu());
-                trayIcon.setToolTip(Tools.title + " " + dayView.getTitleSuffix());
+                trayIcon.setToolTip(dayView.getTitleSuffix() + Tools.title);
                 break;
             }
         }
