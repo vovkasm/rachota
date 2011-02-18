@@ -61,8 +61,8 @@ public class ReportGenerator {
     private String sortBy;
     private Vector days;
     private HistoryChart chart;
-    AbstractTaskFilter highlightFilter;
-    Vector selectFilters;
+    private AbstractTaskFilter highlightFilter;
+    private Vector selectFilters;
     private static int OUTPUT_TXT = 0;
     private static int OUTPUT_CSV = 1;
 
@@ -492,8 +492,9 @@ public class ReportGenerator {
         Iterator daysIterator = days.iterator();
         while (daysIterator.hasNext()) { // Process all days in selected period
             Day day = (Day) daysIterator.next();
-            Iterator tasksIterator = day.getTasks().iterator();
-            while (tasksIterator.hasNext()) { // Process all tasks in a day
+            Vector filteredTasks = filterTasks(day.getTasks()); // Filter all tasks in a day
+            Iterator tasksIterator = filteredTasks.iterator();
+            while (tasksIterator.hasNext()) { // Process all filtered tasks in a day
                 Task task = (Task) tasksIterator.next();
                 if (task.isIdleTask()) continue;
                 boolean includePrivateTasks = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
@@ -526,8 +527,9 @@ public class ReportGenerator {
         Iterator daysIterator = days.iterator();
         while (daysIterator.hasNext()) { // Process all days in selected period
             Day day = (Day) daysIterator.next();
-            Iterator tasksIterator = day.getTasks().iterator();
-            while (tasksIterator.hasNext()) { // Process all tasks in a day
+            Vector filteredTasks = filterTasks(day.getTasks()); // Filter all tasks in a day
+            Iterator tasksIterator = filteredTasks.iterator();
+            while (tasksIterator.hasNext()) { // Process all filtered tasks in a day
                 Task task = (Task) tasksIterator.next();
                 if (task.isIdleTask()) continue;
                 boolean includePrivateTasks = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
@@ -554,6 +556,21 @@ public class ReportGenerator {
             projectRows[i] = (ProjectRow) iterator.next();
         Arrays.sort(projectRows);
         return projectRows;
+    }
+
+    /** Filters given vector of tasks trough all used filters and returns vector
+     * of tasks satisfying all filters.
+     * @param tasks Vector of tasks to be filtered.
+     * @return Vector of tasks that satisfied all filters.
+     */
+    private Vector filterTasks(Vector tasks) {
+        Vector filteredTasks = tasks;
+        Iterator iterator = selectFilters.iterator();
+        while (iterator.hasNext()) {
+            AbstractTaskFilter filter = (AbstractTaskFilter) iterator.next();
+            filteredTasks = filter.filterTasks(filteredTasks);
+        }
+        return filteredTasks;
     }
 
     /** Comparable object representing one task in the summary on report. It has several properties

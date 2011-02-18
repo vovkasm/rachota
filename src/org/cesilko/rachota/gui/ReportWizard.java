@@ -140,7 +140,7 @@ public class ReportWizard extends GenericWizard {
             String currency = (String) getWizardProperty("invoice.currency");
             Double tax = Double.parseDouble((String) getWizardProperty("invoice.tax"));
             String rowsRepresent = (String) getWizardProperty("invoice.rows");
-            InvoiceGenerator invoiceGenerator = new InvoiceGenerator(outputFile, invoiceTitle, userDetails, customerDetails, paymentDetails, dueDays, price, currency, tax, rowsRepresent, days);
+            InvoiceGenerator invoiceGenerator = new InvoiceGenerator(outputFile, invoiceTitle, userDetails, customerDetails, paymentDetails, dueDays, price, currency, tax, rowsRepresent, days, selectFilters);
             invoiceGenerator.generateInvoice();
         }
     }

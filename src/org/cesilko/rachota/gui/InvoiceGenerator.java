@@ -41,6 +41,7 @@ import org.cesilko.rachota.core.Day;
 import org.cesilko.rachota.core.Settings;
 import org.cesilko.rachota.core.Task;
 import org.cesilko.rachota.core.Translator;
+import org.cesilko.rachota.core.filters.AbstractTaskFilter;
 
 /** Helper class for generation of HTML/TXT invoices. */
 class InvoiceGenerator {
@@ -56,8 +57,9 @@ class InvoiceGenerator {
     private Double tax;
     private String rowsRepresent;
     private Vector days;
+    private Vector selectFilters;
 
-    InvoiceGenerator(File outputFile, String title, String userDetails, String customerDetails, String paymentDetails, Integer dueDays, Double price, String currency, Double tax, String rowsRepresent, Vector days) {
+    InvoiceGenerator(File outputFile, String title, String userDetails, String customerDetails, String paymentDetails, Integer dueDays, Double price, String currency, Double tax, String rowsRepresent, Vector days, Vector selectFilters) {
         this.file = outputFile;
         this.title = title;
         this.userDetails = userDetails;
@@ -69,6 +71,7 @@ class InvoiceGenerator {
         this.tax = tax;
         this.rowsRepresent = rowsRepresent;
         this.days = days;
+        this.selectFilters = selectFilters;
     }
 
     /** Generates invoice based on data provided in constructor of InvoiceGenerator class. */
@@ -346,8 +349,9 @@ class InvoiceGenerator {
         Iterator daysIterator = days.iterator();
         while (daysIterator.hasNext()) { // Process all days in selected period
             Day day = (Day) daysIterator.next();
-            Iterator tasksIterator = day.getTasks().iterator();
-            while (tasksIterator.hasNext()) { // Process all tasks in every day
+            Vector filteredTasks = filterTasks(day.getTasks()); // Filter all tasks in a day
+            Iterator tasksIterator = filteredTasks.iterator();
+            while (tasksIterator.hasNext()) { // Process all filtered tasks in every day
                 Task task = (Task) tasksIterator.next();
                 if (task.isIdleTask()) continue;
                 boolean includePrivateTasks = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
@@ -386,8 +390,9 @@ class InvoiceGenerator {
         Iterator daysIterator = days.iterator();
         while (daysIterator.hasNext()) { // Process all days in selected period
             Day day = (Day) daysIterator.next();
-            Iterator tasksIterator = day.getTasks().iterator();
-            while (tasksIterator.hasNext()) { // Process all tasks in every day
+            Vector filteredTasks = filterTasks(day.getTasks()); // Filter all tasks in a day
+            Iterator tasksIterator = filteredTasks.iterator();
+            while (tasksIterator.hasNext()) { // Process all filtered tasks in every day
                 Task task = (Task) tasksIterator.next();
                 if (task.isIdleTask()) continue;
                 boolean includePrivateTasks = ((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue();
@@ -408,6 +413,21 @@ class InvoiceGenerator {
             taskRows[i] = (TaskRow) iterator.next();
         Arrays.sort(taskRows);
         return taskRows;
+    }
+
+    /** Filters given vector of tasks trough all used filters and returns vector
+     * of tasks satisfying all filters.
+     * @param tasks Vector of tasks to be filtered.
+     * @return Vector of tasks that satisfied all filters.
+     */
+    private Vector filterTasks(Vector tasks) {
+        Vector filteredTasks = tasks;
+        Iterator iterator = selectFilters.iterator();
+        while (iterator.hasNext()) {
+            AbstractTaskFilter filter = (AbstractTaskFilter) iterator.next();
+            filteredTasks = filter.filterTasks(filteredTasks);
+        }
+        return filteredTasks;
     }
 
     /** Comparable object representing one project in the summary on invoice. It has several properties
