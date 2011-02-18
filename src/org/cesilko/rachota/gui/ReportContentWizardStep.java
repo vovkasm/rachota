@@ -25,6 +25,7 @@ package org.cesilko.rachota.gui;
 
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.Vector;
 import org.cesilko.rachota.core.Translator;
 
 public class ReportContentWizardStep extends WizardStep {
@@ -664,9 +665,11 @@ public class ReportContentWizardStep extends WizardStep {
      */
     private void cbDurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDurationActionPerformed
         if (cbDuration.isSelected()) {
+            sortBy.add(ReportWizard.SORTBY_DURATION);
             cmbSortBy.addItem(Translator.getTranslation("REPORTWIZARD.CB_DURATION"));
             cmbSortBy.setEnabled(true);
         } else {
+            sortBy.remove(ReportWizard.SORTBY_DURATION);
             cmbSortBy.removeItem(Translator.getTranslation("REPORTWIZARD.CB_DURATION"));
             if (cmbSortBy.getItemCount() == 0) cmbSortBy.setEnabled(false);
         }
@@ -678,9 +681,11 @@ public class ReportContentWizardStep extends WizardStep {
      */
     private void cbProjectsTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbProjectsTasksActionPerformed
         if (cbProjectsTasks.isSelected()) {
+            sortBy.add(ReportWizard.SORTBY_PROJECTS_TASKS);
             cmbSortBy.addItem(Translator.getTranslation("REPORTWIZARD.CB_PROJECTS_TASKS"));
             cmbSortBy.setEnabled(true);
         } else {
+            sortBy.remove(ReportWizard.SORTBY_PROJECTS_TASKS);
             cmbSortBy.removeItem(Translator.getTranslation("REPORTWIZARD.CB_PROJECTS_TASKS"));
             if (cmbSortBy.getItemCount() == 0) cmbSortBy.setEnabled(false);
         }
@@ -692,9 +697,11 @@ public class ReportContentWizardStep extends WizardStep {
      */
     private void cbOccurrencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOccurrencesActionPerformed
         if (cbOccurrences.isSelected()) {
+            sortBy.add(ReportWizard.SORTBY_OCCURRENCES);
             cmbSortBy.addItem(Translator.getTranslation("REPORTWIZARD.CB_OCCURRENCES"));
             cmbSortBy.setEnabled(true);
         } else {
+            sortBy.remove(ReportWizard.SORTBY_OCCURRENCES);
             cmbSortBy.removeItem(Translator.getTranslation("REPORTWIZARD.CB_OCCURRENCES"));
             if (cmbSortBy.getItemCount() == 0) cmbSortBy.setEnabled(false);
         }
@@ -706,9 +713,11 @@ public class ReportContentWizardStep extends WizardStep {
      */
     private void cbNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNotesActionPerformed
         if (cbNotes.isSelected()) {
+            sortBy.add(ReportWizard.SORTBY_NOTES);
             cmbSortBy.addItem(Translator.getTranslation("REPORTWIZARD.CB_NOTES"));
             cmbSortBy.setEnabled(true);
         } else {
+            sortBy.remove(ReportWizard.SORTBY_NOTES);
             cmbSortBy.removeItem(Translator.getTranslation("REPORTWIZARD.CB_NOTES"));
             if (cmbSortBy.getItemCount() == 0) cmbSortBy.setEnabled(false);
         }
@@ -889,6 +898,7 @@ public class ReportContentWizardStep extends WizardStep {
     // End of variables declaration//GEN-END:variables
 
     private Integer previousDueDays = new Integer(14); // Last valid number of due days for backup reasons
+    private Vector sortBy = new Vector(); // Copy of selectable sorting options in English
 
     private void setProperties() {
         if (pnReport.isVisible()) {
@@ -901,7 +911,8 @@ public class ReportContentWizardStep extends WizardStep {
             firePropertyChange("report.content.projects_tasks", null, cbProjectsTasks.isSelected());
             firePropertyChange("report.content.occurrences", null, cbOccurrences.isSelected());
             firePropertyChange("report.content.notes", null, cbNotes.isSelected());
-            firePropertyChange("report.sortby", null, cmbSortBy.getSelectedItem());
+            int selectedIndex = cmbSortBy.getSelectedIndex();
+            firePropertyChange("report.sortby", null, (selectedIndex == -1 ? null : sortBy.get(selectedIndex)));
         } else {
             firePropertyChange("invoice.title", null, txInvoiceTitle.getText());
             firePropertyChange("invoice.details.user", null, taYourDetails.getText());
