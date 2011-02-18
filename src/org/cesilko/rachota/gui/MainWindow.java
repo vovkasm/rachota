@@ -635,7 +635,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         try { trayIcons = SystemTray.getSystemTray().getTrayIcons(); } catch (UnsupportedOperationException e) { return; }
         for (int i = 0; i < trayIcons.length; i++) {
             TrayIcon trayIcon = trayIcons[i];
-            if (trayIcon.getToolTip().startsWith(Tools.title)) {
+            if (trayIcon.getToolTip().endsWith(Tools.title)) {
                 Task task = dayView.getTask();
                 String currentRachotaTrayColor = System.getProperty("rachotaTrayColor");
                 String neededRachotaTrayColor = "red";
