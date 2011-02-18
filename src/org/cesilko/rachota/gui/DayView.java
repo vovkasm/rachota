@@ -1163,25 +1163,25 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         String taskTime = usableTask ? Tools.getTimeShort(task.getDuration()) : "";
         String totalTime = Tools.getTimeShort(Plan.getDefault().getDay(new Date()).getTotalTime(((Boolean) Settings.getDefault().getSetting("countPrivateTasks")).booleanValue()));
         if (showTime.equals("both")) {
-            // Rachota 2.1 - Discussion [00:13 / 05:12]
-            // Rachota 2.1 - [05:12]
-            String suffix = "- " + taskDescription + "[";
+            // Discussion [00:13 / 05:12] - Rachota 2.1
+            // [05:12] - Rachota 2.1
+            String suffix = taskDescription + "[";
             if (usableTask) suffix = suffix + taskTime + " / ";
             suffix = suffix + totalTime + "]";
-            return suffix;
+            return suffix + " - ";
         }
         if (showTime.equals("total")) {
-            // Rachota 2.1 - [05:12] Discussion
-            // Rachota 2.1 - [05:12]
-            String suffix = "- [" + totalTime + "]";
+            // [05:12] Discussion - Rachota 2.1
+            // [05:12] - Rachota 2.1
+            String suffix = "[" + totalTime + "]";
             if (usableTask) suffix = suffix + " " + taskDescription;
-            return suffix;
+            return suffix + " - ";
         }
-        // Rachota 2.1 - Discussion [00:13]
+        // Discussion [00:13] - Rachota 2.1
         // Rachota 2.1
         String suffix = "";
-        if (usableTask) suffix = suffix + "- " + taskDescription + "[" + taskTime + "]";
-        return suffix;
+        if (usableTask) suffix = taskDescription + "[" + taskTime + "]";
+        return suffix + " - ";
     }
     
     /** Tries to load restarting task and run it.

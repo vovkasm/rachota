@@ -139,7 +139,7 @@ public class MainWindow extends javax.swing.JFrame implements PropertyChangeList
         AnalyticsView analyticsView = new AnalyticsView();
         tpViews.add(analyticsView, TAB_ANALYTICS_VIEW);
         setSize(550, 650);
-        setTitle(Tools.title + " " + dayView.getTitleSuffix());
+        setTitle(dayView.getTitleSuffix() + Tools.title);
         String size = (String) Settings.getDefault().getSetting("size");
         String location = (String) Settings.getDefault().getSetting("location");
         if (size != null) {
@@ -620,7 +620,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
      */
     public void propertyChange(PropertyChangeEvent evt) {
         DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
-        setTitle(Tools.title + " " + dayView.getTitleSuffix());
+        setTitle(dayView.getTitleSuffix() + Tools.title);
         if (evt.getPropertyName().equals("day"))
             tpViews.setSelectedIndex(0);
         if (evt.getPropertyName().equals("enable_menu")) {
