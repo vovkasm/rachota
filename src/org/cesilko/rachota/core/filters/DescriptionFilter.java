@@ -78,7 +78,7 @@ public class DescriptionFilter extends AbstractTaskFilter {
         int contentRule = getContentRule();
         while (iterator.hasNext()) {
             Task task = (Task) iterator.next();
-            boolean containsSubString = task.getDescription().indexOf(subString) != -1;
+            boolean containsSubString = task.getDescription().toLowerCase().indexOf(subString.toLowerCase()) != -1;
             switch (contentRule) {
                 case RULE_CONTAINS:
                     if (!containsSubString) filteredTasks.remove(task);
