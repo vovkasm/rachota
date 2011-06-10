@@ -47,6 +47,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputAdapter;
 import org.cesilko.rachota.core.Clock;
@@ -1460,7 +1461,14 @@ public class DayView extends javax.swing.JPanel implements ClockListener, Proper
         }
         if (evt.getPropertyName().equals("startTime"))
             checkButtons();
-        updateInformation(taskDurationChanged);
+        final boolean taskDurationChangedFinal = taskDurationChanged;
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                updateInformation(taskDurationChangedFinal);
+            }
+        });
     }
     
     /** Saves setup customized by user i.e. selected columns and their widths. */
