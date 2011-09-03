@@ -202,7 +202,7 @@ class InvoiceGenerator {
             writer.write("      </tr>\n");
             writer.write("      <tr><td colspan=\"3\">&nbsp;</td></tr>\n");
         }
-        double totalCost = price * Tools.getTotalTime(false, true, days) / (double) (1000*60*60);
+        double totalCost = price * Tools.getTotalTime(false, Settings.getDefault().getCountPrivateTasks(), days) / (double) (1000*60*60);
         double totalTax = tax * totalCost / (double) 100;
         double total = totalCost + totalTax;
         writer.write("      <tr><td colspan=\"2\">" + Translator.getTranslation("INVOICE.TOTAL_COST") + "</td><td align=\"right\">" + DecimalFormat.getCurrencyInstance().format(totalCost) + " " + currency + "</td></tr>\n");
@@ -225,7 +225,7 @@ class InvoiceGenerator {
             double cost = price * taskRows[i].getDuration() / (double) (1000*60*60);
             writer.write("<td align=\"right\">" + DecimalFormat.getCurrencyInstance().format(cost) + " " + currency + "</td></tr>\n");
         }
-        double totalCost = price * Tools.getTotalTime(false, true, days) / (double) (1000*60*60);
+        double totalCost = price * Tools.getTotalTime(false, Settings.getDefault().getCountPrivateTasks(), days) / (double) (1000*60*60);
         double totalTax = tax * totalCost / (double) 100;
         double total = totalCost + totalTax;
         writer.write("      <tr><td colspan=\"3\">&nbsp;</td></tr>\n");
@@ -298,7 +298,7 @@ class InvoiceGenerator {
             }
             writer.write("\n");
         }
-        double totalCost = price * Tools.getTotalTime(false, true, days) / (double) (1000*60*60);
+        double totalCost = price * Tools.getTotalTime(false, Settings.getDefault().getCountPrivateTasks(), days) / (double) (1000*60*60);
         double totalTax = tax * totalCost / (double) 100;
         double total = totalCost + totalTax;
         writer.write("\n" + Translator.getTranslation("INVOICE.TOTAL_COST") + " " + DecimalFormat.getCurrencyInstance().format(totalCost) + " " + currency + "\n");
@@ -331,7 +331,7 @@ class InvoiceGenerator {
             double cost = price * taskRows[i].getDuration() / (double) (1000*60*60);
             writer.write(DecimalFormat.getCurrencyInstance().format(cost) + " " + currency + "\n");
         }
-        double totalCost = price * Tools.getTotalTime(false, true, days) / (double) (1000*60*60);
+        double totalCost = price * Tools.getTotalTime(false, Settings.getDefault().getCountPrivateTasks(), days) / (double) (1000*60*60);
         double totalTax = tax * totalCost / (double) 100;
         double total = totalCost + totalTax;
         writer.write("\n" + Translator.getTranslation("INVOICE.TOTAL_COST") + "   " + DecimalFormat.getCurrencyInstance().format(totalCost) + " " + currency + "\n");
