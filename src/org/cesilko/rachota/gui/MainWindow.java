@@ -675,6 +675,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             public void actionPerformed(ActionEvent arg0) {
                 DayView dayView = (DayView) tpViews.getComponentAt(TAB_DAY_VIEW);
                 TaskDialog dialog = new TaskDialog(dayView.getDay());
+                dialog.setLocationRelativeTo(MainWindow.this);
                 dialog.addPropertyChangeListener(dayView);
                 dialog.setVisible(true);
                 Tools.recordActivity();
