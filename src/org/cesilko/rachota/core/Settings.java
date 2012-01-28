@@ -130,6 +130,10 @@ public class Settings {
             userDir = userDir.substring(index, userDir.lastIndexOf((index == 1) ? "\\" : "/"));
         }
         userDir = Tools.replaceAll(userDir, "%20", " "); // Space in path is replaced by %20 and this needs to be changed
+        if (!new File(userDir + File.separator + "diary.dtd").exists()) { // User upgraded to newer version of Rachota without any diaries
+            userDir = System.getProperty("user.home") + File.separator + ".rachota"; // Default userdir since 2.4 is $HOME/.rachota
+            new File(userDir).mkdir();
+        }
         settingsMap.put("userDir", userDir);
     }
     
