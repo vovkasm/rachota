@@ -71,4 +71,20 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <target name="bundle-mac" depends="jar" description="Make MacOS application bundle">
+        <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="ant/appbundler-1.0.jar"/>
+
+        <bundleapp outputdirectory="${dist.dir}"
+            name="Rachota"
+            displayname="${application.title}"
+            identifier="org.cesilko.rachota"
+            shortversion="2.4"
+            applicationCategory="public.app-category.developer-tools"
+            mainclassname="${main.class}">
+            <classpath file="${dist.jar}"/>
+            <option value="-Dapple.laf.useScreenMenuBar=true"/>
+            <option value="-Dapple.awt.brushMetalLook=true"/>
+        </bundleapp>
+    </target>
 </project>
