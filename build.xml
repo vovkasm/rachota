@@ -73,7 +73,7 @@
     -->
 
     <target name="bundle-mac" depends="jar" description="Make MacOS application bundle">
-        <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="ant/appbundler-1.0.jar"/>
+        <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="ant/appbundler-1.0ea.jar"/>
 
         <bundleapp outputdirectory="${dist.dir}"
             name="Rachota"
